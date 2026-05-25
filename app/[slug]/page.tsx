@@ -95,25 +95,28 @@ export default async function InvitationPage({ params }: Props) {
         groomName={invitation.groomName}
         weddingDate={invitation.weddingDate}
         coverImageUrl={invitation.coverImageUrl}
+        primaryColor={invitation.primaryColor}
+        fontFamily={invitation.fontFamily}
+        backgroundStyle={invitation.backgroundStyle}
       />
 
-      {invitation.story && <OurStory story={invitation.story} />}
+      {invitation.story && <OurStory story={invitation.story} color={invitation.primaryColor ?? undefined} />}
 
       {invitation.videoUrl && <VideoSection videoUrl={invitation.videoUrl} />}
 
       {invitation.events.length > 0 && (
-        <EventsSection events={invitation.events} />
+        <EventsSection events={invitation.events} color={invitation.primaryColor ?? undefined} />
       )}
 
       {invitation.contacts.length > 0 && (
-        <ContactsSection contacts={invitation.contacts} />
+        <ContactsSection contacts={invitation.contacts} color={invitation.primaryColor ?? undefined} />
       )}
 
       {invitation.giftRegistries.length > 0 && (
-        <GiftRegistry gifts={invitation.giftRegistries} />
+        <GiftRegistry gifts={invitation.giftRegistries} color={invitation.primaryColor ?? undefined} />
       )}
 
-      <RSVPForm slug={slug} rsvpDeadline={invitation.rsvpDeadline} />
+      <RSVPForm slug={slug} rsvpDeadline={invitation.rsvpDeadline} color={invitation.primaryColor ?? undefined} />
 
       <footer className="py-8 text-center text-xs text-[#5c3320]/40 bg-[#fdfaf6] border-t border-[#b8960c]/10">
         Δημιουργήθηκε από{' '}
@@ -122,7 +125,7 @@ export default async function InvitationPage({ params }: Props) {
         </a>
       </footer>
 
-      <FloatingBar events={invitation.events} gifts={invitation.giftRegistries} />
+      <FloatingBar events={invitation.events} gifts={invitation.giftRegistries} color={invitation.primaryColor ?? undefined} />
     </main>
   );
 }

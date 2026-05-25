@@ -9,11 +9,13 @@ import type { CreateRsvpPayload } from '@/lib/types';
 interface Props {
   slug: string;
   rsvpDeadline: string | null;
+  color?: string;
 }
 
 type Step = 'attending' | 'details' | 'done';
 
-export default function RSVPForm({ slug, rsvpDeadline }: Props) {
+export default function RSVPForm({ slug, rsvpDeadline, color }: Props) {
+  const c = color ?? '#b8960c';
   const [step, setStep] = useState<Step>('attending');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -48,7 +50,7 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
     }
   };
 
-  const inputCls = 'w-full border border-[#b8960c]/30 rounded-xl px-4 py-3 text-[#2c1810] bg-white focus:outline-none focus:ring-2 focus:ring-[#b8960c]/40 text-sm';
+  const inputCls = 'w-full rounded-xl px-4 py-3 text-[#2c1810] bg-white focus:outline-none text-sm';
   const labelCls = 'block text-sm font-medium text-[#5c3320] mb-1.5';
 
   const deadlinePassed =
@@ -58,21 +60,20 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
     <section className="py-20 px-4 bg-[#fdfaf6]" id="rsvp">
       <div className="max-w-xl mx-auto">
         <div className="text-center mb-12">
-          <p className="tracking-[0.3em] uppercase text-[#b8960c] text-sm mb-4 font-medium">
+          <p className="tracking-[0.3em] uppercase text-sm mb-4 font-medium" style={{ color: c }}>
             Απάντηση
           </p>
           <h2 className="font-serif text-4xl text-[#2c1810] italic">RSVP</h2>
           <div className="divider mt-6 mb-4" />
           {rsvpDeadline && (
             <p className={`text-sm ${deadlinePassed ? 'text-red-500 font-medium' : 'text-[#5c3320]/60'}`}>
-              {deadlinePassed ? '⏰ Η προθεσμία έχει παρέλθει' : `Παρακαλούμε απαντήστε έως ${new Date(rsvpDeadline).toLocaleDateString('el-GR')}`}
+              {deadlinePassed ? 'Η προθεσμία έχει παρέλθει' : `Παρακαλούμε απαντήστε έως ${new Date(rsvpDeadline).toLocaleDateString('el-GR')}`}
             </p>
           )}
         </div>
 
         {deadlinePassed ? (
-          <div className="bg-white rounded-2xl p-10 text-center shadow-sm border border-[#b8960c]/10">
-            <p className="text-4xl mb-4">⏰</p>
+          <div className="bg-white rounded-2xl p-10 text-center shadow-sm" style={{ border: `1px solid ${c}1a` }}>
             <h3 className="font-serif text-xl text-[#2c1810] mb-2">Η προθεσμία έχει παρέλθει</h3>
             <p className="text-sm text-[#5c3320]/60">
               Η περίοδος RSVP για αυτή την πρόσκληση έχει λήξει.
@@ -85,10 +86,14 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
               key="done"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="text-center bg-white rounded-2xl p-10 shadow-sm border border-[#b8960c]/10"
+              className="text-center bg-white rounded-2xl p-10 shadow-sm"
+              style={{ border: `1px solid ${c}1a` }}
             >
-              <div className="w-16 h-16 rounded-full bg-[#b8960c]/10 flex items-center justify-center mx-auto mb-4">
-                <Heart size={28} className="text-[#b8960c]" />
+              <div
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                style={{ backgroundColor: c + '1a' }}
+              >
+                <Heart size={28} style={{ color: c }} />
               </div>
               <h3 className="font-serif text-2xl text-[#2c1810] mb-3">
                 {form.attending ? 'Σας περιμένουμε!' : 'Λάβαμε την απάντησή σας'}
@@ -105,25 +110,26 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
               onSubmit={handleSubmit}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl p-8 shadow-sm border border-[#b8960c]/10 space-y-6"
+              className="bg-white rounded-2xl p-8 shadow-sm space-y-6"
+              style={{ border: `1px solid ${c}1a` }}
             >
               {/* Will you attend? */}
               <div>
                 <label className={labelCls}>Θα παραστείτε; *</label>
                 <div className="grid grid-cols-2 gap-3">
                   {[
-                    { value: true, label: '✓ Ναι, θα είμαι εκεί!' },
-                    { value: false, label: '✗ Δυστυχώς όχι' },
+                    { value: true, label: 'Ναι, θα είμαι εκεί!' },
+                    { value: false, label: 'Δυστυχώς όχι' },
                   ].map(({ value, label }) => (
                     <button
                       key={String(value)}
                       type="button"
                       onClick={() => set('attending', value)}
-                      className={`py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all ${
-                        form.attending === value
-                          ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
-                          : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
-                      }`}
+                      className="py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all"
+                      style={form.attending === value
+                        ? { borderColor: c, backgroundColor: c + '1a', color: '#2c1810' }
+                        : { borderColor: c + '33', color: '#5c3320' }
+                      }
                     >
                       {label}
                     </button>
@@ -136,6 +142,7 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                 <label className={labelCls}>Ονοματεπώνυμο *</label>
                 <input
                   className={inputCls}
+                  style={{ border: `1px solid ${c}4d` }}
                   value={form.guestName}
                   onChange={(e) => set('guestName', e.target.value)}
                   placeholder="Όνομα Επώνυμο"
@@ -147,6 +154,7 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                 <label className={labelCls}>Κινητό</label>
                 <input
                   className={inputCls}
+                  style={{ border: `1px solid ${c}4d` }}
                   value={form.phone}
                   onChange={(e) => set('phone', e.target.value)}
                   placeholder="69X XXX XXXX"
@@ -161,6 +169,7 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                     <label className={labelCls}>Αριθμός ενηλίκων *</label>
                     <select
                       className={inputCls}
+                      style={{ border: `1px solid ${c}4d` }}
                       value={form.adultCount}
                       onChange={(e) => set('adultCount', Number(e.target.value))}
                     >
@@ -182,11 +191,11 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                           key={String(v)}
                           type="button"
                           onClick={() => set('hasChildren', v)}
-                          className={`flex-1 py-2.5 rounded-xl text-sm border-2 transition-all ${
-                            form.hasChildren === v
-                              ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
-                              : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
-                          }`}
+                          className="flex-1 py-2.5 rounded-xl text-sm border-2 transition-all"
+                          style={form.hasChildren === v
+                            ? { borderColor: c, backgroundColor: c + '1a', color: '#2c1810' }
+                            : { borderColor: c + '33', color: '#5c3320' }
+                          }
                         >
                           {l}
                         </button>
@@ -199,6 +208,7 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                       <label className={labelCls}>Αριθμός παιδιών</label>
                       <select
                         className={inputCls}
+                        style={{ border: `1px solid ${c}4d` }}
                         value={form.childCount}
                         onChange={(e) => set('childCount', Number(e.target.value))}
                       >
@@ -218,11 +228,11 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                           key={d}
                           type="button"
                           onClick={() => set('dietary', d)}
-                          className={`px-4 py-2 rounded-xl text-sm border-2 transition-all ${
-                            form.dietary === d
-                              ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
-                              : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
-                          }`}
+                          className="px-4 py-2 rounded-xl text-sm border-2 transition-all"
+                          style={form.dietary === d
+                            ? { borderColor: c, backgroundColor: c + '1a', color: '#2c1810' }
+                            : { borderColor: c + '33', color: '#5c3320' }
+                          }
                         >
                           {d === 'NONE' ? 'Κανένα' : d === 'VEGAN' ? 'Vegan' : 'Vegetarian'}
                         </button>
@@ -242,11 +252,11 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                           key={String(v)}
                           type="button"
                           onClick={() => set('hasAllergy', v)}
-                          className={`flex-1 py-2.5 rounded-xl text-sm border-2 transition-all ${
-                            form.hasAllergy === v
-                              ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
-                              : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
-                          }`}
+                          className="flex-1 py-2.5 rounded-xl text-sm border-2 transition-all"
+                          style={form.hasAllergy === v
+                            ? { borderColor: c, backgroundColor: c + '1a', color: '#2c1810' }
+                            : { borderColor: c + '33', color: '#5c3320' }
+                          }
                         >
                           {l}
                         </button>
@@ -255,6 +265,7 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                     {form.hasAllergy && (
                       <input
                         className={inputCls}
+                        style={{ border: `1px solid ${c}4d` }}
                         value={form.allergyNote}
                         onChange={(e) => set('allergyNote', e.target.value)}
                         placeholder="Περιγράψτε την αλλεργία..."
@@ -269,6 +280,7 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
                 <label className={labelCls}>Προσωπικό μήνυμα</label>
                 <textarea
                   className={`${inputCls} resize-none`}
+                  style={{ border: `1px solid ${c}4d` }}
                   rows={3}
                   value={form.message}
                   onChange={(e) => set('message', e.target.value)}
@@ -283,7 +295,8 @@ export default function RSVPForm({ slug, rsvpDeadline }: Props) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#2c1810] text-white py-3.5 rounded-xl font-medium hover:bg-[#5c3320] transition-colors disabled:opacity-50"
+                className="w-full text-white py-3.5 rounded-xl font-medium transition-colors disabled:opacity-50"
+                style={{ backgroundColor: c }}
               >
                 {loading ? 'Αποστολή...' : 'Αποστολή'}
               </button>

@@ -94,7 +94,7 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
 
   return (
     <div>
-      <header className="bg-[#071218]/80 backdrop-blur-md border-b border-[#01FFFF]/10 px-6 py-4 flex items-center justify-between">
+      <div className="flex items-center justify-between px-6 pt-6 pb-2">
         <div className="flex items-center gap-4">
           <button onClick={() => router.push('/admin')} className="text-white/40 hover:text-white transition-colors">
             <ArrowLeft size={18} />
@@ -115,7 +115,7 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
             <Download size={14} /> CSV
           </button>
         )}
-      </header>
+      </div>
 
       <main className="max-w-5xl mx-auto px-4 py-8">
         {/* Stats row */}

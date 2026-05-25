@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { adminApi } from '@/lib/api';
 import { Plus, Trash2, ArrowLeft } from 'lucide-react';
+import CoverImageUpload from '@/components/CoverImageUpload';
 
 type EventType = 'CEREMONY' | 'RECEPTION';
 type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR';
@@ -42,8 +43,12 @@ function SectionTitle({ title }: { title: string }) {
   );
 }
 
-export default function AdminCreatePage() {
+const VALID_TYPES: InvitationType[] = ['MINI_WEBSITE', 'VIDEO_PROSKLITIRIO', 'VIDEO'];
+
+function AdminCreatePageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const typeParam = searchParams.get('type') as InvitationType | null;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -57,7 +62,9 @@ export default function AdminCreatePage() {
   const [coverImageUrl, setCoverImageUrl] = useState('');
   const [rsvpDeadline, setRsvpDeadline] = useState('');
   const [status, setStatus] = useState<'DRAFT' | 'ACTIVE'>('DRAFT');
-  const [invitationType, setInvitationType] = useState<InvitationType>('MINI_WEBSITE');
+  const [invitationType, setInvitationType] = useState<InvitationType>(
+    typeParam && VALID_TYPES.includes(typeParam) ? typeParam : 'MINI_WEBSITE',
+  );
 
   // Dynamic lists
   const [events, setEvents] = useState<EventForm[]>([
@@ -141,17 +148,17 @@ export default function AdminCreatePage() {
 
   return (
     <div>
-      <header className="bg-[#071218]/80 backdrop-blur-md border-b border-[#01FFFF]/10 px-6 py-4 flex items-center gap-4">
-        <button
-          onClick={() => router.push('/admin')}
-          className="text-white/40 hover:text-white transition-colors"
-        >
-          <ArrowLeft size={18} />
-        </button>
-        <h1 className="text-white font-semibold">Νέα Πρόσκληση</h1>
-      </header>
-
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.push('/admin')}
+            className="text-white/40 hover:text-white transition-colors"
+          >
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-white font-semibold">Νέα Πρόσκληση</h1>
+        </div>
 
         {/* Core */}
         <section className={sectionCls}>
@@ -208,9 +215,8 @@ export default function AdminCreatePage() {
             </div>
           </div>
           <div>
-            <label className={labelCls}>Φωτογραφία εξωφύλλου (URL)</label>
-            <input className={inputCls} value={coverImageUrl} onChange={(e) => setCoverImageUrl(e.target.value)} placeholder="https://... (Cloudinary, Drive κ.λπ.)" />
-            <p className="text-xs text-white/30 mt-1">Θα εμφανιστεί ως φόντο στο hero του ζευγαριού. Αφήστε κενό για το προεπιλεγμένο χρώμα.</p>
+            <label className={labelCls}>Φωτογραφία εξωφύλλου</label>
+            <CoverImageUpload value={coverImageUrl} onChange={setCoverImageUrl} />
           </div>
           <div>
             <label className={labelCls}>Τύπος Πρόσκλησης</label>
@@ -404,5 +410,13 @@ export default function AdminCreatePage() {
         </div>
       </form>
     </div>
+  );
+}
+
+export default function AdminCreatePage() {
+  return (
+    <Suspense>
+      <AdminCreatePageInner />
+    </Suspense>
   );
 }

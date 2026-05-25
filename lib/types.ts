@@ -37,6 +37,9 @@ export interface Invitation {
   story: string | null;
   videoUrl: string | null;
   coverImageUrl: string | null;
+  primaryColor: string | null;
+  fontFamily: string | null;
+  backgroundStyle: string | null;
   status: InvitationStatus;
   invitationType: InvitationType;
   rsvpDeadline: string | null;

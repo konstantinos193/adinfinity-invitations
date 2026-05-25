@@ -1,36 +1,88 @@
 'use client';
 
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { el } from 'date-fns/locale';
 import CountdownTimer from './CountdownTimer';
+
+const BG_GRADIENTS: Record<string, string> = {
+  'warm-ivory': 'linear-gradient(135deg,#2c1810 0%,#5c3320 50%,#8b5e3c 100%)',
+  'blush':      'linear-gradient(135deg,#3d0d1e 0%,#7a2a44 50%,#b86080 100%)',
+  'sage':       'linear-gradient(135deg,#0d1e10 0%,#1e4022 50%,#386840 100%)',
+  'midnight':   'linear-gradient(135deg,#050510 0%,#101030 50%,#1e1e50 100%)',
+  'golden':     'linear-gradient(135deg,#1e1000 0%,#3d2400 50%,#6b4400 100%)',
+};
+
+const GOOGLE_FONTS_URL =
+  'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600' +
+  '&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=Great+Vibes' +
+  '&family=Dancing+Script:wght@400;700' +
+  '&family=Lora:ital,wght@0,400;0,600;1,400;1,600' +
+  '&family=Cinzel:wght@400;600;700' +
+  '&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600' +
+  '&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400' +
+  '&display=swap';
 
 interface Props {
   brideName: string;
   groomName: string;
   weddingDate: string;
   coverImageUrl?: string | null;
+  primaryColor?: string | null;
+  fontFamily?: string | null;
+  backgroundStyle?: string | null;
 }
 
-export default function InvitationHero({ brideName, groomName, weddingDate, coverImageUrl }: Props) {
-  const formattedDate = format(new Date(weddingDate), "d MMMM yyyy", { locale: el });
+export default function InvitationHero({
+  brideName, groomName, weddingDate,
+  coverImageUrl, primaryColor, fontFamily, backgroundStyle,
+}: Props) {
+  const formattedDate = format(new Date(weddingDate), 'd MMMM yyyy', { locale: el });
+  const color = primaryColor ?? '#b8960c';
+  const rawFont = fontFamily ?? 'Playfair Display';
+  const isCustomFont = rawFont.startsWith('custom:');
+  const customFontSrc = isCustomFont ? rawFont.slice(7) : null;
+  const font = isCustomFont ? 'CustomWeddingFont' : rawFont;
+  const bgKey = backgroundStyle ?? 'warm-ivory';
+  const bgGradient = bgKey.startsWith('custom:')
+    ? (() => {
+        const [from, to] = bgKey.slice(7).split(',');
+        const mid = from && to ? (() => {
+          const parse = (h: string) => ({ r: parseInt(h.slice(1,3),16)||0, g: parseInt(h.slice(3,5),16)||0, b: parseInt(h.slice(5,7),16)||0 });
+          const a = parse(from), b2 = parse(to);
+          const hex = (n: number) => n.toString(16).padStart(2,'0');
+          return `#${hex(Math.round((a.r+b2.r)/2))}${hex(Math.round((a.g+b2.g)/2))}${hex(Math.round((a.b+b2.b)/2))}`;
+        })() : from;
+        return `linear-gradient(135deg, ${from} 0%, ${mid} 50%, ${to} 100%)`;
+      })()
+    : BG_GRADIENTS[bgKey] ?? BG_GRADIENTS['warm-ivory'];
+
+  useEffect(() => {
+    if (isCustomFont && customFontSrc) {
+      const ff = new FontFace('CustomWeddingFont', `url(${customFontSrc})`);
+      ff.load().then((loaded) => document.fonts.add(loaded)).catch(() => {});
+      return;
+    }
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = GOOGLE_FONTS_URL;
+    document.head.appendChild(link);
+    return () => { document.head.removeChild(link); };
+  }, [isCustomFont, customFontSrc]);
 
   return (
     <section
       className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden"
-      style={coverImageUrl ? {
-        backgroundImage: `url(${coverImageUrl})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      } : {
-        background: 'linear-gradient(135deg, #2c1810 0%, #5c3320 40%, #8b5e3c 100%)',
-      }}
+      style={coverImageUrl
+        ? { backgroundImage: `url(${coverImageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+        : { background: bgGradient }
+      }
     >
-      {/* Dark overlay when cover photo is used */}
-      {coverImageUrl && (
-        <div className="absolute inset-0 bg-black/50" />
-      )}
-      {/* Decorative petals / dots */}
+      {coverImageUrl && <div className="absolute inset-0 bg-black/50" />}
+
+      {/* Decorative orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {[...Array(20)].map((_, i) => (
           <motion.div
@@ -43,11 +95,7 @@ export default function InvitationHero({ brideName, groomName, weddingDate, cove
               left: `${Math.random() * 100}%`,
             }}
             animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
-            transition={{
-              duration: Math.random() * 4 + 3,
-              repeat: Infinity,
-              delay: Math.random() * 3,
-            }}
+            transition={{ duration: Math.random() * 4 + 3, repeat: Infinity, delay: Math.random() * 3 }}
           />
         ))}
       </div>
@@ -68,7 +116,8 @@ export default function InvitationHero({ brideName, groomName, weddingDate, cove
         </motion.p>
 
         <motion.h1
-          className="font-serif text-6xl md:text-8xl font-bold text-white italic leading-tight mb-4"
+          className="text-6xl md:text-8xl font-bold italic leading-tight mb-4 text-white"
+          style={{ fontFamily: `'${font}', serif` }}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
@@ -77,7 +126,8 @@ export default function InvitationHero({ brideName, groomName, weddingDate, cove
         </motion.h1>
 
         <motion.div
-          className="text-white/60 text-3xl my-2"
+          className="text-3xl my-2 font-light"
+          style={{ color }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
@@ -86,7 +136,8 @@ export default function InvitationHero({ brideName, groomName, weddingDate, cove
         </motion.div>
 
         <motion.h1
-          className="font-serif text-6xl md:text-8xl font-bold text-white italic leading-tight mb-8"
+          className="text-6xl md:text-8xl font-bold italic leading-tight mb-8 text-white"
+          style={{ fontFamily: `'${font}', serif` }}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.9, duration: 0.8 }}
@@ -95,7 +146,8 @@ export default function InvitationHero({ brideName, groomName, weddingDate, cove
         </motion.h1>
 
         <motion.div
-          className="divider mb-6"
+          className="mb-6 mx-auto h-px w-32"
+          style={{ backgroundColor: color, opacity: 0.7 }}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ delay: 1.1, duration: 0.6 }}
@@ -119,7 +171,6 @@ export default function InvitationHero({ brideName, groomName, weddingDate, cove
         </motion.div>
       </motion.div>
 
-      {/* Scroll indicator */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
         animate={{ y: [0, 8, 0] }}

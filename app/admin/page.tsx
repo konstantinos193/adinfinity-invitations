@@ -2,13 +2,12 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { adminApi } from '@/lib/api';
 import type { Invitation } from '@/lib/types';
 import {
-  AlertTriangle, ExternalLink, Pencil, Plus, Trash2, Users,
+  AlertTriangle, ExternalLink, Pencil, Trash2, Users,
   Search, RefreshCw, Copy, Check, X, Calendar, TrendingUp,
-  Globe, Video, Film, LogOut, Mail,
+  Globe, Video, Film, Mail,
 } from 'lucide-react';
 import { format, differenceInDays, isPast } from 'date-fns';
 import { el } from 'date-fns/locale';
@@ -132,11 +131,6 @@ export default function AdminPage() {
     setInvitations((prev) => prev.map((i) => i.id === inv.id ? { ...i, status: next } : i));
   };
 
-  const logout = () => {
-    localStorage.removeItem('admin_token');
-    router.push('/admin/login');
-  };
-
   // Stats
   const stats = useMemo(() => ({
     total:   invitations.length,
@@ -189,36 +183,17 @@ export default function AdminPage() {
         />
       )}
 
-      {/* Header */}
-      <header className="bg-[#071218]/80 backdrop-blur-md border-b border-[#01FFFF]/10 px-6 py-4 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <Image src="/logo.png" alt="adifinity" width={110} height={38} className="object-contain" />
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => load(false)}
-              className={`p-2 rounded-xl text-white/30 hover:text-white hover:bg-white/5 transition-colors ${refreshing ? 'animate-spin text-[#01FFFF]/60' : ''}`}
-              title="Ανανέωση"
-            >
-              <RefreshCw size={16} />
-            </button>
-            <a
-              href="/admin/create"
-              className="flex items-center gap-1.5 bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] text-sm font-bold px-4 py-2 rounded-xl transition-colors"
-            >
-              <Plus size={15} /> Νέα Πρόσκληση
-            </a>
-            <button
-              onClick={logout}
-              className="p-2 rounded-xl text-white/30 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-              title="Αποσύνδεση"
-            >
-              <LogOut size={16} />
-            </button>
-          </div>
-        </div>
-      </header>
-
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-6">
+        <div className="flex items-center justify-between">
+          <h1 className="text-white/70 font-semibold text-base">Προσκλήσεις</h1>
+          <button
+            onClick={() => load(false)}
+            className={`p-2 rounded-xl text-white/30 hover:text-white hover:bg-white/5 transition-colors ${refreshing ? 'animate-spin text-[#01FFFF]/60' : ''}`}
+            title="Ανανέωση"
+          >
+            <RefreshCw size={16} />
+          </button>
+        </div>
 
         {/* Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -313,7 +288,7 @@ export default function AdminPage() {
                 : 'Δεν υπάρχουν προσκλήσεις ακόμη.'}
             </p>
             {!search && statusFilter === 'ALL' && typeFilter === 'ALL' && (
-              <a href="/admin/create" className="inline-block mt-4 text-[#01FFFF] text-sm hover:underline">
+              <a href="/admin/create/mini-web" className="inline-block mt-4 text-[#01FFFF] text-sm hover:underline">
                 Δημιουργήστε την πρώτη →
               </a>
             )}

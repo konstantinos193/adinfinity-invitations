@@ -8,9 +8,10 @@ import { copyToClipboard } from '@/lib/clipboard';
 
 interface Props {
   gifts: GiftRegistryType[];
+  color?: string;
 }
 
-function IBANCard({ gift }: { gift: GiftRegistryType }) {
+function IBANCard({ gift, color }: { gift: GiftRegistryType; color: string }) {
   const [copied, setCopied] = useState(false);
 
   const copy = async () => {
@@ -20,8 +21,8 @@ function IBANCard({ gift }: { gift: GiftRegistryType }) {
   };
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#b8960c]/10">
-      <p className="text-xs tracking-widest text-[#b8960c] uppercase mb-1">
+    <div className="bg-white rounded-2xl p-6 shadow-sm" style={{ border: `1px solid ${color}1a` }}>
+      <p className="text-xs tracking-widest uppercase mb-1" style={{ color }}>
         {gift.ownerName}
       </p>
       {gift.bankName && (
@@ -33,23 +34,25 @@ function IBANCard({ gift }: { gift: GiftRegistryType }) {
         </span>
         <button
           onClick={copy}
-          className="shrink-0 text-[#b8960c] hover:text-[#5c3320] transition-colors"
+          className="shrink-0 transition-colors hover:opacity-70"
+          style={{ color: copied ? '#16a34a' : color }}
           title="Αντιγραφή IBAN"
         >
-          {copied ? <Check size={18} className="text-green-600" /> : <Copy size={18} />}
+          {copied ? <Check size={18} /> : <Copy size={18} />}
         </button>
       </div>
     </div>
   );
 }
 
-export default function GiftRegistry({ gifts }: Props) {
+export default function GiftRegistry({ gifts, color }: Props) {
+  const c = color ?? '#b8960c';
   if (!gifts.length) return null;
   return (
     <section className="py-20 px-4 bg-[#f5efe6]">
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12">
-          <p className="tracking-[0.3em] uppercase text-[#b8960c] text-sm mb-4 font-medium">
+          <p className="tracking-[0.3em] uppercase text-sm mb-4 font-medium" style={{ color: c }}>
             Λίστα γάμου
           </p>
           <h2 className="font-serif text-4xl text-[#2c1810] italic">
@@ -71,7 +74,7 @@ export default function GiftRegistry({ gifts }: Props) {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
             >
-              <IBANCard gift={gift} />
+              <IBANCard gift={gift} color={c} />
             </motion.div>
           ))}
         </div>

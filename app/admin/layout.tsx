@@ -1,3 +1,5 @@
+import { AdminSidebar } from './Sidebar';
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#07141C] text-white relative">
@@ -13,7 +15,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Cyan glow top-right */}
       <div className="fixed -top-40 right-20 w-96 h-96 bg-[#01FFFF]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="fixed -bottom-40 left-20 w-96 h-96 bg-[#01A9FF]/5 rounded-full blur-[100px] pointer-events-none" />
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 flex min-h-screen">
+        <AdminSidebar />
+        <div className="flex-1 min-w-0">{children}</div>
+      </div>
     </div>
   );
 }

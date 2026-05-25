@@ -9,6 +9,19 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
+// Loaded via <link> so we're not restricted by next/font subset types.
+// All 8 fonts have confirmed Greek glyph support on Google Fonts.
+const WEDDING_FONTS =
+  'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600' +
+  '&family=Alegreya:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=GFS+Didot:ital,wght@0,400;1,400' +
+  '&family=Cardo:ital,wght@0,400;0,700;1,400' +
+  '&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=Tinos:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400' +
+  '&display=swap';
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://invitations.adinfinity.gr'),
   title: {
@@ -48,6 +61,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="el" className={`${inter.variable} ${playfair.variable}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href={WEDDING_FONTS} />
+      </head>
       <body className="min-h-screen antialiased">{children}</body>
     </html>
   );

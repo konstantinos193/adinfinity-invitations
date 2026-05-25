@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { adminApi } from '@/lib/api';
 import type { Invitation, EventType, ContactRole } from '@/lib/types';
 import { AlertTriangle, ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import CoverImageUpload from '@/components/CoverImageUpload';
 
 const inputCls = 'w-full bg-[#07141C] border border-[#01FFFF]/20 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-[#01FFFF]/30 focus:border-[#01FFFF]/40 transition-colors';
 const labelCls = 'block text-xs font-medium text-white/50 mb-1 uppercase tracking-wide';
@@ -128,15 +129,14 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
 
   return (
     <div>
-      <header className="bg-[#071218]/80 backdrop-blur-md border-b border-[#01FFFF]/10 px-6 py-4 flex items-center gap-4">
-        <button onClick={() => router.push('/admin')} className="text-white/40 hover:text-white transition-colors">
-          <ArrowLeft size={18} />
-        </button>
-        <h1 className="text-white font-semibold">Επεξεργασία Πρόσκλησης</h1>
-        <span className="text-xs text-white/30 ml-1">— {brideName} &amp; {groomName}</span>
-      </header>
-
       <form onSubmit={handleSubmit} className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={() => router.push('/admin')} className="text-white/40 hover:text-white transition-colors">
+            <ArrowLeft size={18} />
+          </button>
+          <h1 className="text-white font-semibold">Επεξεργασία Πρόσκλησης</h1>
+          <span className="text-xs text-white/30 ml-1">— {brideName} &amp; {groomName}</span>
+        </div>
 
         {/* Core fields */}
         <div className={sectionCls}>
@@ -174,9 +174,8 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
             </div>
           </div>
           <div>
-            <label className={labelCls}>Φωτογραφία εξωφύλλου (URL)</label>
-            <input className={inputCls} value={coverImageUrl} onChange={(e) => setCoverImageUrl(e.target.value)} placeholder="https://... (Cloudinary, Drive κ.λπ.)" />
-            <p className="text-xs text-white/30 mt-1">Θα εμφανιστεί ως φόντο στο hero. Αφήστε κενό για το προεπιλεγμένο χρώμα.</p>
+            <label className={labelCls}>Φωτογραφία εξωφύλλου</label>
+            <CoverImageUpload value={coverImageUrl} onChange={setCoverImageUrl} />
           </div>
           <div>
             <label className={labelCls}>Τύπος Πρόσκλησης</label>

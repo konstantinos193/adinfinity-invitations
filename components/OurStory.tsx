@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 
 interface Props {
   story: string;
+  color?: string;
 }
 
-export default function OurStory({ story }: Props) {
+export default function OurStory({ story, color }: Props) {
+  const c = color ?? '#b8960c';
   return (
     <section className="py-20 px-4 bg-[#fdfaf6]">
       <div className="max-w-2xl mx-auto text-center">
@@ -16,7 +18,7 @@ export default function OurStory({ story }: Props) {
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
         >
-          <p className="tracking-[0.3em] uppercase text-[#b8960c] text-sm mb-4 font-medium">
+          <p className="tracking-[0.3em] uppercase text-sm mb-4 font-medium" style={{ color: c }}>
             Η ιστορία μας
           </p>
           <h2 className="font-serif text-4xl text-[#2c1810] italic mb-6">

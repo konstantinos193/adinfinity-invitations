@@ -1,0 +1,297 @@
+'use client';
+
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart } from 'lucide-react';
+import { submitRsvp } from '@/lib/api';
+import type { CreateRsvpPayload } from '@/lib/types';
+
+interface Props {
+  slug: string;
+  rsvpDeadline: string | null;
+}
+
+type Step = 'attending' | 'details' | 'done';
+
+export default function RSVPForm({ slug, rsvpDeadline }: Props) {
+  const [step, setStep] = useState<Step>('attending');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [form, setForm] = useState<CreateRsvpPayload>({
+    guestName: '',
+    phone: '',
+    attending: true,
+    adultCount: 1,
+    hasChildren: false,
+    childCount: 0,
+    dietary: 'NONE',
+    hasAllergy: false,
+    allergyNote: '',
+    message: '',
+  });
+
+  const set = (key: keyof CreateRsvpPayload, value: unknown) =>
+    setForm((f) => ({ ...f, [key]: value }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.guestName.trim()) { setError('Παρακαλώ εισάγετε το ονοματεπώνυμό σας.'); return; }
+    setLoading(true);
+    setError('');
+    try {
+      await submitRsvp(slug, form);
+      setStep('done');
+    } catch {
+      setError('Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputCls = 'w-full border border-[#b8960c]/30 rounded-xl px-4 py-3 text-[#2c1810] bg-white focus:outline-none focus:ring-2 focus:ring-[#b8960c]/40 text-sm';
+  const labelCls = 'block text-sm font-medium text-[#5c3320] mb-1.5';
+
+  const deadlinePassed =
+    rsvpDeadline != null && new Date(rsvpDeadline) < new Date();
+
+  return (
+    <section className="py-20 px-4 bg-[#fdfaf6]" id="rsvp">
+      <div className="max-w-xl mx-auto">
+        <div className="text-center mb-12">
+          <p className="tracking-[0.3em] uppercase text-[#b8960c] text-sm mb-4 font-medium">
+            Απάντηση
+          </p>
+          <h2 className="font-serif text-4xl text-[#2c1810] italic">RSVP</h2>
+          <div className="divider mt-6 mb-4" />
+          {rsvpDeadline && (
+            <p className={`text-sm ${deadlinePassed ? 'text-red-500 font-medium' : 'text-[#5c3320]/60'}`}>
+              {deadlinePassed ? '⏰ Η προθεσμία έχει παρέλθει' : `Παρακαλούμε απαντήστε έως ${new Date(rsvpDeadline).toLocaleDateString('el-GR')}`}
+            </p>
+          )}
+        </div>
+
+        {deadlinePassed ? (
+          <div className="bg-white rounded-2xl p-10 text-center shadow-sm border border-[#b8960c]/10">
+            <p className="text-4xl mb-4">⏰</p>
+            <h3 className="font-serif text-xl text-[#2c1810] mb-2">Η προθεσμία έχει παρέλθει</h3>
+            <p className="text-sm text-[#5c3320]/60">
+              Η περίοδος RSVP για αυτή την πρόσκληση έχει λήξει.
+            </p>
+          </div>
+        ) : (
+        <AnimatePresence mode="wait">
+          {step === 'done' ? (
+            <motion.div
+              key="done"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center bg-white rounded-2xl p-10 shadow-sm border border-[#b8960c]/10"
+            >
+              <div className="w-16 h-16 rounded-full bg-[#b8960c]/10 flex items-center justify-center mx-auto mb-4">
+                <Heart size={28} className="text-[#b8960c]" />
+              </div>
+              <h3 className="font-serif text-2xl text-[#2c1810] mb-3">
+                {form.attending ? 'Σας περιμένουμε!' : 'Λάβαμε την απάντησή σας'}
+              </h3>
+              <p className="text-[#5c3320]/70">
+                {form.attending
+                  ? 'Χαιρόμαστε ιδιαίτερα που θα μπορέσετε να έρθετε!'
+                  : 'Λυπούμαστε που δεν θα μπορέσετε να παραστείτε.'}
+              </p>
+            </motion.div>
+          ) : (
+            <motion.form
+              key="form"
+              onSubmit={handleSubmit}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-2xl p-8 shadow-sm border border-[#b8960c]/10 space-y-6"
+            >
+              {/* Will you attend? */}
+              <div>
+                <label className={labelCls}>Θα παραστείτε; *</label>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { value: true, label: '✓ Ναι, θα είμαι εκεί!' },
+                    { value: false, label: '✗ Δυστυχώς όχι' },
+                  ].map(({ value, label }) => (
+                    <button
+                      key={String(value)}
+                      type="button"
+                      onClick={() => set('attending', value)}
+                      className={`py-3 px-4 rounded-xl text-sm font-medium border-2 transition-all ${
+                        form.attending === value
+                          ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
+                          : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Name */}
+              <div>
+                <label className={labelCls}>Ονοματεπώνυμο *</label>
+                <input
+                  className={inputCls}
+                  value={form.guestName}
+                  onChange={(e) => set('guestName', e.target.value)}
+                  placeholder="Όνομα Επώνυμο"
+                />
+              </div>
+
+              {/* Phone */}
+              <div>
+                <label className={labelCls}>Κινητό</label>
+                <input
+                  className={inputCls}
+                  value={form.phone}
+                  onChange={(e) => set('phone', e.target.value)}
+                  placeholder="69X XXX XXXX"
+                  type="tel"
+                />
+              </div>
+
+              {form.attending && (
+                <>
+                  {/* Adults */}
+                  <div>
+                    <label className={labelCls}>Αριθμός ενηλίκων *</label>
+                    <select
+                      className={inputCls}
+                      value={form.adultCount}
+                      onChange={(e) => set('adultCount', Number(e.target.value))}
+                    >
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <option key={n} value={n}>{n}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Children */}
+                  <div>
+                    <label className={labelCls}>Παιδιά;</label>
+                    <div className="flex gap-3">
+                      {[
+                        { v: false, l: 'Όχι' },
+                        { v: true, l: 'Ναι' },
+                      ].map(({ v, l }) => (
+                        <button
+                          key={String(v)}
+                          type="button"
+                          onClick={() => set('hasChildren', v)}
+                          className={`flex-1 py-2.5 rounded-xl text-sm border-2 transition-all ${
+                            form.hasChildren === v
+                              ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
+                              : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
+                          }`}
+                        >
+                          {l}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {form.hasChildren && (
+                    <div>
+                      <label className={labelCls}>Αριθμός παιδιών</label>
+                      <select
+                        className={inputCls}
+                        value={form.childCount}
+                        onChange={(e) => set('childCount', Number(e.target.value))}
+                      >
+                        {[1, 2, 3, 4].map((n) => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Dietary */}
+                  <div>
+                    <label className={labelCls}>Διατροφικές συνήθειες</label>
+                    <div className="flex gap-3 flex-wrap">
+                      {(['NONE', 'VEGAN', 'VEGETARIAN'] as const).map((d) => (
+                        <button
+                          key={d}
+                          type="button"
+                          onClick={() => set('dietary', d)}
+                          className={`px-4 py-2 rounded-xl text-sm border-2 transition-all ${
+                            form.dietary === d
+                              ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
+                              : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
+                          }`}
+                        >
+                          {d === 'NONE' ? 'Κανένα' : d === 'VEGAN' ? 'Vegan' : 'Vegetarian'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Allergy */}
+                  <div>
+                    <label className={labelCls}>Αλλεργία σε τρόφιμο;</label>
+                    <div className="flex gap-3 mb-3">
+                      {[
+                        { v: false, l: 'Όχι' },
+                        { v: true, l: 'Ναι' },
+                      ].map(({ v, l }) => (
+                        <button
+                          key={String(v)}
+                          type="button"
+                          onClick={() => set('hasAllergy', v)}
+                          className={`flex-1 py-2.5 rounded-xl text-sm border-2 transition-all ${
+                            form.hasAllergy === v
+                              ? 'border-[#b8960c] bg-[#b8960c]/10 text-[#2c1810]'
+                              : 'border-[#b8960c]/20 text-[#5c3320]/60 hover:border-[#b8960c]/50'
+                          }`}
+                        >
+                          {l}
+                        </button>
+                      ))}
+                    </div>
+                    {form.hasAllergy && (
+                      <input
+                        className={inputCls}
+                        value={form.allergyNote}
+                        onChange={(e) => set('allergyNote', e.target.value)}
+                        placeholder="Περιγράψτε την αλλεργία..."
+                      />
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* Personal message */}
+              <div>
+                <label className={labelCls}>Προσωπικό μήνυμα</label>
+                <textarea
+                  className={`${inputCls} resize-none`}
+                  rows={3}
+                  value={form.message}
+                  onChange={(e) => set('message', e.target.value)}
+                  placeholder="Γράψτε ένα μήνυμα στο ζευγάρι..."
+                />
+              </div>
+
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#2c1810] text-white py-3.5 rounded-xl font-medium hover:bg-[#5c3320] transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Αποστολή...' : 'Αποστολή'}
+              </button>
+            </motion.form>
+          )}
+        </AnimatePresence>
+        )}
+      </div>
+    </section>
+  );
+}

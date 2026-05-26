@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { format } from 'date-fns';
 import { el } from 'date-fns/locale';
 import CountdownTimer from './CountdownTimer';
@@ -30,17 +30,20 @@ interface Props {
   groomName: string;
   weddingDate: string;
   coverImageUrl?: string | null;
+  coverImages?: string[];
   primaryColor?: string | null;
   fontFamily?: string | null;
+  fontColor?: string | null;
   backgroundStyle?: string | null;
 }
 
 export default function InvitationHero({
   brideName, groomName, weddingDate,
-  coverImageUrl, primaryColor, fontFamily, backgroundStyle,
+  coverImageUrl, coverImages, primaryColor, fontFamily, fontColor, backgroundStyle,
 }: Props) {
   const formattedDate = format(new Date(weddingDate), 'd MMMM yyyy', { locale: el });
   const color = primaryColor ?? '#b8960c';
+  const nameColor = fontColor ?? '#ffffff';
   const rawFont = fontFamily ?? 'Playfair Display';
   const isCustomFont = rawFont.startsWith('custom:');
   const customFontSrc = isCustomFont ? rawFont.slice(7) : null;
@@ -59,6 +62,22 @@ export default function InvitationHero({
       })()
     : BG_GRADIENTS[bgKey] ?? BG_GRADIENTS['warm-ivory'];
 
+  // Build the ordered image list: coverImages takes priority, fall back to coverImageUrl
+  const images: string[] = (coverImages && coverImages.length > 0)
+    ? coverImages
+    : (coverImageUrl ? [coverImageUrl] : []);
+
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    if (images.length < 2) return;
+    const timer = setInterval(() => {
+      setActiveIdx((i) => (i + 1) % images.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
   useEffect(() => {
     if (isCustomFont && customFontSrc) {
       const ff = new FontFace('CustomWeddingFont', `url(${customFontSrc})`);
@@ -72,34 +91,56 @@ export default function InvitationHero({
     return () => { document.head.removeChild(link); };
   }, [isCustomFont, customFontSrc]);
 
+  const hasImages = images.length > 0;
+
   return (
     <section
       className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden"
-      style={coverImageUrl
-        ? { backgroundImage: `url(${coverImageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
-        : { background: bgGradient }
-      }
+      style={hasImages ? undefined : { background: bgGradient }}
     >
-      {coverImageUrl && <div className="absolute inset-0 bg-black/50" />}
+      {/* Carousel background */}
+      {hasImages && (
+        <div className="absolute inset-0">
+          <AnimatePresence mode="sync">
+            <motion.div
+              key={activeIdx}
+              className="absolute inset-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+              style={{
+                backgroundImage: `url(${images[activeIdx]})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+              }}
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
+      )}
 
-      {/* Decorative orbs */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-white/5"
-            style={{
-              width: Math.random() * 120 + 40,
-              height: Math.random() * 120 + 40,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-            }}
-            animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: Math.random() * 4 + 3, repeat: Infinity, delay: Math.random() * 3 }}
-          />
-        ))}
-      </div>
+      {/* Gradient background (no images) */}
+      {!hasImages && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-white/5"
+              style={{
+                width: Math.random() * 120 + 40,
+                height: Math.random() * 120 + 40,
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }}
+              transition={{ duration: Math.random() * 4 + 3, repeat: Infinity, delay: Math.random() * 3 }}
+            />
+          ))}
+        </div>
+      )}
 
+      {/* Content */}
       <motion.div
         className="relative z-10 max-w-2xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
@@ -116,8 +157,8 @@ export default function InvitationHero({
         </motion.p>
 
         <motion.h1
-          className="text-6xl md:text-8xl font-bold italic leading-tight mb-4 text-white"
-          style={{ fontFamily: `'${font}', serif` }}
+          className="text-6xl md:text-8xl font-bold italic leading-tight mb-4"
+          style={{ fontFamily: `'${font}', serif`, color: nameColor }}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
@@ -136,8 +177,8 @@ export default function InvitationHero({
         </motion.div>
 
         <motion.h1
-          className="text-6xl md:text-8xl font-bold italic leading-tight mb-8 text-white"
-          style={{ fontFamily: `'${font}', serif` }}
+          className="text-6xl md:text-8xl font-bold italic leading-tight mb-8"
+          style={{ fontFamily: `'${font}', serif`, color: nameColor }}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.9, duration: 0.8 }}
@@ -171,6 +212,25 @@ export default function InvitationHero({
         </motion.div>
       </motion.div>
 
+      {/* Carousel dots */}
+      {images.length > 1 && (
+        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActiveIdx(i)}
+              className="transition-all duration-300 rounded-full"
+              style={{
+                width: i === activeIdx ? 20 : 8,
+                height: 8,
+                backgroundColor: i === activeIdx ? color : 'rgba(255,255,255,0.4)',
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Scroll indicator */}
       <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
         animate={{ y: [0, 8, 0] }}

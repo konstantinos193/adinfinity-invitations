@@ -9,6 +9,8 @@ import GiftRegistry from '@/components/GiftRegistry';
 import RSVPForm from '@/components/RSVPForm';
 import VideoSection from '@/components/VideoSection';
 import FloatingBar from '@/components/FloatingBar';
+import MusicPlayer from '@/components/MusicPlayer';
+import PhotoGallery from '@/components/PhotoGallery';
 import VideoOnlyPage from '@/components/templates/VideoOnlyPage';
 import VideoProsklitirio from '@/components/templates/VideoProsklitirio';
 
@@ -95,14 +97,20 @@ export default async function InvitationPage({ params }: Props) {
         groomName={invitation.groomName}
         weddingDate={invitation.weddingDate}
         coverImageUrl={invitation.coverImageUrl}
+        coverImages={invitation.coverImages}
         primaryColor={invitation.primaryColor}
         fontFamily={invitation.fontFamily}
+        fontColor={invitation.fontColor}
         backgroundStyle={invitation.backgroundStyle}
       />
 
       {invitation.story && <OurStory story={invitation.story} color={invitation.primaryColor ?? undefined} />}
 
       {invitation.videoUrl && <VideoSection videoUrl={invitation.videoUrl} />}
+
+      {invitation.galleryImages?.length > 0 && (
+        <PhotoGallery images={invitation.galleryImages} color={invitation.primaryColor ?? undefined} />
+      )}
 
       {invitation.events.length > 0 && (
         <EventsSection events={invitation.events} color={invitation.primaryColor ?? undefined} />
@@ -126,6 +134,8 @@ export default async function InvitationPage({ params }: Props) {
       </footer>
 
       <FloatingBar events={invitation.events} gifts={invitation.giftRegistries} color={invitation.primaryColor ?? undefined} />
+
+      {invitation.musicUrl && <MusicPlayer src={invitation.musicUrl} />}
     </main>
   );
 }

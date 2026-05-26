@@ -7,7 +7,8 @@ import { Plus, Trash2, ArrowLeft, Globe, Check, Upload, Loader2 } from 'lucide-r
 import { format } from 'date-fns';
 import { el } from 'date-fns/locale';
 import { supabase, COVER_BUCKET } from '@/lib/supabase';
-import CoverImageUpload from '@/components/CoverImageUpload';
+import CoverImagesUpload from '@/components/CoverImagesUpload';
+import MusicUpload from '@/components/MusicUpload';
 
 type EventType = 'CEREMONY' | 'RECEPTION';
 type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR';
@@ -158,7 +159,8 @@ export default function MiniWebCreatePage() {
   const [groomName, setGroomName] = useState('');
   const [weddingDate, setWeddingDate] = useState('');
   const [story, setStory] = useState('');
-  const [coverImageUrl, setCoverImageUrl] = useState('');
+  const [coverImages, setCoverImages] = useState<string[]>([]);
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [rsvpDeadline, setRsvpDeadline] = useState('');
   const [status, setStatus] = useState<'DRAFT' | 'ACTIVE'>('DRAFT');
 
@@ -173,10 +175,18 @@ export default function MiniWebCreatePage() {
   const [customFontError, setCustomFontError] = useState('');
   const fontInputRef = useRef<HTMLInputElement>(null);
 
-  // Custom color picker
+  // Custom color picker (accent)
   const [customColor, setCustomColor] = useState('#b8960c');
   const [customHexInput, setCustomHexInput] = useState('B8960C');
   const colorInputRef = useRef<HTMLInputElement>(null);
+
+  // Font color picker
+  const [fontColor, setFontColor] = useState('#ffffff');
+  const [fontColorHexInput, setFontColorHexInput] = useState('FFFFFF');
+  const fontColorInputRef = useRef<HTMLInputElement>(null);
+
+  // Music URL
+  const [musicUrl, setMusicUrl] = useState('');
 
   // Custom background gradient
   const [customBgFrom, setCustomBgFrom] = useState('#1a0a2e');
@@ -260,13 +270,17 @@ export default function MiniWebCreatePage() {
         slug, brideName, groomName,
         weddingDate: new Date(weddingDate).toISOString(),
         story: story || undefined,
-        coverImageUrl: coverImageUrl || undefined,
+        coverImageUrl: coverImages[0] || undefined,
+        coverImages: coverImages.length > 0 ? coverImages : undefined,
+        galleryImages: galleryImages.length > 0 ? galleryImages : undefined,
         rsvpDeadline: rsvpDeadline ? new Date(rsvpDeadline).toISOString() : undefined,
         status,
         invitationType: 'MINI_WEBSITE',
         primaryColor: resolvedPalette.primary,
         fontFamily: fontFamily === 'CustomWeddingFont' && customFontUrl ? `custom:${customFontUrl}` : fontFamily,
+        fontColor: fontColor !== '#ffffff' ? fontColor : undefined,
         backgroundStyle: bgStyleId === 'custom' ? `custom:${customBgFrom},${customBgTo}` : bgStyleId,
+        musicUrl: musicUrl || undefined,
         events: events.filter((ev) => ev.name && ev.date).map((ev) => ({
           ...ev, date: new Date(ev.date).toISOString(),
           address: ev.address || undefined, mapsUrl: ev.mapsUrl || undefined,
@@ -529,6 +543,68 @@ export default function MiniWebCreatePage() {
                 )}
               </div>
 
+              {/* Font color */}
+              <div>
+                <label className={lbl}>Χρώμα γραμματοσειράς ονομάτων</label>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {[
+                    { hex: '#ffffff', label: 'Λευκό' },
+                    { hex: '#f5efe6', label: 'Κρεμ' },
+                    { hex: '#b8960c', label: 'Χρυσό' },
+                    { hex: '#b76e79', label: 'Rose' },
+                    { hex: '#fde68a', label: 'Κίτρινο' },
+                    { hex: '#1a1a1a', label: 'Μαύρο' },
+                  ].map(({ hex, label }) => (
+                    <button
+                      key={hex}
+                      type="button"
+                      onClick={() => { setFontColor(hex); setFontColorHexInput(hex.slice(1).toUpperCase()); }}
+                      title={label}
+                      className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${
+                        fontColor === hex ? 'border-[#01FFFF]/60 bg-[#01FFFF]/5' : 'border-white/8 hover:border-white/20'
+                      }`}
+                    >
+                      <div className="w-7 h-7 rounded-full border border-white/20" style={{ backgroundColor: hex }} />
+                      <span className="text-[10px] text-white/40">{label}</span>
+                    </button>
+                  ))}
+                  {/* Custom font color */}
+                  <button
+                    type="button"
+                    onClick={() => fontColorInputRef.current?.click()}
+                    title="Custom"
+                    className="flex flex-col items-center gap-1 p-2 rounded-xl border border-white/8 hover:border-white/20 transition-all"
+                  >
+                    <div
+                      className="w-7 h-7 rounded-full border border-white/20 overflow-hidden"
+                      style={{ background: 'conic-gradient(from 0deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)' }}
+                    />
+                    <span className="text-[10px] text-white/40">Custom</span>
+                  </button>
+                  <input ref={fontColorInputRef} type="color"
+                    onChange={(e) => { setFontColor(e.target.value); setFontColorHexInput(e.target.value.slice(1).toUpperCase()); }}
+                    className="sr-only" />
+                </div>
+                <div className="mt-2 flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-md border border-white/15 shrink-0" style={{ backgroundColor: fontColor }} />
+                  <div className="flex items-center bg-[#07141C] border border-[#01FFFF]/15 rounded-lg overflow-hidden focus-within:border-[#01FFFF]/40 transition-colors">
+                    <span className="pl-3 text-white/30 text-sm font-mono">#</span>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={fontColorHexInput}
+                      onChange={(e) => {
+                        const v = e.target.value.replace(/[^0-9a-fA-F]/g, '').toUpperCase().slice(0, 6);
+                        setFontColorHexInput(v);
+                        if (v.length === 6) setFontColor('#' + v.toLowerCase());
+                      }}
+                      onBlur={() => setFontColorHexInput(fontColor.slice(1).toUpperCase())}
+                      className="bg-transparent text-white text-sm font-mono py-1.5 pr-3 focus:outline-none w-24"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Background mood */}
               <div>
                 <label className={lbl}>Φόντο hero</label>
@@ -658,9 +734,9 @@ export default function MiniWebCreatePage() {
                 </div>
               </div>
               <div>
-                <label className={lbl}>Φωτογραφία εξωφύλλου</label>
-                <CoverImageUpload value={coverImageUrl} onChange={setCoverImageUrl} />
-                <p className="text-xs text-white/25 mt-1">Αντικαθιστά το gradient φόντο του hero.</p>
+                <label className={lbl}>Εικόνες hero (carousel)</label>
+                <CoverImagesUpload values={coverImages} onChange={setCoverImages} />
+                <p className="text-xs text-white/25 mt-1">Πολλαπλές εικόνες → αυτόματο carousel κάθε 5 δευτ.</p>
               </div>
               <div>
                 <label className={lbl}>Κατάσταση</label>
@@ -670,9 +746,20 @@ export default function MiniWebCreatePage() {
                 </select>
               </div>
               <div>
+                <label className={lbl}>Μουσική υπόκρουση</label>
+                <MusicUpload value={musicUrl} onChange={setMusicUrl} />
+                <p className="text-xs text-white/25 mt-1">Παίζει αυτόματα. Κουμπί mute/unmute κάτω δεξιά.</p>
+              </div>
+              <div>
                 <label className={lbl}>Ιστορία ζευγαριού</label>
                 <textarea className={`${inp} resize-none`} rows={4} value={story} onChange={(e) => setStory(e.target.value)} placeholder="Πώς γνωριστήκατε..." />
               </div>
+            </section>
+
+            {/* Gallery */}
+            <section className={sec}>
+              <SecTitle title="Gallery φωτογραφιών" desc="Εμφανίζεται σαν masonry grid κάτω από το βίντεο" />
+              <CoverImagesUpload values={galleryImages} onChange={setGalleryImages} max={20} />
             </section>
 
             {/* Events */}

@@ -10,13 +10,21 @@ import { el } from 'date-fns/locale';
 import { supabase, COVER_BUCKET } from '@/lib/supabase';
 import CoverImagesUpload from '@/components/CoverImagesUpload';
 import MusicUpload from '@/components/MusicUpload';
+import VideoUpload from '@/components/VideoUpload';
 
 const inputCls = 'w-full bg-[#07141C] border border-[#01FFFF]/20 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-[#01FFFF]/30 focus:border-[#01FFFF]/40 transition-colors';
 const labelCls = 'block text-xs font-medium text-white/50 mb-1 uppercase tracking-wide';
 const sectionCls = 'bg-[#071218]/60 backdrop-blur-sm rounded-2xl p-6 border border-[#01FFFF]/10 space-y-4';
 
 function fmt(iso: string | null | undefined) {
-  return iso ? iso.slice(0, 16) : '';
+  if (!iso) return '';
+  const d = new Date(iso);
+  const yyyy = d.getFullYear();
+  const MM = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const HH = String(d.getHours()).padStart(2, '0');
+  const mm = String(d.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${MM}-${dd}T${HH}:${mm}`;
 }
 
 interface EventRow { type: EventType; name: string; date: string; address: string; mapsUrl: string; }
@@ -163,7 +171,7 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
         setWeddingDate(fmt(inv.weddingDate));
         setStory(inv.story ?? '');
         setVideoUrl(inv.videoUrl ?? '');
-        setCoverImages(inv.coverImages ?? (inv.coverImageUrl ? [inv.coverImageUrl] : []));
+        setCoverImages(inv.coverImages.length > 0 ? inv.coverImages : (inv.coverImageUrl ? [inv.coverImageUrl] : []));
         setGalleryImages(inv.galleryImages ?? []);
         setRsvpDeadline(fmt(inv.rsvpDeadline));
         setStatus(inv.status);
@@ -640,19 +648,19 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
             <option value="VIDEO">Video Only — Μόνο βίντεο, χωρίς RSVP</option>
           </select>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelCls}>Video URL</label>
-            <input className={inputCls} value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://youtube.com/..." />
-          </div>
-          <div>
-            <label className={labelCls}>Κατάσταση</label>
-            <select className={inputCls} value={status} onChange={(e) => setStatus(e.target.value)}>
-              <option value="DRAFT">Προσχέδιο</option>
-              <option value="ACTIVE">Ενεργή</option>
-              <option value="EXPIRED">Έληξε</option>
-            </select>
-          </div>
+        <div>
+          <label className={labelCls}>Κατάσταση</label>
+          <select className={inputCls} value={status} onChange={(e) => setStatus(e.target.value)}>
+            <option value="DRAFT">Προσχέδιο</option>
+            <option value="ACTIVE">Ενεργή</option>
+            <option value="EXPIRED">Έληξε</option>
+          </select>
+        </div>
+        <div>
+          <label className={labelCls}>Βίντεο</label>
+          <VideoUpload value={videoUrl} onChange={setVideoUrl} />
+          <p className="text-xs text-white/25 mt-1">Ανέβασε MP4/MOV/WEBM, ή επικόλλα YouTube/Vimeo URL:</p>
+          <input className={`${inputCls} mt-2`} value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://youtube.com/..." />
         </div>
         <div>
           <label className={labelCls}>Ιστορία ζευγαριού</label>

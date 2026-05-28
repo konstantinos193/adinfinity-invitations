@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Heart, Baby, Sparkles, LogOut, LayoutDashboard, Menu, X } from 'lucide-react';
+import { Globe, Film, Video, LogOut, LayoutDashboard, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -50,40 +50,28 @@ export function AdminSidebar() {
           Νέα Πρόσκληση
         </p>
         <Link
-          href="/admin/create/wedding"
+          href="/admin/create/mini-web"
           onClick={close}
-          className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors ${
-            pathname === '/admin/create/wedding'
-              ? 'bg-rose-500/10 text-rose-300'
-              : 'text-rose-400/60 hover:text-rose-300 hover:bg-rose-500/10'
-          }`}
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/5 transition-colors"
         >
-          <Heart size={14} />
-          Γάμος
+          <Globe size={14} className="text-white/40" />
+          Mini Web
         </Link>
         <Link
-          href="/admin/create/baptism"
+          href="/admin/create/video-pro"
           onClick={close}
-          className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors ${
-            pathname === '/admin/create/baptism'
-              ? 'bg-sky-500/10 text-sky-300'
-              : 'text-sky-400/60 hover:text-sky-300 hover:bg-sky-500/10'
-          }`}
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-purple-400/60 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"
         >
-          <Baby size={14} />
-          Βάπτιση
+          <Film size={14} />
+          Video Pro
         </Link>
         <Link
-          href="/admin/create/wedding-baptism"
+          href="/admin/create/video-only"
           onClick={close}
-          className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-colors ${
-            pathname === '/admin/create/wedding-baptism'
-              ? 'bg-violet-500/10 text-violet-300'
-              : 'text-violet-400/60 hover:text-violet-300 hover:bg-violet-500/10'
-          }`}
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-blue-400/60 hover:text-blue-400 hover:bg-blue-500/10 transition-colors"
         >
-          <Sparkles size={14} />
-          Γαμοβάπτιση
+          <Video size={14} />
+          Video Only
         </Link>
       </div>
 

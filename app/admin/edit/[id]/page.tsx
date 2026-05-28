@@ -86,14 +86,23 @@ function rgbToHex(r: number, g: number, b: number) {
 type PaletteShape = { id: string; label: string; primary: string; dark: string; swatch: string };
 
 function PreviewCard({
-  brideName, groomName, weddingDate, fontFamily, palette, bgStyle,
+  brideName, groomName, weddingDate, fontFamily, fontColor, palette, bgStyle,
 }: {
   brideName: string; groomName: string; weddingDate: string;
-  fontFamily: string; palette: PaletteShape; bgStyle: typeof BG_STYLES[0];
+  fontFamily: string; fontColor: string; palette: PaletteShape; bgStyle: typeof BG_STYLES[0];
 }) {
   const dateStr = weddingDate
     ? format(new Date(weddingDate), 'd MMMM yyyy', { locale: el })
     : 'Ημερομηνία γάμου';
+  useEffect(() => {
+    if (fontFamily === 'CustomWeddingFont') return;
+    if (document.getElementById('editor-google-fonts')) return;
+    const link = document.createElement('link');
+    link.id = 'editor-google-fonts';
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=GFS+Didot&family=Cardo:ital,wght@0,400;0,700;1,400&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+    document.head.appendChild(link);
+  }, [fontFamily]);
   return (
     <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10">
       <div className="relative flex flex-col items-center justify-center py-12 px-6 text-center" style={{ background: bgStyle.gradient }}>
@@ -104,11 +113,11 @@ function PreviewCard({
           ))}
         </div>
         <p className="relative text-white/60 text-[10px] tracking-[0.3em] uppercase mb-4">Με χαρά σας καλούμε</p>
-        <h2 className="relative text-white text-4xl italic leading-tight" style={{ fontFamily: `'${fontFamily}', serif` }}>
+        <h2 className="relative text-4xl italic leading-tight" style={{ fontFamily: `'${fontFamily}', serif`, color: fontColor }}>
           {brideName || 'Νύφη'}
         </h2>
         <div className="relative my-2 text-2xl" style={{ color: palette.primary }}>&</div>
-        <h2 className="relative text-white text-4xl italic leading-tight" style={{ fontFamily: `'${fontFamily}', serif` }}>
+        <h2 className="relative text-4xl italic leading-tight" style={{ fontFamily: `'${fontFamily}', serif`, color: fontColor }}>
           {groomName || 'Γαμπρός'}
         </h2>
         <div className="relative mt-4 w-24 h-px" style={{ backgroundColor: palette.primary, opacity: 0.8 }} />
@@ -312,7 +321,7 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
         ...(hasStyleFields && {
           primaryColor: resolvedPalette.primary,
           fontFamily: fontFamily === 'CustomWeddingFont' && customFontUrl ? `custom:${customFontUrl}` : fontFamily,
-          fontColor: fontColor !== '#ffffff' ? fontColor : undefined,
+          fontColor: fontColor,
           backgroundStyle: bgStyleId === 'custom' ? `custom:${customBgFrom},${customBgTo}` : bgStyleId,
           musicUrl: musicUrl || undefined,
         }),
@@ -909,6 +918,7 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
                 groomName={groomName}
                 weddingDate={weddingDate}
                 fontFamily={fontFamily}
+                fontColor={fontColor}
                 palette={resolvedPalette}
                 bgStyle={resolvedBgStyle}
               />

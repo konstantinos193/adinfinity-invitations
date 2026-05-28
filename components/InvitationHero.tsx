@@ -15,14 +15,15 @@ const BG_GRADIENTS: Record<string, string> = {
 };
 
 const GOOGLE_FONTS_URL =
-  'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600' +
-  '&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700' +
-  '&family=Great+Vibes' +
-  '&family=Dancing+Script:wght@400;700' +
-  '&family=Lora:ital,wght@0,400;0,600;1,400;1,600' +
-  '&family=Cinzel:wght@400;600;700' +
+  'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700' +
   '&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600' +
-  '&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400' +
+  '&family=Alegreya:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=GFS+Didot' +
+  '&family=Cardo:ital,wght@0,400;0,700;1,400' +
+  '&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400' +
+  '&family=Tinos:ital,wght@0,400;0,700;1,400;1,700' +
+  '&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700' +
   '&display=swap';
 
 interface Props {

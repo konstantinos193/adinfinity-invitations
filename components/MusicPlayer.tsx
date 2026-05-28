@@ -40,7 +40,12 @@ export default function MusicPlayer({ src }: Props) {
       }
     };
 
-    tryPlay();
+    if (audio.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA) {
+      tryPlay();
+    } else {
+      audio.addEventListener('canplaythrough', tryPlay, { once: true });
+      return () => audio.removeEventListener('canplaythrough', tryPlay);
+    }
   }, [src]);
 
   const handleClick = async () => {

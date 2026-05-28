@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminApi } from '@/lib/api';
 import { Plus, Trash2, ArrowLeft, Heart, Check, Upload, Loader2, Globe, Film, Video } from 'lucide-react';
@@ -76,12 +76,21 @@ const BG_STYLES = [
 
 type PaletteShape = typeof PALETTES[0];
 
-function PreviewCard({ brideName, groomName, weddingDate, fontFamily, palette, bgStyle }: {
+function PreviewCard({ brideName, groomName, weddingDate, fontFamily, fontColor, palette, bgStyle }: {
   brideName: string; groomName: string; weddingDate: string;
-  fontFamily: string; palette: PaletteShape; bgStyle: typeof BG_STYLES[0];
+  fontFamily: string; fontColor: string; palette: PaletteShape; bgStyle: typeof BG_STYLES[0];
 }) {
   const dateStr = weddingDate ? format(new Date(weddingDate), 'd MMMM yyyy', { locale: el }) : 'Ημερομηνία γάμου';
   const effectiveFont = fontFamily === 'CustomWeddingFont' ? 'CustomWeddingFont' : fontFamily;
+  useEffect(() => {
+    if (fontFamily === 'CustomWeddingFont') return;
+    if (document.getElementById('editor-google-fonts')) return;
+    const link = document.createElement('link');
+    link.id = 'editor-google-fonts';
+    link.rel = 'stylesheet';
+    link.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Alegreya:ital,wght@0,400;0,700;1,400;1,700&family=GFS+Didot&family=Cardo:ital,wght@0,400;0,700;1,400&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Tinos:ital,wght@0,400;0,700;1,400;1,700&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap';
+    document.head.appendChild(link);
+  }, [fontFamily]);
   return (
     <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10">
       <div className="relative flex flex-col items-center justify-center py-12 px-6 text-center" style={{ background: bgStyle.gradient }}>
@@ -92,11 +101,11 @@ function PreviewCard({ brideName, groomName, weddingDate, fontFamily, palette, b
           ))}
         </div>
         <p className="relative text-white/60 text-[10px] tracking-[0.3em] uppercase mb-4">Με χαρά σας καλούμε</p>
-        <h2 className="relative text-white text-4xl italic leading-tight" style={{ fontFamily: `'${effectiveFont}', serif` }}>
+        <h2 className="relative text-4xl italic leading-tight" style={{ fontFamily: `'${effectiveFont}', serif`, color: fontColor }}>
           {brideName || 'Νύφη'}
         </h2>
         <div className="relative my-2 text-2xl" style={{ color: palette.primary }}>&</div>
-        <h2 className="relative text-white text-4xl italic leading-tight" style={{ fontFamily: `'${effectiveFont}', serif` }}>
+        <h2 className="relative text-4xl italic leading-tight" style={{ fontFamily: `'${effectiveFont}', serif`, color: fontColor }}>
           {groomName || 'Γαμπρός'}
         </h2>
         <div className="relative mt-4 w-24 h-px" style={{ backgroundColor: palette.primary, opacity: 0.8 }} />
@@ -215,7 +224,7 @@ export default function WeddingCreatePage() {
         payload.galleryImages = galleryImages.length > 0 ? galleryImages : undefined;
         payload.primaryColor = resolvedPalette.primary;
         payload.fontFamily = fontFamily === 'CustomWeddingFont' && customFontUrl ? `custom:${customFontUrl}` : fontFamily;
-        payload.fontColor = fontColor !== '#ffffff' ? fontColor : undefined;
+        payload.fontColor = fontColor;
         payload.backgroundStyle = bgStyleId === 'custom' ? `custom:${customBgFrom},${customBgTo}` : bgStyleId;
         payload.musicUrl = musicUrl || undefined;
       } else {
@@ -657,7 +666,7 @@ export default function WeddingCreatePage() {
           {invitationType === 'MINI_WEBSITE' && (
             <div className="w-72 shrink-0 sticky top-8 hidden xl:block space-y-4">
               <p className="text-white/30 text-xs uppercase tracking-widest text-center">Live Preview</p>
-              <PreviewCard brideName={brideName} groomName={groomName} weddingDate={weddingDate} fontFamily={fontFamily} palette={resolvedPalette} bgStyle={bgStyle} />
+              <PreviewCard brideName={brideName} groomName={groomName} weddingDate={weddingDate} fontFamily={fontFamily} fontColor={fontColor} palette={resolvedPalette} bgStyle={bgStyle} />
               <div className="bg-[#071218]/60 rounded-2xl p-4 border border-[#01FFFF]/10 space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-white/30">Γραμματοσειρά</span>

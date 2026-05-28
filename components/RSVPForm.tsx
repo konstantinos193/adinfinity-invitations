@@ -190,7 +190,7 @@ export default function RSVPForm({ slug, rsvpDeadline, color }: Props) {
                         <button
                           key={String(v)}
                           type="button"
-                          onClick={() => set('hasChildren', v)}
+                          onClick={() => setForm((f) => ({ ...f, hasChildren: v, childCount: v ? 1 : 0 }))}
                           className="flex-1 py-2.5 rounded-xl text-sm border-2 transition-all"
                           style={form.hasChildren === v
                             ? { borderColor: c, backgroundColor: c + '1a', color: '#2c1810' }

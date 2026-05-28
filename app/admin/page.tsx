@@ -237,7 +237,7 @@ export default function AdminPage() {
         {/* Filter tabs */}
         <div className="flex flex-wrap gap-2">
           {/* Status filters */}
-          <div className="flex gap-1 bg-[#071218]/60 border border-[#01FFFF]/10 rounded-xl p-1">
+          <div className="flex flex-wrap gap-1 bg-[#071218]/60 border border-[#01FFFF]/10 rounded-xl p-1">
             {(['ALL', 'ACTIVE', 'DRAFT', 'EXPIRED'] as StatusFilter[]).map((f) => (
               <button
                 key={f}
@@ -259,7 +259,7 @@ export default function AdminPage() {
           </div>
 
           {/* Type filters */}
-          <div className="flex gap-1 bg-[#071218]/60 border border-[#01FFFF]/10 rounded-xl p-1">
+          <div className="flex flex-wrap gap-1 bg-[#071218]/60 border border-[#01FFFF]/10 rounded-xl p-1">
             {(['ALL', 'MINI_WEBSITE', 'VIDEO_PROSKLITIRIO', 'VIDEO'] as TypeFilter[]).map((f) => (
               <button
                 key={f}

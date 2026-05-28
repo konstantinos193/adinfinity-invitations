@@ -3,7 +3,8 @@
 import { useEffect, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminApi } from '@/lib/api';
-import { ArrowLeft, Download, Inbox, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Download, FileSpreadsheet, Inbox, AlertTriangle, X, MessageSquare } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import { format } from 'date-fns';
 import { el } from 'date-fns/locale';
 
@@ -28,12 +29,36 @@ const dietaryLabel: Record<string, string> = {
   VEGETARIAN: 'Vegetarian',
 };
 
+function MessageModal({ guestName, message, onClose }: { guestName: string; message: string; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative bg-[#071218] border border-[#01FFFF]/15 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3 mb-4">
+          <div>
+            <p className="text-[10px] text-white/30 uppercase tracking-widest mb-0.5">Μήνυμα από</p>
+            <h3 className="text-white font-semibold">{guestName}</h3>
+          </div>
+          <button onClick={onClose} className="text-white/30 hover:text-white transition-colors shrink-0 mt-0.5">
+            <X size={18} />
+          </button>
+        </div>
+        <p className="text-white/70 text-sm leading-relaxed whitespace-pre-wrap">{message}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function RsvpsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const router = useRouter();
   const [rsvps, setRsvps] = useState<RSVP[]>([]);
   const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState('');
+  const [msgModal, setMsgModal] = useState<{ guestName: string; message: string } | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('admin_token');
@@ -56,22 +81,24 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
   const totalAdults = attending.reduce((s, r) => s + r.adultCount, 0);
   const totalChildren = attending.reduce((s, r) => s + r.childCount, 0);
 
+  const rsvpRows = () =>
+    rsvps.map((r) => ({
+      Ονοματεπώνυμο: r.guestName,
+      Τηλέφωνο: r.phone ?? '',
+      Παρουσία: r.attending ? 'Ναι' : 'Όχι',
+      Ενήλικες: r.attending ? r.adultCount : '',
+      Παιδιά: r.attending ? r.childCount : '',
+      Διατροφή: dietaryLabel[r.dietary] ?? r.dietary,
+      Αλλεργία: r.hasAllergy ? (r.allergyNote ?? 'Ναι') : 'Όχι',
+      Μήνυμα: r.message ?? '',
+      Ημερομηνία: format(new Date(r.submittedAt), 'dd/MM/yyyy HH:mm'),
+    }));
+
   const exportCsv = () => {
-    const header = 'Ονοματεπώνυμο,Τηλέφωνο,Παρουσία,Ενήλικες,Παιδιά,Διατροφή,Αλλεργία,Μήνυμα,Ημερομηνία';
-    const rows = rsvps.map((r) =>
-      [
-        r.guestName,
-        r.phone ?? '',
-        r.attending ? 'Ναι' : 'Όχι',
-        r.adultCount,
-        r.childCount,
-        dietaryLabel[r.dietary] ?? r.dietary,
-        r.hasAllergy ? (r.allergyNote ?? 'Ναι') : 'Όχι',
-        (r.message ?? '').replace(/,/g, ' '),
-        format(new Date(r.submittedAt), 'dd/MM/yyyy HH:mm'),
-      ].join(',')
-    );
-    const csv = [header, ...rows].join('\n');
+    const rows = rsvpRows();
+    const header = Object.keys(rows[0] ?? {}).join(',');
+    const lines = rows.map((r) => Object.values(r).map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','));
+    const csv = [header, ...lines].join('\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -79,6 +106,14 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
     a.download = `rsvp-${id}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+  };
+
+  const exportExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(rsvpRows());
+    ws['!cols'] = [20, 16, 10, 10, 10, 14, 20, 40, 18].map((w) => ({ wch: w }));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'RSVPs');
+    XLSX.writeFile(wb, `rsvp-${id}.xlsx`);
   };
 
   if (loading) {
@@ -94,13 +129,21 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
 
   return (
     <div>
-      <div className="flex items-center justify-between px-6 pt-6 pb-2">
+      {msgModal && (
+        <MessageModal
+          guestName={msgModal.guestName}
+          message={msgModal.message}
+          onClose={() => setMsgModal(null)}
+        />
+      )}
+
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 pt-6 pb-2">
         <div className="flex items-center gap-4">
-          <button onClick={() => router.push('/admin')} className="text-white/40 hover:text-white transition-colors">
+          <button onClick={() => router.push('/admin')} className="text-white/40 hover:text-white transition-colors shrink-0">
             <ArrowLeft size={18} />
           </button>
-          <div>
-            <h1 className="text-white font-semibold">RSVPs — {title}</h1>
+          <div className="min-w-0">
+            <h1 className="text-white font-semibold truncate">RSVPs — {title}</h1>
             <p className="text-xs text-white/40 mt-0.5">
               {attending.length} θα έρθουν · {notAttending.length} δεν θα έρθουν ·{' '}
               {totalAdults} ενήλικες · {totalChildren} παιδιά
@@ -108,16 +151,24 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
           </div>
         </div>
         {rsvps.length > 0 && (
-          <button
-            onClick={exportCsv}
-            className="flex items-center gap-1.5 text-sm text-white/60 border border-[#01FFFF]/20 px-4 py-2 rounded-xl hover:border-[#01FFFF]/40 hover:text-white transition-colors"
-          >
-            <Download size={14} /> CSV
-          </button>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              onClick={exportExcel}
+              className="flex items-center gap-2 text-sm font-medium bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl hover:bg-emerald-500/25 hover:border-emerald-500/50 transition-colors"
+            >
+              <FileSpreadsheet size={15} /> Excel
+            </button>
+            <button
+              onClick={exportCsv}
+              className="flex items-center gap-2 text-sm font-medium bg-[#01FFFF]/10 text-[#01FFFF] border border-[#01FFFF]/25 px-4 py-2 rounded-xl hover:bg-[#01FFFF]/20 hover:border-[#01FFFF]/40 transition-colors"
+            >
+              <Download size={15} /> CSV
+            </button>
+          </div>
         )}
       </div>
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-8">
         {/* Stats row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           {[
@@ -140,7 +191,7 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
           </div>
         ) : (
           <div className="bg-[#071218]/60 backdrop-blur-sm rounded-2xl border border-[#01FFFF]/10 overflow-x-auto">
-            <table className="w-full text-sm min-w-175">
+            <table className="w-full text-sm min-w-max">
               <thead className="border-b border-[#01FFFF]/10">
                 <tr className="text-white/40 text-xs uppercase tracking-widest">
                   <th className="text-left px-4 py-3 font-medium">Ονοματεπώνυμο</th>
@@ -148,7 +199,7 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
                   <th className="text-center px-4 py-3 font-medium">Παρουσία</th>
                   <th className="text-center px-4 py-3 font-medium">Ενήλικες</th>
                   <th className="text-center px-4 py-3 font-medium">Παιδιά</th>
-                  <th className="text-left px-4 py-3 font-medium">Διατροφή</th>
+                  <th className="text-left px-4 py-3 font-medium">Διατροφή / Αλλεργία</th>
                   <th className="text-left px-4 py-3 font-medium">Μήνυμα</th>
                   <th className="text-left px-4 py-3 font-medium">Ημερομηνία</th>
                 </tr>
@@ -169,16 +220,34 @@ export default function RsvpsPage({ params }: { params: Promise<{ id: string }> 
                     </td>
                     <td className="px-4 py-3 text-center text-white/50">{r.attending ? r.adultCount : '—'}</td>
                     <td className="px-4 py-3 text-center text-white/50">
-                      {r.attending && r.hasChildren ? r.childCount : '—'}
+                      {r.attending ? (r.childCount > 0 ? r.childCount : '—') : '—'}
                     </td>
-                    <td className="px-4 py-3 text-white/50">
-                      {dietaryLabel[r.dietary] ?? r.dietary}
-                      {r.hasAllergy && (
-                        <span title={r.allergyNote ?? 'Αλλεργία'}><AlertTriangle size={12} className="inline ml-1 text-amber-400" /></span>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-col gap-1">
+                        {r.dietary !== 'NONE'
+                          ? <span className="text-white/50">{dietaryLabel[r.dietary] ?? r.dietary}</span>
+                          : !r.hasAllergy && <span className="text-white/25">—</span>
+                        }
+                        {r.hasAllergy && (
+                          <span className="inline-flex items-center gap-1.5 text-xs font-medium text-amber-300 bg-amber-400/10 rounded-md px-1.5 py-0.5 w-fit">
+                            <AlertTriangle size={11} className="shrink-0" />
+                            {r.allergyNote ?? 'Αλλεργία'}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      {r.message ? (
+                        <button
+                          onClick={() => setMsgModal({ guestName: r.guestName, message: r.message! })}
+                          className="flex items-center gap-1.5 text-white/50 hover:text-[#01FFFF] transition-colors text-left group"
+                        >
+                          <MessageSquare size={12} className="shrink-0 group-hover:text-[#01FFFF]" />
+                          <span className="max-w-32 truncate text-xs">{r.message}</span>
+                        </button>
+                      ) : (
+                        <span className="text-white/25">—</span>
                       )}
-                    </td>
-                    <td className="px-4 py-3 text-white/50 max-w-45 truncate" title={r.message ?? ''}>
-                      {r.message ?? '—'}
                     </td>
                     <td className="px-4 py-3 text-white/30 text-xs whitespace-nowrap">
                       {format(new Date(r.submittedAt), 'd MMM yyyy, HH:mm', { locale: el })}

@@ -68,10 +68,10 @@ export default function ContactsSection({ contacts, color }: Props) {
                 {contact.email && (
                   <a
                     href={`mailto:${contact.email}`}
-                    className="flex items-center justify-center gap-1.5 text-sm text-[#5c3320]/70 hover:text-[#5c3320] transition-colors truncate"
+                    className="flex items-center justify-center gap-1.5 text-sm text-[#5c3320]/70 hover:text-[#5c3320] transition-colors min-w-0"
                   >
-                    <Mail size={13} />
-                    {contact.email}
+                    <Mail size={13} className="shrink-0" />
+                    <span className="truncate">{contact.email}</span>
                   </a>
                 )}
               </div>

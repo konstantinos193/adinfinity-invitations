@@ -17,7 +17,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="fixed -bottom-40 left-20 w-96 h-96 bg-[#01A9FF]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="relative z-10 flex min-h-screen">
         <AdminSidebar />
-        <div className="flex-1 min-w-0">{children}</div>
+        <div className="flex-1 min-w-0 pt-14 md:pt-0">{children}</div>
       </div>
     </div>
   );

@@ -65,7 +65,7 @@ export default function GiftRegistry({ gifts, color }: Props) {
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className={gifts.length === 2 ? "grid grid-cols-2 gap-4" : "space-y-4"}>
           {gifts.map((gift, i) => (
             <motion.div
               key={gift.id}

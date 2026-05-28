@@ -14,6 +14,10 @@ const roleLabels: Record<string, string> = {
   GROOM: 'Γαμπρός',
   BEST_MAN: 'Κουμπάρος',
   MAID_OF_HONOR: 'Κουμπάρα',
+  FATHER: 'Μπαμπάς',
+  MOTHER: 'Μαμά',
+  GODFATHER: 'Νονός',
+  GODMOTHER: 'Νονά',
 };
 
 export default function ContactsSection({ contacts, color }: Props) {

@@ -11,12 +11,20 @@ import { el } from 'date-fns/locale';
 import { supabase, COVER_BUCKET } from '@/lib/supabase';
 import CoverImagesUpload from '@/components/CoverImagesUpload';
 import MusicUpload from '@/components/MusicUpload';
+import VideoUpload from '@/components/VideoUpload';
 
+type EventCategory = 'WEDDING' | 'BAPTISM' | 'WEDDING_BAPTISM';
 type EventType = 'CEREMONY' | 'RECEPTION';
-type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR';
+type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR' | 'FATHER' | 'MOTHER' | 'GODFATHER' | 'GODMOTHER';
 interface EventForm { type: EventType; name: string; date: string; address: string; mapsUrl: string; }
 interface ContactForm { role: ContactRole; name: string; phone: string; email: string; }
 interface GiftForm { ownerName: string; bankName: string; iban: string; }
+
+const CATEGORY_OPTIONS: { id: EventCategory; label: string; color: string; activeClass: string }[] = [
+  { id: 'WEDDING',         label: 'Γάμος',         color: 'text-rose-400',   activeClass: 'bg-rose-500/15 border-rose-400/50 text-rose-300' },
+  { id: 'BAPTISM',         label: 'Βάπτιση',        color: 'text-sky-400',    activeClass: 'bg-sky-500/15 border-sky-400/50 text-sky-300' },
+  { id: 'WEDDING_BAPTISM', label: 'Γαμοβάπτιση',   color: 'text-violet-400', activeClass: 'bg-violet-500/15 border-violet-400/50 text-violet-300' },
+];
 
 /* ── Shared style tokens ─────────────────────────────────────── */
 const inp = 'w-full bg-[#07141C] border border-[#01FFFF]/20 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-[#01FFFF]/30 focus:border-[#01FFFF]/40 transition-colors';
@@ -87,61 +95,50 @@ const BG_STYLES = [
 type PaletteShape = { id: string; label: string; primary: string; dark: string; swatch: string };
 
 function PreviewCard({
-  brideName, groomName, weddingDate,
+  category, brideName, groomName, childName, weddingDate,
   fontFamily, palette, bgStyle,
 }: {
-  brideName: string; groomName: string; weddingDate: string;
+  category: EventCategory;
+  brideName: string; groomName: string; childName: string; weddingDate: string;
   fontFamily: string; palette: PaletteShape; bgStyle: typeof BG_STYLES[0];
 }) {
   const p = palette;
   const bg = bgStyle;
   const effectiveFont = fontFamily === 'CustomWeddingFont' ? 'CustomWeddingFont' : fontFamily;
-  const dateStr = weddingDate
-    ? format(new Date(weddingDate), 'd MMMM yyyy', { locale: el })
-    : 'Ημερομηνία γάμου';
+  const dateStr = weddingDate ? format(new Date(weddingDate), 'd MMMM yyyy', { locale: el }) : 'Ημερομηνία εκδήλωσης';
+  const categoryLabel = category === 'BAPTISM' ? 'Βάπτιση' : category === 'WEDDING_BAPTISM' ? 'Γαμοβάπτιση' : 'Γάμος';
 
   return (
     <div className="rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-      {/* Mini hero */}
-      <div
-        className="relative flex flex-col items-center justify-center py-12 px-6 text-center"
-        style={{ background: bg.gradient }}
-      >
+      <div className="relative flex flex-col items-center justify-center py-12 px-6 text-center" style={{ background: bg.gradient }}>
         <div className="absolute inset-0 opacity-10">
           {[...Array(6)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-white"
-              style={{
-                width: 60 + i * 20, height: 60 + i * 20,
-                top: `${10 + i * 14}%`, left: `${5 + i * 12}%`,
-                opacity: 0.15,
-              }}
-            />
+            <div key={i} className="absolute rounded-full bg-white"
+              style={{ width: 60 + i * 20, height: 60 + i * 20, top: `${10 + i * 14}%`, left: `${5 + i * 12}%`, opacity: 0.15 }} />
           ))}
         </div>
-        <p className="relative text-white/60 text-[10px] tracking-[0.3em] uppercase mb-4">
-          Με χαρά σας καλούμε
-        </p>
-        <h2
-          className="relative text-white text-4xl italic leading-tight"
-          style={{ fontFamily: `'${effectiveFont}', serif` }}
-        >
-          {brideName || 'Νύφη'}
-        </h2>
-        <div className="relative my-2 text-2xl" style={{ color: p.primary }}>&</div>
-        <h2
-          className="relative text-white text-4xl italic leading-tight"
-          style={{ fontFamily: `'${effectiveFont}', serif` }}
-        >
-          {groomName || 'Γαμπρός'}
-        </h2>
+        <p className="relative text-white/60 text-[10px] tracking-[0.3em] uppercase mb-4">{categoryLabel}</p>
+        {category === 'BAPTISM' ? (
+          <h2 className="relative text-white text-4xl italic leading-tight" style={{ fontFamily: `'${effectiveFont}', serif` }}>
+            {childName || 'Όνομα παιδιού'}
+          </h2>
+        ) : (
+          <>
+            <h2 className="relative text-white text-4xl italic leading-tight" style={{ fontFamily: `'${effectiveFont}', serif` }}>
+              {brideName || 'Νύφη'}
+            </h2>
+            <div className="relative my-2 text-2xl" style={{ color: p.primary }}>&</div>
+            <h2 className="relative text-white text-4xl italic leading-tight" style={{ fontFamily: `'${effectiveFont}', serif` }}>
+              {groomName || 'Γαμπρός'}
+            </h2>
+            {category === 'WEDDING_BAPTISM' && childName && (
+              <p className="relative mt-2 text-white/60 text-xs">Βάπτιση: {childName}</p>
+            )}
+          </>
+        )}
         <div className="relative mt-4 w-24 h-px" style={{ backgroundColor: p.primary, opacity: 0.8 }} />
-        <p className="relative mt-3 text-white/80 text-xs tracking-widest uppercase">
-          {dateStr}
-        </p>
+        <p className="relative mt-3 text-white/80 text-xs tracking-widest uppercase">{dateStr}</p>
       </div>
-      {/* Mini content strip */}
       <div className="bg-[#fdfaf6] py-4 px-6 text-center">
         <p className="text-[10px] text-[#5c3320]/50 uppercase tracking-widest">Mini Web Preview</p>
       </div>
@@ -155,10 +152,15 @@ export default function MiniWebCreatePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const [eventCategory, setEventCategory] = useState<EventCategory>('WEDDING');
+
   // Core fields
   const [slug, setSlug] = useState('');
   const [brideName, setBrideName] = useState('');
   const [groomName, setGroomName] = useState('');
+  const [childName, setChildName] = useState('');
+  const [fatherName, setFatherName] = useState('');
+  const [motherName, setMotherName] = useState('');
   const [weddingDate, setWeddingDate] = useState('');
   const [story, setStory] = useState('');
   const [coverImages, setCoverImages] = useState<string[]>([]);
@@ -187,7 +189,8 @@ export default function MiniWebCreatePage() {
   const [fontColorHexInput, setFontColorHexInput] = useState('FFFFFF');
   const fontColorInputRef = useRef<HTMLInputElement>(null);
 
-  // Music URL
+  // Video & Music URL
+  const [videoUrl, setVideoUrl] = useState('');
   const [musicUrl, setMusicUrl] = useState('');
 
   // Custom background gradient
@@ -205,6 +208,30 @@ export default function MiniWebCreatePage() {
     { role: 'BRIDE', name: '', phone: '', email: '' },
     { role: 'GROOM', name: '', phone: '', email: '' },
   ]);
+
+  const switchCategory = (cat: EventCategory) => {
+    setEventCategory(cat);
+    if (cat === 'BAPTISM') {
+      setContacts([
+        { role: 'FATHER', name: '', phone: '', email: '' },
+        { role: 'MOTHER', name: '', phone: '', email: '' },
+        { role: 'GODFATHER', name: '', phone: '', email: '' },
+        { role: 'GODMOTHER', name: '', phone: '', email: '' },
+      ]);
+    } else if (cat === 'WEDDING') {
+      setContacts([
+        { role: 'BRIDE', name: '', phone: '', email: '' },
+        { role: 'GROOM', name: '', phone: '', email: '' },
+      ]);
+    } else {
+      setContacts([
+        { role: 'BRIDE', name: '', phone: '', email: '' },
+        { role: 'GROOM', name: '', phone: '', email: '' },
+        { role: 'GODFATHER', name: '', phone: '', email: '' },
+        { role: 'GODMOTHER', name: '', phone: '', email: '' },
+      ]);
+    }
+  };
   const [gifts, setGifts] = useState<GiftForm[]>([{ ownerName: '', bankName: '', iban: '' }]);
 
 
@@ -249,6 +276,8 @@ export default function MiniWebCreatePage() {
 
   const autoSlug = (b: string, g: string) =>
     `${b}-${g}`.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const autoSlugBaptism = (name: string) =>
+    name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
   const upEv = (i: number, k: keyof EventForm, v: string) =>
     setEvents((p) => p.map((e, idx) => idx === i ? { ...e, [k]: v } : e));
@@ -259,17 +288,21 @@ export default function MiniWebCreatePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!slug || !brideName || !groomName || !weddingDate) {
-      setError('Συμπληρώστε τα υποχρεωτικά πεδία.');
-      return;
-    }
+    const isWedding = eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM';
+    const isBaptism = eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM';
+    if (!slug || !weddingDate) { setError('Συμπληρώστε τα υποχρεωτικά πεδία.'); return; }
+    if (isWedding && (!brideName || !groomName)) { setError('Συμπληρώστε ονόματα νύφης και γαμπρού.'); return; }
+    if (isBaptism && !childName) { setError('Συμπληρώστε το όνομα του παιδιού.'); return; }
     setLoading(true);
     setError('');
     try {
       const token = localStorage.getItem('admin_token');
       if (!token) { router.replace('/admin/login'); return; }
       await adminApi(token).post('/admin/invitations', {
-        slug, brideName, groomName,
+        slug,
+        eventCategory,
+        ...(isWedding && { brideName, groomName }),
+        ...(isBaptism && { childName, fatherName: fatherName || undefined, motherName: motherName || undefined }),
         weddingDate: new Date(weddingDate).toISOString(),
         story: story || undefined,
         coverImageUrl: coverImages[0] || undefined,
@@ -277,6 +310,7 @@ export default function MiniWebCreatePage() {
         galleryImages: galleryImages.length > 0 ? galleryImages : undefined,
         rsvpDeadline: rsvpDeadline ? new Date(rsvpDeadline).toISOString() : undefined,
         status,
+        videoUrl: videoUrl || undefined,
         invitationType: 'MINI_WEBSITE',
         primaryColor: resolvedPalette.primary,
         fontFamily: fontFamily === 'CustomWeddingFont' && customFontUrl ? `custom:${customFontUrl}` : fontFamily,
@@ -307,13 +341,27 @@ export default function MiniWebCreatePage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
 
       {/* Page header */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-6">
         <button type="button" onClick={() => router.push('/admin')} className="text-white/40 hover:text-white transition-colors">
           <ArrowLeft size={18} />
         </button>
         <Globe size={16} className="text-[#01FFFF]/60" />
         <h1 className="text-white font-semibold">Νέο Mini Web</h1>
         <span className="text-white/20 text-sm ml-auto">Πλήρης ψηφιακή πρόσκληση</span>
+      </div>
+
+      {/* Category toggle */}
+      <div className="flex gap-2 mb-8">
+        {CATEGORY_OPTIONS.map((opt) => (
+          <button key={opt.id} type="button" onClick={() => switchCategory(opt.id)}
+            className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+              eventCategory === opt.id
+                ? opt.activeClass
+                : 'border-white/10 text-white/40 hover:text-white/70 hover:border-white/20'
+            }`}>
+            {opt.label}
+          </button>
+        ))}
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -702,27 +750,56 @@ export default function MiniWebCreatePage() {
             {/* Core fields */}
             <section className={sec}>
               <SecTitle title="Βασικά στοιχεία" />
+
+              {/* Wedding fields */}
+              {(eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM') && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={lbl}>Νύφη *</label>
+                    <input className={inp} value={brideName}
+                      onChange={(e) => { setBrideName(e.target.value); if (!slug) setSlug(autoSlug(e.target.value, groomName)); }}
+                      placeholder="Ιωάννα" />
+                  </div>
+                  <div>
+                    <label className={lbl}>Γαμπρός *</label>
+                    <input className={inp} value={groomName}
+                      onChange={(e) => { setGroomName(e.target.value); if (!slug) setSlug(autoSlug(brideName, e.target.value)); }}
+                      placeholder="Αλέξανδρος" />
+                  </div>
+                </div>
+              )}
+
+              {/* Baptism fields */}
+              {(eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM') && (
+                <>
+                  <div>
+                    <label className={lbl}>Όνομα παιδιού *</label>
+                    <input className={inp} value={childName}
+                      onChange={(e) => { setChildName(e.target.value); if (!slug && eventCategory === 'BAPTISM') setSlug(autoSlugBaptism(e.target.value)); }}
+                      placeholder="π.χ. Ελπίδα, Κωνσταντίνος" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className={lbl}>Όνομα μπαμπά</label>
+                      <input className={inp} value={fatherName} onChange={(e) => setFatherName(e.target.value)} placeholder="Γιώργης" />
+                    </div>
+                    <div>
+                      <label className={lbl}>Όνομα μαμάς</label>
+                      <input className={inp} value={motherName} onChange={(e) => setMotherName(e.target.value)} placeholder="Μαρία" />
+                    </div>
+                  </div>
+                </>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={lbl}>Νύφη *</label>
-                  <input className={inp} value={brideName}
-                    onChange={(e) => { setBrideName(e.target.value); if (!slug) setSlug(autoSlug(e.target.value, groomName)); }}
-                    placeholder="Ιωάννα" required />
-                </div>
-                <div>
-                  <label className={lbl}>Γαμπρός *</label>
-                  <input className={inp} value={groomName}
-                    onChange={(e) => { setGroomName(e.target.value); if (!slug) setSlug(autoSlug(brideName, e.target.value)); }}
-                    placeholder="Αλέξανδρος" required />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={lbl}>Ημερομηνία γάμου *</label>
+                  <label className={lbl}>
+                    {eventCategory === 'BAPTISM' ? 'Ημερομηνία βάπτισης *' : eventCategory === 'WEDDING_BAPTISM' ? 'Ημερομηνία εκδήλωσης *' : 'Ημερομηνία γάμου *'}
+                  </label>
                   <input type="datetime-local" className={inp} value={weddingDate} onChange={(e) => setWeddingDate(e.target.value)} required />
                 </div>
                 <div>
-                  <label className={lbl}>Απάντηση συμμετοχής μέχρι</label>
+                  <label className={lbl}>RSVP μέχρι</label>
                   <input type="datetime-local" className={inp} value={rsvpDeadline} onChange={(e) => setRsvpDeadline(e.target.value)} />
                 </div>
               </div>
@@ -732,7 +809,7 @@ export default function MiniWebCreatePage() {
                   <span className="text-sm text-white/30 shrink-0">/</span>
                   <input className={inp} value={slug}
                     onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''))}
-                    placeholder="ioanna-alexandros" required />
+                    placeholder={eventCategory === 'BAPTISM' ? 'elpida-baptism' : 'ioanna-alexandros'} required />
                 </div>
               </div>
               <div>
@@ -753,9 +830,16 @@ export default function MiniWebCreatePage() {
                 <p className="text-xs text-white/25 mt-1">Παίζει αυτόματα. Κουμπί mute/unmute κάτω δεξιά.</p>
               </div>
               <div>
-                <label className={lbl}>Ιστορία ζευγαριού</label>
-                <textarea className={`${inp} resize-none`} rows={4} value={story} onChange={(e) => setStory(e.target.value)} placeholder="Πώς γνωριστήκατε..." />
+                <label className={lbl}>{eventCategory === 'BAPTISM' ? 'Περιγραφή' : 'Ιστορία ζευγαριού'}</label>
+                <textarea className={`${inp} resize-none`} rows={4} value={story} onChange={(e) => setStory(e.target.value)}
+                  placeholder={eventCategory === 'BAPTISM' ? 'Λίγα λόγια για τη βάπτιση...' : 'Πώς γνωριστήκατε...'} />
               </div>
+            </section>
+
+            {/* Video */}
+            <section className={sec}>
+              <SecTitle title="Βίντεο πρόσκλησης" desc="Προαιρετικό. Εμφανίζεται πριν το gallery φωτογραφιών." />
+              <VideoUpload value={videoUrl} onChange={setVideoUrl} />
             </section>
 
             {/* Gallery */}
@@ -807,10 +891,18 @@ export default function MiniWebCreatePage() {
                 <div key={i} className="border border-[#01FFFF]/10 rounded-xl p-4 space-y-3 bg-[#07141C]/50">
                   <div className="flex items-center justify-between">
                     <select className="text-xs font-medium text-[#01FFFF]/80 bg-transparent border-none outline-none cursor-pointer" value={c.role} onChange={(e) => upCo(i, 'role', e.target.value)}>
-                      <option value="BRIDE">Νύφη</option>
-                      <option value="GROOM">Γαμπρός</option>
-                      <option value="BEST_MAN">Κουμπάρος</option>
-                      <option value="MAID_OF_HONOR">Κουμπάρα</option>
+                      {(eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM') && <>
+                        <option value="BRIDE">Νύφη</option>
+                        <option value="GROOM">Γαμπρός</option>
+                        <option value="BEST_MAN">Κουμπάρος</option>
+                        <option value="MAID_OF_HONOR">Κουμπάρα</option>
+                      </>}
+                      {(eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM') && <>
+                        <option value="FATHER">Μπαμπάς</option>
+                        <option value="MOTHER">Μαμά</option>
+                        <option value="GODFATHER">Νονός</option>
+                        <option value="GODMOTHER">Νονά</option>
+                      </>}
                     </select>
                     {contacts.length > 1 && <button type="button" onClick={() => setContacts((p) => p.filter((_, idx) => idx !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={14} /></button>}
                   </div>
@@ -826,7 +918,7 @@ export default function MiniWebCreatePage() {
             {/* Gift Registry */}
             <section className={sec}>
               <div className="flex items-center justify-between">
-                <SecTitle title="Λίστα γάμου (IBAN)" />
+                <SecTitle title={eventCategory === 'BAPTISM' ? 'Δωροδήλωση (IBAN)' : 'Λίστα γάμου (IBAN)'} />
                 <button type="button" onClick={() => setGifts((p) => [...p, { ownerName: '', bankName: '', iban: '' }])}
                   className="flex items-center gap-1 text-xs text-[#01FFFF]/60 hover:text-[#01FFFF] transition-colors">
                   <Plus size={14} /> Προσθήκη
@@ -857,7 +949,7 @@ export default function MiniWebCreatePage() {
               </button>
               <button type="submit" disabled={loading}
                 className="flex-1 py-3 rounded-xl bg-[#01FFFF] text-[#07141C] text-sm font-bold hover:bg-[#01FFFF]/90 transition-colors disabled:opacity-50">
-                {loading ? 'Αποθήκευση...' : '✓ Δημιουργία Mini Web'}
+                {loading ? 'Αποθήκευση...' : `Δημιουργία ${eventCategory === 'BAPTISM' ? 'Βάπτισης' : eventCategory === 'WEDDING_BAPTISM' ? 'Γαμοβάπτισης' : 'Γάμου'}`}
               </button>
             </div>
           </div>
@@ -866,8 +958,10 @@ export default function MiniWebCreatePage() {
           <div className="w-72 shrink-0 sticky top-8 hidden xl:block space-y-4">
             <p className="text-white/30 text-xs uppercase tracking-widest text-center">Live Preview</p>
             <PreviewCard
+              category={eventCategory}
               brideName={brideName}
               groomName={groomName}
+              childName={childName}
               weddingDate={weddingDate}
               fontFamily={fontFamily}
               palette={resolvedPalette}

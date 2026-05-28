@@ -18,15 +18,16 @@ function embedUrl(url: string): string {
 interface Props { invitation: Invitation }
 
 export default function VideoOnlyPage({ invitation }: Props) {
-  const { brideName, groomName, weddingDate, videoUrl } = invitation;
+  const { brideName, groomName, weddingDate, videoUrl, eventCategory, childName, fatherName, motherName } = invitation;
   const formattedDate = weddingDate ? format(new Date(weddingDate), "d MMMM yyyy", { locale: el }) : '';
+  const isBaptism = eventCategory === 'BAPTISM';
+  const isWeddingBaptism = eventCategory === 'WEDDING_BAPTISM';
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col">
 
       {/* Hero */}
       <section className="relative flex flex-col items-center justify-center text-center px-6 pt-20 pb-12 overflow-hidden">
-        {/* Subtle glow */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-white/3 rounded-full blur-[120px]" />
         </div>
@@ -37,17 +38,37 @@ export default function VideoOnlyPage({ invitation }: Props) {
           transition={{ duration: 1 }}
           className="relative z-10"
         >
-          <p className="text-white/40 tracking-[0.4em] text-xs uppercase mb-8">Με μεγάλη χαρά σας προσκαλούμε</p>
-          <h1 className="font-serif text-6xl md:text-8xl text-white mb-4 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
-            {brideName}
-          </h1>
-          <p className="text-white/30 text-3xl my-3" style={{ fontFamily: "serif" }}>&amp;</p>
-          <h1 className="font-serif text-6xl md:text-8xl text-white mb-10 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
-            {groomName}
-          </h1>
+          <p className="text-white/40 tracking-[0.4em] text-xs uppercase mb-8">
+            {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
+          </p>
 
-          {/* Decorative line */}
-          <div className="flex items-center gap-4 justify-center mb-6">
+          {isBaptism ? (
+            <>
+              <h1 className="font-serif text-6xl md:text-8xl text-white mb-4 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
+                {childName}
+              </h1>
+              {(fatherName || motherName) && (
+                <p className="text-white/50 text-lg tracking-wide mb-6">
+                  {fatherName && motherName ? `${fatherName} & ${motherName}` : fatherName || motherName}
+                </p>
+              )}
+            </>
+          ) : (
+            <>
+              <h1 className="font-serif text-6xl md:text-8xl text-white mb-4 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
+                {brideName}
+              </h1>
+              <p className="text-white/30 text-3xl my-3" style={{ fontFamily: "serif" }}>&amp;</p>
+              <h1 className="font-serif text-6xl md:text-8xl text-white mb-4 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
+                {groomName}
+              </h1>
+              {isWeddingBaptism && childName && (
+                <p className="text-white/50 text-base tracking-wide mb-2">Βάπτιση: {childName}</p>
+              )}
+            </>
+          )}
+
+          <div className="flex items-center gap-4 justify-center mb-6 mt-4">
             <div className="h-px w-16 bg-white/20" />
             <span className="text-white/25 text-xs">◆</span>
             <div className="h-px w-16 bg-white/20" />
@@ -72,7 +93,7 @@ export default function VideoOnlyPage({ invitation }: Props) {
                 className="absolute inset-0 w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                title={`${brideName} & ${groomName} — Video Invitation`}
+                title={isBaptism ? `Βάπτιση ${childName} — Video Invitation` : `${brideName} & ${groomName} — Video Invitation`}
               />
             </div>
           </div>

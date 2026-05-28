@@ -11,11 +11,18 @@ import CoverImageUpload from '@/components/CoverImageUpload';
 import MusicUpload from '@/components/MusicUpload';
 import VideoUpload from '@/components/VideoUpload';
 
+type EventCategory = 'WEDDING' | 'BAPTISM' | 'WEDDING_BAPTISM';
 type EventType = 'CEREMONY' | 'RECEPTION';
-type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR';
+type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR' | 'FATHER' | 'MOTHER' | 'GODFATHER' | 'GODMOTHER';
 interface EventForm { type: EventType; name: string; date: string; address: string; mapsUrl: string; }
 interface ContactForm { role: ContactRole; name: string; phone: string; email: string; }
 interface GiftForm { ownerName: string; bankName: string; iban: string; }
+
+const CATEGORY_OPTIONS: { id: EventCategory; label: string; activeClass: string }[] = [
+  { id: 'WEDDING',         label: 'Γάμος',         activeClass: 'bg-rose-500/15 border-rose-400/50 text-rose-300' },
+  { id: 'BAPTISM',         label: 'Βάπτιση',        activeClass: 'bg-sky-500/15 border-sky-400/50 text-sky-300' },
+  { id: 'WEDDING_BAPTISM', label: 'Γαμοβάπτιση',   activeClass: 'bg-violet-500/15 border-violet-400/50 text-violet-300' },
+];
 
 const inp = 'w-full bg-[#07141C] border border-[#01FFFF]/20 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-white/25 focus:outline-none focus:ring-2 focus:ring-[#01FFFF]/30 focus:border-[#01FFFF]/40 transition-colors';
 const lbl = 'block text-xs font-medium text-white/50 mb-1 uppercase tracking-wide';
@@ -123,9 +130,14 @@ export default function VideoProCreatePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const [eventCategory, setEventCategory] = useState<EventCategory>('WEDDING');
+
   const [slug, setSlug] = useState('');
   const [brideName, setBrideName] = useState('');
   const [groomName, setGroomName] = useState('');
+  const [childName, setChildName] = useState('');
+  const [fatherName, setFatherName] = useState('');
+  const [motherName, setMotherName] = useState('');
   const [weddingDate, setWeddingDate] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [coverImageUrl, setCoverImageUrl] = useState('');
@@ -163,6 +175,13 @@ export default function VideoProCreatePage() {
     { role: 'BRIDE', name: '', phone: '', email: '' },
     { role: 'GROOM', name: '', phone: '', email: '' },
   ]);
+
+  const switchCategory = (cat: EventCategory) => {
+    setEventCategory(cat);
+    if (cat === 'BAPTISM') setContacts([{ role: 'FATHER', name: '', phone: '', email: '' }, { role: 'MOTHER', name: '', phone: '', email: '' }, { role: 'GODFATHER', name: '', phone: '', email: '' }, { role: 'GODMOTHER', name: '', phone: '', email: '' }]);
+    else if (cat === 'WEDDING') setContacts([{ role: 'BRIDE', name: '', phone: '', email: '' }, { role: 'GROOM', name: '', phone: '', email: '' }]);
+    else setContacts([{ role: 'BRIDE', name: '', phone: '', email: '' }, { role: 'GROOM', name: '', phone: '', email: '' }, { role: 'GODFATHER', name: '', phone: '', email: '' }, { role: 'GODMOTHER', name: '', phone: '', email: '' }]);
+  };
   const [gifts, setGifts] = useState<GiftForm[]>([{ ownerName: '', bankName: '', iban: '' }]);
 
   const uploadFont = async (file: File) => {
@@ -216,17 +235,21 @@ export default function VideoProCreatePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!slug || !brideName || !groomName || !weddingDate) {
-      setError('Συμπληρώστε τα υποχρεωτικά πεδία.');
-      return;
-    }
+    const isWedding = eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM';
+    const isBaptism = eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM';
+    if (!slug || !weddingDate) { setError('Συμπληρώστε τα υποχρεωτικά πεδία.'); return; }
+    if (isWedding && (!brideName || !groomName)) { setError('Συμπληρώστε ονόματα νύφης και γαμπρού.'); return; }
+    if (isBaptism && !childName) { setError('Συμπληρώστε το όνομα του παιδιού.'); return; }
     setLoading(true);
     setError('');
     try {
       const token = localStorage.getItem('admin_token');
       if (!token) { router.replace('/admin/login'); return; }
       await adminApi(token).post('/admin/invitations', {
-        slug, brideName, groomName,
+        slug,
+        eventCategory,
+        ...(isWedding && { brideName, groomName }),
+        ...(isBaptism && { childName, fatherName: fatherName || undefined, motherName: motherName || undefined }),
         weddingDate: new Date(weddingDate).toISOString(),
         videoUrl: videoUrl || undefined,
         coverImageUrl: coverImageUrl || undefined,
@@ -262,13 +285,27 @@ export default function VideoProCreatePage() {
     <div className="max-w-7xl mx-auto px-4 py-8">
 
       {/* Page header */}
-      <div className="flex items-center gap-3 mb-8">
+      <div className="flex items-center gap-3 mb-6">
         <button type="button" onClick={() => router.push('/admin')} className="text-white/40 hover:text-white transition-colors">
           <ArrowLeft size={18} />
         </button>
         <Film size={16} className="text-[#01FFFF]/60" />
         <h1 className="text-white font-semibold">Νέο Video Pro</h1>
         <span className="text-white/20 text-sm ml-auto">Βίντεο με πλήρη πρόσκληση</span>
+      </div>
+
+      {/* Category toggle */}
+      <div className="flex gap-2 mb-8">
+        {CATEGORY_OPTIONS.map((opt) => (
+          <button key={opt.id} type="button" onClick={() => switchCategory(opt.id)}
+            className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+              eventCategory === opt.id
+                ? opt.activeClass
+                : 'border-white/10 text-white/40 hover:text-white/70 hover:border-white/20'
+            }`}>
+            {opt.label}
+          </button>
+        ))}
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -550,28 +587,42 @@ export default function VideoProCreatePage() {
 
             {/* Core fields */}
             <section className={sec}>
-              <SecTitle title="Βασικά στοιχεία" desc="Στοιχεία ζευγαριού και ημερομηνία γάμου" />
+              <SecTitle title="Βασικά στοιχεία" />
+              {(eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM') && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className={lbl}>Νύφη *</label>
+                    <input className={inp} value={brideName}
+                      onChange={(e) => { setBrideName(e.target.value); if (!slug) setSlug(autoSlug(e.target.value, groomName)); }}
+                      placeholder="Ιωάννα" />
+                  </div>
+                  <div>
+                    <label className={lbl}>Γαμπρός *</label>
+                    <input className={inp} value={groomName}
+                      onChange={(e) => { setGroomName(e.target.value); if (!slug) setSlug(autoSlug(brideName, e.target.value)); }}
+                      placeholder="Αλέξανδρος" />
+                  </div>
+                </div>
+              )}
+              {(eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM') && (
+                <>
+                  <div>
+                    <label className={lbl}>Όνομα παιδιού *</label>
+                    <input className={inp} value={childName} onChange={(e) => setChildName(e.target.value)} placeholder="π.χ. Ελπίδα" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className={lbl}>Μπαμπάς</label><input className={inp} value={fatherName} onChange={(e) => setFatherName(e.target.value)} placeholder="Γιώργης" /></div>
+                    <div><label className={lbl}>Μαμά</label><input className={inp} value={motherName} onChange={(e) => setMotherName(e.target.value)} placeholder="Μαρία" /></div>
+                  </div>
+                </>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={lbl}>Νύφη *</label>
-                  <input className={inp} value={brideName}
-                    onChange={(e) => { setBrideName(e.target.value); if (!slug) setSlug(autoSlug(e.target.value, groomName)); }}
-                    placeholder="Ιωάννα" required />
-                </div>
-                <div>
-                  <label className={lbl}>Γαμπρός *</label>
-                  <input className={inp} value={groomName}
-                    onChange={(e) => { setGroomName(e.target.value); if (!slug) setSlug(autoSlug(brideName, e.target.value)); }}
-                    placeholder="Αλέξανδρος" required />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={lbl}>Ημερομηνία γάμου *</label>
+                  <label className={lbl}>{eventCategory === 'BAPTISM' ? 'Ημερομηνία βάπτισης *' : eventCategory === 'WEDDING_BAPTISM' ? 'Ημερομηνία εκδήλωσης *' : 'Ημερομηνία γάμου *'}</label>
                   <input type="datetime-local" className={inp} value={weddingDate} onChange={(e) => setWeddingDate(e.target.value)} required />
                 </div>
                 <div>
-                  <label className={lbl}>Απάντηση συμμετοχής μέχρι</label>
+                  <label className={lbl}>RSVP μέχρι</label>
                   <input type="datetime-local" className={inp} value={rsvpDeadline} onChange={(e) => setRsvpDeadline(e.target.value)} />
                 </div>
               </div>
@@ -661,10 +712,8 @@ export default function VideoProCreatePage() {
                 <div key={i} className="border border-[#01FFFF]/10 rounded-xl p-4 space-y-3 bg-[#07141C]/50">
                   <div className="flex items-center justify-between">
                     <select className="text-xs font-medium text-[#01FFFF]/80 bg-transparent border-none outline-none cursor-pointer" value={c.role} onChange={(e) => upCo(i, 'role', e.target.value)}>
-                      <option value="BRIDE">Νύφη</option>
-                      <option value="GROOM">Γαμπρός</option>
-                      <option value="BEST_MAN">Κουμπάρος</option>
-                      <option value="MAID_OF_HONOR">Κουμπάρα</option>
+                      {(eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM') && <><option value="BRIDE">Νύφη</option><option value="GROOM">Γαμπρός</option><option value="BEST_MAN">Κουμπάρος</option><option value="MAID_OF_HONOR">Κουμπάρα</option></>}
+                      {(eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM') && <><option value="FATHER">Μπαμπάς</option><option value="MOTHER">Μαμά</option><option value="GODFATHER">Νονός</option><option value="GODMOTHER">Νονά</option></>}
                     </select>
                     {contacts.length > 1 && <button type="button" onClick={() => setContacts((p) => p.filter((_, idx) => idx !== i))} className="text-red-400 hover:text-red-600"><Trash2 size={14} /></button>}
                   </div>
@@ -711,7 +760,7 @@ export default function VideoProCreatePage() {
               </button>
               <button type="submit" disabled={loading}
                 className="flex-1 py-3 rounded-xl bg-[#01FFFF] text-[#07141C] text-sm font-bold hover:bg-[#01FFFF]/90 transition-colors disabled:opacity-50">
-                {loading ? 'Αποθήκευση...' : '✓ Δημιουργία Video Pro'}
+                {loading ? 'Αποθήκευση...' : `Δημιουργία Video Pro — ${eventCategory === 'BAPTISM' ? 'Βάπτιση' : eventCategory === 'WEDDING_BAPTISM' ? 'Γαμοβάπτιση' : 'Γάμος'}`}
               </button>
             </div>
           </div>

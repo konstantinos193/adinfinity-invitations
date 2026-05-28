@@ -19,8 +19,10 @@ function embedUrl(url: string): string {
 interface Props { invitation: Invitation }
 
 export default function VideoProsklitirio({ invitation }: Props) {
-  const { brideName, groomName, weddingDate, videoUrl, events, giftRegistries, slug, rsvpDeadline } = invitation;
+  const { brideName, groomName, weddingDate, videoUrl, events, giftRegistries, slug, rsvpDeadline, eventCategory, childName, fatherName, motherName } = invitation;
   const formattedDate = weddingDate ? format(new Date(weddingDate), "d MMMM yyyy", { locale: el }) : '';
+  const isBaptism = eventCategory === 'BAPTISM';
+  const isWeddingBaptism = eventCategory === 'WEDDING_BAPTISM';
   const rsvpRef = useRef<HTMLDivElement>(null);
   const [ibanCopied, setIbanCopied] = useState(false);
 
@@ -62,15 +64,37 @@ export default function VideoProsklitirio({ invitation }: Props) {
           transition={{ duration: 0.9 }}
           className="relative z-10"
         >
-          <p className="text-white/50 tracking-[0.4em] text-xs uppercase mb-6">Με μεγάλη χαρά σας προσκαλούμε</p>
-          <h1 className="text-white text-5xl md:text-7xl mb-2 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
-            {brideName}
-          </h1>
-          <p className="text-white/40 text-3xl my-2">&amp;</p>
-          <h1 className="text-white text-5xl md:text-7xl mb-8 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
-            {groomName}
-          </h1>
-          <div className="flex items-center gap-3 justify-center mb-4">
+          <p className="text-white/50 tracking-[0.4em] text-xs uppercase mb-6">
+            {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
+          </p>
+
+          {isBaptism ? (
+            <>
+              <h1 className="text-white text-5xl md:text-7xl mb-2 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
+                {childName}
+              </h1>
+              {(fatherName || motherName) && (
+                <p className="text-white/50 text-base tracking-wide mt-2 mb-4">
+                  {fatherName && motherName ? `${fatherName} & ${motherName}` : fatherName || motherName}
+                </p>
+              )}
+            </>
+          ) : (
+            <>
+              <h1 className="text-white text-5xl md:text-7xl mb-2 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
+                {brideName}
+              </h1>
+              <p className="text-white/40 text-3xl my-2">&amp;</p>
+              <h1 className="text-white text-5xl md:text-7xl leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
+                {groomName}
+              </h1>
+              {isWeddingBaptism && childName && (
+                <p className="text-white/50 text-sm tracking-wide mt-3">Βάπτιση: {childName}</p>
+              )}
+            </>
+          )}
+
+          <div className="flex items-center gap-3 justify-center mb-4 mt-6">
             <div className="h-px w-12 bg-white/30" />
             <span className="text-white/30 text-xs">◆</span>
             <div className="h-px w-12 bg-white/30" />

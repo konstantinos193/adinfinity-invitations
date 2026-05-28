@@ -35,13 +35,20 @@ interface Props {
   fontFamily?: string | null;
   fontColor?: string | null;
   backgroundStyle?: string | null;
+  eventCategory?: string | null;
+  childName?: string | null;
+  fatherName?: string | null;
+  motherName?: string | null;
 }
 
 export default function InvitationHero({
   brideName, groomName, weddingDate,
   coverImageUrl, coverImages, primaryColor, fontFamily, fontColor, backgroundStyle,
+  eventCategory, childName, fatherName, motherName,
 }: Props) {
-  const formattedDate = format(new Date(weddingDate), 'd MMMM yyyy', { locale: el });
+  const formattedDate = weddingDate ? format(new Date(weddingDate), 'd MMMM yyyy', { locale: el }) : '';
+  const isBaptism = eventCategory === 'BAPTISM';
+  const isWeddingBaptism = eventCategory === 'WEDDING_BAPTISM';
   const color = primaryColor ?? '#b8960c';
   const nameColor = fontColor ?? '#ffffff';
   const rawFont = fontFamily ?? 'Playfair Display';
@@ -153,38 +160,72 @@ export default function InvitationHero({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          Με μεγάλη χαρά σας προσκαλούμε
+          {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
         </motion.p>
 
-        <motion.h1
-          className="text-6xl md:text-8xl font-bold italic leading-tight mb-4"
-          style={{ fontFamily: `'${font}', serif`, color: nameColor }}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 0.8 }}
-        >
-          {brideName}
-        </motion.h1>
-
-        <motion.div
-          className="text-3xl my-2 font-light"
-          style={{ color }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          &
-        </motion.div>
-
-        <motion.h1
-          className="text-6xl md:text-8xl font-bold italic leading-tight mb-8"
-          style={{ fontFamily: `'${font}', serif`, color: nameColor }}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
-        >
-          {groomName}
-        </motion.h1>
+        {isBaptism ? (
+          <>
+            <motion.h1
+              className="text-6xl md:text-8xl font-bold italic leading-tight mb-4"
+              style={{ fontFamily: `'${font}', serif`, color: nameColor }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              {childName || ''}
+            </motion.h1>
+            {(fatherName || motherName) && (
+              <motion.p
+                className="text-white/60 text-lg tracking-wide mb-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                {fatherName && motherName ? `${fatherName} & ${motherName}` : fatherName || motherName}
+              </motion.p>
+            )}
+          </>
+        ) : (
+          <>
+            <motion.h1
+              className="text-6xl md:text-8xl font-bold italic leading-tight mb-4"
+              style={{ fontFamily: `'${font}', serif`, color: nameColor }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              {brideName}
+            </motion.h1>
+            <motion.div
+              className="text-3xl my-2 font-light"
+              style={{ color }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              &
+            </motion.div>
+            <motion.h1
+              className="text-6xl md:text-8xl font-bold italic leading-tight mb-4"
+              style={{ fontFamily: `'${font}', serif`, color: nameColor }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.9, duration: 0.8 }}
+            >
+              {groomName}
+            </motion.h1>
+            {isWeddingBaptism && childName && (
+              <motion.p
+                className="text-white/60 text-lg tracking-wide mb-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.0 }}
+              >
+                Βάπτιση: {childName}
+              </motion.p>
+            )}
+          </>
+        )}
 
         <motion.div
           className="mb-6 mx-auto h-px w-32"
@@ -203,13 +244,15 @@ export default function InvitationHero({
           {formattedDate}
         </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.4 }}
-        >
-          <CountdownTimer targetDate={weddingDate} />
-        </motion.div>
+        {weddingDate && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.4 }}
+          >
+            <CountdownTimer targetDate={weddingDate} />
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Carousel dots */}

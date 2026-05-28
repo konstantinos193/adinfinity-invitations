@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { adminApi } from '@/lib/api';
-import type { Invitation, EventType, ContactRole } from '@/lib/types';
+import type { Invitation, EventType, ContactRole, EventCategory } from '@/lib/types';
 import { AlertTriangle, ArrowLeft, Check, Loader2, Plus, Trash2, Upload } from 'lucide-react';
 import { format } from 'date-fns';
 import { el } from 'date-fns/locale';
@@ -33,6 +33,12 @@ interface GiftRow { ownerName: string; bankName: string; iban: string; }
 
 const blankEvent = (): EventRow => ({ type: 'CEREMONY', name: '', date: '', address: '', mapsUrl: '' });
 const blankContact = (): ContactRow => ({ role: 'BRIDE', name: '', phone: '', email: '' });
+
+const CATEGORY_OPTIONS: { id: EventCategory; label: string; activeClass: string }[] = [
+  { id: 'WEDDING',         label: 'Γάμος',         activeClass: 'bg-rose-500/15 border-rose-400/50 text-rose-300' },
+  { id: 'BAPTISM',         label: 'Βάπτιση',        activeClass: 'bg-sky-500/15 border-sky-400/50 text-sky-300' },
+  { id: 'WEDDING_BAPTISM', label: 'Γαμοβάπτιση',   activeClass: 'bg-violet-500/15 border-violet-400/50 text-violet-300' },
+];
 const blankGift = (): GiftRow => ({ ownerName: '', bankName: '', iban: '' });
 
 const FONTS = [
@@ -123,9 +129,13 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
   const [error, setError] = useState('');
 
   // Core fields
+  const [eventCategory, setEventCategory] = useState<EventCategory>('WEDDING');
   const [slug, setSlug] = useState('');
   const [brideName, setBrideName] = useState('');
   const [groomName, setGroomName] = useState('');
+  const [childName, setChildName] = useState('');
+  const [fatherName, setFatherName] = useState('');
+  const [motherName, setMotherName] = useState('');
   const [weddingDate, setWeddingDate] = useState('');
   const [story, setStory] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
@@ -166,8 +176,12 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
       .then((r) => {
         const inv = r.data;
         setSlug(inv.slug);
+        setEventCategory(inv.eventCategory ?? 'WEDDING');
         setBrideName(inv.brideName ?? '');
         setGroomName(inv.groomName ?? '');
+        setChildName(inv.childName ?? '');
+        setFatherName(inv.fatherName ?? '');
+        setMotherName(inv.motherName ?? '');
         setWeddingDate(fmt(inv.weddingDate ?? ''));
         setStory(inv.story ?? '');
         setVideoUrl(inv.videoUrl ?? '');
@@ -276,11 +290,17 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
     setError('');
     try {
       const token = localStorage.getItem('admin_token')!;
+      const isWedding = eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM';
+      const isBaptism = eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM';
       await adminApi(token).patch(`/admin/invitations/${id}`, {
         slug: slug || undefined,
-        brideName,
-        groomName,
-        weddingDate: new Date(weddingDate).toISOString(),
+        eventCategory,
+        brideName: isWedding ? brideName : null,
+        groomName: isWedding ? groomName : null,
+        childName: isBaptism ? childName : null,
+        fatherName: isBaptism ? (fatherName || null) : null,
+        motherName: isBaptism ? (motherName || null) : null,
+        weddingDate: weddingDate ? new Date(weddingDate).toISOString() : undefined,
         story: story || undefined,
         videoUrl: videoUrl || undefined,
         coverImageUrl: coverImages[0] || undefined,
@@ -604,6 +624,20 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
         </div>
       )}
 
+      {/* Category toggle */}
+      <div className="flex gap-2">
+        {CATEGORY_OPTIONS.map((opt) => (
+          <button key={opt.id} type="button" onClick={() => setEventCategory(opt.id)}
+            className={`flex-1 py-2.5 rounded-xl border text-sm font-medium transition-all ${
+              eventCategory === opt.id
+                ? opt.activeClass
+                : 'border-white/10 text-white/40 hover:text-white/70 hover:border-white/20'
+            }`}>
+            {opt.label}
+          </button>
+        ))}
+      </div>
+
       {/* Core fields */}
       <div className={sectionCls}>
         <h2 className="text-white/70 text-xs font-semibold tracking-widest uppercase border-b border-[#01FFFF]/10 pb-2 mb-4">Βασικά Στοιχεία</h2>
@@ -616,19 +650,42 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
               required />
           </div>
         </div>
+
+        {(eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM') && (
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>Νύφη *</label>
+              <input className={inputCls} value={brideName} onChange={(e) => setBrideName(e.target.value)} />
+            </div>
+            <div>
+              <label className={labelCls}>Γαμπρός *</label>
+              <input className={inputCls} value={groomName} onChange={(e) => setGroomName(e.target.value)} />
+            </div>
+          </div>
+        )}
+
+        {(eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM') && (
+          <>
+            <div>
+              <label className={labelCls}>Όνομα παιδιού *</label>
+              <input className={inputCls} value={childName} onChange={(e) => setChildName(e.target.value)} placeholder="π.χ. Ελπίδα" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Μπαμπάς</label>
+                <input className={inputCls} value={fatherName} onChange={(e) => setFatherName(e.target.value)} placeholder="Γιώργης" />
+              </div>
+              <div>
+                <label className={labelCls}>Μαμά</label>
+                <input className={inputCls} value={motherName} onChange={(e) => setMotherName(e.target.value)} placeholder="Μαρία" />
+              </div>
+            </div>
+          </>
+        )}
+
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className={labelCls}>Νύφη *</label>
-            <input className={inputCls} value={brideName} onChange={(e) => setBrideName(e.target.value)} required />
-          </div>
-          <div>
-            <label className={labelCls}>Γαμπρός *</label>
-            <input className={inputCls} value={groomName} onChange={(e) => setGroomName(e.target.value)} required />
-          </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className={labelCls}>Ημερομηνία γάμου *</label>
+            <label className={labelCls}>{eventCategory === 'BAPTISM' ? 'Ημερομηνία βάπτισης *' : eventCategory === 'WEDDING_BAPTISM' ? 'Ημερομηνία εκδήλωσης *' : 'Ημερομηνία γάμου *'}</label>
             <input type="datetime-local" className={inputCls} value={weddingDate} onChange={(e) => setWeddingDate(e.target.value)} required />
           </div>
           <div>
@@ -663,7 +720,7 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
           <input className={`${inputCls} mt-2`} value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://youtube.com/..." />
         </div>
         <div>
-          <label className={labelCls}>Ιστορία ζευγαριού</label>
+          <label className={labelCls}>{eventCategory === 'BAPTISM' ? 'Περιγραφή' : 'Ιστορία ζευγαριού'}</label>
           <textarea className={`${inputCls} resize-none`} rows={5} value={story} onChange={(e) => setStory(e.target.value)} />
         </div>
       </div>
@@ -743,10 +800,18 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
               <div>
                 <label className={labelCls}>Ρόλος</label>
                 <select className={inputCls} value={c.role} onChange={(e) => updateContact(i, 'role', e.target.value as ContactRole)}>
-                  <option value="BRIDE">Νύφη</option>
-                  <option value="GROOM">Γαμπρός</option>
-                  <option value="BEST_MAN">Κουμπάρος</option>
-                  <option value="MAID_OF_HONOR">Κουμπάρα</option>
+                  {(eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM') && <>
+                    <option value="BRIDE">Νύφη</option>
+                    <option value="GROOM">Γαμπρός</option>
+                    <option value="BEST_MAN">Κουμπάρος</option>
+                    <option value="MAID_OF_HONOR">Κουμπάρα</option>
+                  </>}
+                  {(eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM') && <>
+                    <option value="FATHER">Μπαμπάς</option>
+                    <option value="MOTHER">Μαμά</option>
+                    <option value="GODFATHER">Νονός</option>
+                    <option value="GODMOTHER">Νονά</option>
+                  </>}
                 </select>
               </div>
               <div>

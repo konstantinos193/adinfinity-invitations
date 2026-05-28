@@ -102,6 +102,10 @@ export default async function InvitationPage({ params }: Props) {
         brideName={invitation.brideName ?? ''}
         groomName={invitation.groomName ?? ''}
         weddingDate={invitation.weddingDate ?? ''}
+        eventCategory={invitation.eventCategory}
+        childName={invitation.childName}
+        fatherName={invitation.fatherName}
+        motherName={invitation.motherName}
         coverImageUrl={invitation.coverImageUrl}
         coverImages={invitation.coverImages}
         primaryColor={invitation.primaryColor}

@@ -1,7 +1,8 @@
 export type EventType = 'CEREMONY' | 'RECEPTION';
-export type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR';
+export type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR' | 'FATHER' | 'MOTHER' | 'GODFATHER' | 'GODMOTHER';
 export type InvitationStatus = 'DRAFT' | 'ACTIVE' | 'EXPIRED';
 export type InvitationType = 'MINI_WEBSITE' | 'VIDEO' | 'VIDEO_PROSKLITIRIO';
+export type EventCategory = 'WEDDING' | 'BAPTISM' | 'WEDDING_BAPTISM';
 export type DietaryType = 'NONE' | 'VEGAN' | 'VEGETARIAN';
 
 export interface Event {
@@ -31,9 +32,16 @@ export interface GiftRegistry {
 export interface Invitation {
   id: string;
   slug: string;
-  brideName: string;
-  groomName: string;
-  weddingDate: string;
+  eventCategory: EventCategory;
+  // Wedding fields
+  brideName: string | null;
+  groomName: string | null;
+  // Baptism fields
+  childName: string | null;
+  fatherName: string | null;
+  motherName: string | null;
+  // Shared event date
+  weddingDate: string | null;
   story: string | null;
   videoUrl: string | null;
   coverImageUrl: string | null;

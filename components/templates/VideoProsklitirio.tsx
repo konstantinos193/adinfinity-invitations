@@ -20,7 +20,7 @@ interface Props { invitation: Invitation }
 
 export default function VideoProsklitirio({ invitation }: Props) {
   const { brideName, groomName, weddingDate, videoUrl, events, giftRegistries, slug, rsvpDeadline } = invitation;
-  const formattedDate = format(new Date(weddingDate), "d MMMM yyyy", { locale: el });
+  const formattedDate = weddingDate ? format(new Date(weddingDate), "d MMMM yyyy", { locale: el }) : '';
   const rsvpRef = useRef<HTMLDivElement>(null);
   const [ibanCopied, setIbanCopied] = useState(false);
 

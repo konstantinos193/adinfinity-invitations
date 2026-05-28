@@ -166,9 +166,9 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
       .then((r) => {
         const inv = r.data;
         setSlug(inv.slug);
-        setBrideName(inv.brideName);
-        setGroomName(inv.groomName);
-        setWeddingDate(fmt(inv.weddingDate));
+        setBrideName(inv.brideName ?? '');
+        setGroomName(inv.groomName ?? '');
+        setWeddingDate(fmt(inv.weddingDate ?? ''));
         setStory(inv.story ?? '');
         setVideoUrl(inv.videoUrl ?? '');
         setCoverImages(inv.coverImages.length > 0 ? inv.coverImages : (inv.coverImageUrl ? [inv.coverImageUrl] : []));

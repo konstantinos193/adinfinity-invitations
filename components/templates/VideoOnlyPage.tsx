@@ -19,7 +19,7 @@ interface Props { invitation: Invitation }
 
 export default function VideoOnlyPage({ invitation }: Props) {
   const { brideName, groomName, weddingDate, videoUrl } = invitation;
-  const formattedDate = format(new Date(weddingDate), "d MMMM yyyy", { locale: el });
+  const formattedDate = weddingDate ? format(new Date(weddingDate), "d MMMM yyyy", { locale: el }) : '';
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col">

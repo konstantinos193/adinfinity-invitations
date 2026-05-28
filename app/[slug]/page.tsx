@@ -18,12 +18,18 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+function invitationTitle(inv: { eventCategory?: string | null; brideName?: string | null; groomName?: string | null; childName?: string | null }): string {
+  if (inv.eventCategory === 'BAPTISM') return inv.childName ?? 'Βάπτιση';
+  if (inv.eventCategory === 'WEDDING_BAPTISM') return `${inv.brideName ?? ''} & ${inv.groomName ?? ''} · ${inv.childName ?? ''}`.trim();
+  return `${inv.brideName ?? ''} & ${inv.groomName ?? ''}`.trim();
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { slug } = await params;
     const inv = await getInvitation(slug);
-    const title = `${inv.brideName} & ${inv.groomName}`;
-    const description = `Ψηφιακή πρόσκληση γάμου — ${inv.brideName} & ${inv.groomName}. RSVP online, χάρτες εκδηλώσεων και λεπτομέρειες γάμου.`;
+    const title = invitationTitle(inv);
+    const description = `Ψηφιακή πρόσκληση — ${title}. RSVP online, χάρτες εκδηλώσεων και λεπτομέρειες.`;
     const images = inv.coverImageUrl
       ? [{ url: inv.coverImageUrl, width: 1200, height: 630, alt: title }]
       : [];
@@ -75,8 +81,8 @@ export default async function InvitationPage({ params }: Props) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Event',
-    name: `Γάμος ${invitation.brideName} & ${invitation.groomName}`,
-    startDate: invitation.weddingDate,
+    name: invitationTitle(invitation),
+    startDate: invitation.weddingDate ?? undefined,
     eventStatus: 'https://schema.org/EventScheduled',
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     ...(ceremony?.address && {
@@ -93,9 +99,9 @@ export default async function InvitationPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <InvitationHero
-        brideName={invitation.brideName}
-        groomName={invitation.groomName}
-        weddingDate={invitation.weddingDate}
+        brideName={invitation.brideName ?? ''}
+        groomName={invitation.groomName ?? ''}
+        weddingDate={invitation.weddingDate ?? ''}
         coverImageUrl={invitation.coverImageUrl}
         coverImages={invitation.coverImages}
         primaryColor={invitation.primaryColor}

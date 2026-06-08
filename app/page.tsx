@@ -63,8 +63,57 @@ export default function LandingPage() {
     ? {}
     : { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.5 } };
 
+  // Structured data. Mirrors the established business entity on adinfinity.gr
+  // (same name/logo/socials) so Google links this subdomain to it. Rendered
+  // into the initial SSR HTML even though this is a client component.
+  const homeJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://adinfinity.gr/#organization',
+        name: 'adinfinity Advertising Agency',
+        alternateName: 'adinfinity',
+        url: 'https://adinfinity.gr',
+        logo: 'https://adinfinity.gr/logo.png',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Vas. Pirrou 30',
+          addressLocality: 'Arta',
+          postalCode: '471 32',
+          addressCountry: 'GR',
+        },
+        sameAs: [
+          'https://www.facebook.com/1.adinfinity',
+          'https://www.instagram.com/adinfinityads/',
+          'https://www.linkedin.com/in/adinfinity-ads-bb0a398a/?originalSubdomain=gr',
+        ],
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://invitations.adinfinity.gr/#website',
+        url: 'https://invitations.adinfinity.gr',
+        name: 'adifinity — Ψηφιακές Προσκλήσεις',
+        inLanguage: 'el-GR',
+        publisher: { '@id': 'https://adinfinity.gr/#organization' },
+      },
+      {
+        '@type': 'Service',
+        name: 'Ψηφιακές Προσκλήσεις Γάμου & Βάπτισης',
+        serviceType: 'Digital wedding & baptism invitations',
+        areaServed: 'GR',
+        url: 'https://invitations.adinfinity.gr',
+        provider: { '@id': 'https://adinfinity.gr/#organization' },
+      },
+    ],
+  };
+
   return (
     <div className="min-h-screen bg-[#07141C] text-white overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(homeJsonLd) }}
+      />
 
       {/* Background */}
       <div className="fixed inset-0 bg-linear-to-b from-[#07141C] via-[#071a24] to-[#061218] opacity-80 pointer-events-none" />

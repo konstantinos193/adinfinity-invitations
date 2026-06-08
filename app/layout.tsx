@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 
@@ -24,6 +24,7 @@ const WEDDING_FONTS =
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://invitations.adinfinity.gr'),
+  alternates: { canonical: '/' },
   title: {
     default: 'Ψηφιακές Προσκλήσεις Γάμου | adifinity',
     template: '%s | adifinity',
@@ -54,6 +55,10 @@ export const metadata: Metadata = {
       'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
   },
   robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#b8960c',
 };
 
 export default function RootLayout({

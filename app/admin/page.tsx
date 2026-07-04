@@ -7,7 +7,7 @@ import type { Invitation, EventCategory } from '@/lib/types';
 import {
   AlertTriangle, ExternalLink, Pencil, Trash2, Users,
   Search, RefreshCw, Copy, Check, X, Calendar, TrendingUp,
-  Globe, Video, Film, Mail, Heart, Baby, Sparkles,
+  Globe, Video, Film, Mail, Heart, Baby, Sparkles, Cake, PartyPopper,
 } from 'lucide-react';
 import { format, differenceInDays, isPast } from 'date-fns';
 import { el } from 'date-fns/locale';
@@ -16,7 +16,7 @@ type InvitationWithCount = Invitation & { _count?: { rsvps: number } };
 
 type StatusFilter   = 'ALL' | 'ACTIVE' | 'DRAFT' | 'EXPIRED';
 type TypeFilter     = 'ALL' | 'MINI_WEBSITE' | 'VIDEO_PROSKLITIRIO' | 'VIDEO';
-type CategoryFilter = 'ALL' | 'WEDDING' | 'BAPTISM' | 'WEDDING_BAPTISM';
+type CategoryFilter = 'ALL' | 'WEDDING' | 'BAPTISM' | 'WEDDING_BAPTISM' | 'ANNIVERSARY' | 'BIRTHDAY' | 'EVENT';
 type SortKey        = 'date' | 'created' | 'rsvps' | 'name';
 
 const statusMeta: Record<string, { text: string; cls: string }> = {
@@ -32,9 +32,12 @@ const typeMeta: Record<string, { text: string; icon: React.ElementType; cls: str
 };
 
 const categoryMeta: Record<EventCategory, { text: string; icon: React.ElementType; cls: string; href: string }> = {
-  WEDDING:          { text: 'Γάμος',         icon: Heart,    cls: 'text-rose-400',   href: '/admin/create/wedding' },
-  BAPTISM:          { text: 'Βάπτιση',        icon: Baby,     cls: 'text-sky-400',    href: '/admin/create/baptism' },
-  WEDDING_BAPTISM:  { text: 'Γαμοβάπτιση',   icon: Sparkles, cls: 'text-violet-400', href: '/admin/create/wedding-baptism' },
+  WEDDING:          { text: 'Γάμος',         icon: Heart,       cls: 'text-rose-400',   href: '/admin/create/wedding' },
+  BAPTISM:          { text: 'Βάπτιση',        icon: Baby,        cls: 'text-sky-400',    href: '/admin/create/baptism' },
+  WEDDING_BAPTISM:  { text: 'Γαμοβάπτιση',   icon: Sparkles,    cls: 'text-violet-400', href: '/admin/create/wedding-baptism' },
+  ANNIVERSARY:      { text: 'Επέτειος',      icon: Heart,       cls: 'text-pink-400',   href: '/admin/create/event?type=ANNIVERSARY' },
+  BIRTHDAY:         { text: 'Γενέθλια',      icon: Cake,        cls: 'text-amber-400',  href: '/admin/create/event?type=BIRTHDAY' },
+  EVENT:            { text: 'Εκδήλωση',      icon: PartyPopper, cls: 'text-purple-400', href: '/admin/create/event?type=EVENT' },
 };
 
 function displayName(inv: InvitationWithCount): string {
@@ -43,6 +46,15 @@ function displayName(inv: InvitationWithCount): string {
   }
   if (inv.eventCategory === 'BAPTISM') {
     return inv.childName ?? '—';
+  }
+  if (inv.eventCategory === 'ANNIVERSARY') {
+    return `${inv.brideName ?? ''} & ${inv.groomName ?? ''}`.trim();
+  }
+  if (inv.eventCategory === 'BIRTHDAY') {
+    return inv.honoreeName ?? '—';
+  }
+  if (inv.eventCategory === 'EVENT') {
+    return inv.eventTitle ?? '—';
   }
   // WEDDING_BAPTISM
   const couple = `${inv.brideName ?? ''} & ${inv.groomName ?? ''}`.trim();

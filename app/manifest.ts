@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'adifinity — Ψηφιακές Προσκλήσεις',
-    short_name: 'adifinity',
+    name: 'adinfinity — Ψηφιακές Προσκλήσεις',
+    short_name: 'adinfinity',
     description:
       'Δημιουργήστε την ψηφιακή πρόσκληση γάμου σας — mini-site με αντίστροφη μέτρηση, RSVP online, χάρτες Google, λίστα δώρων και video.',
     start_url: '/',

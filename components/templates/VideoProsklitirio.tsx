@@ -19,10 +19,13 @@ function embedUrl(url: string): string {
 interface Props { invitation: Invitation }
 
 export default function VideoProsklitirio({ invitation }: Props) {
-  const { brideName, groomName, weddingDate, videoUrl, events, giftRegistries, slug, rsvpDeadline, eventCategory, childName, fatherName, motherName } = invitation;
+  const { brideName, groomName, weddingDate, videoUrl, events, giftRegistries, slug, rsvpDeadline, eventCategory, childName, fatherName, motherName, honoreeName, eventTitle, yearsCount } = invitation;
   const formattedDate = weddingDate ? format(new Date(weddingDate), "d MMMM yyyy", { locale: el }) : '';
   const isBaptism = eventCategory === 'BAPTISM';
   const isWeddingBaptism = eventCategory === 'WEDDING_BAPTISM';
+  const isAnniversary = eventCategory === 'ANNIVERSARY';
+  const isBirthday = eventCategory === 'BIRTHDAY';
+  const isEvent = eventCategory === 'EVENT';
   const rsvpRef = useRef<HTMLDivElement>(null);
   const [ibanCopied, setIbanCopied] = useState(false);
 
@@ -65,7 +68,7 @@ export default function VideoProsklitirio({ invitation }: Props) {
           className="relative z-10"
         >
           <p className="text-white/50 tracking-[0.4em] text-xs uppercase mb-6">
-            {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
+            {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : isAnniversary ? 'Επέτειος' : isBirthday ? 'Γενέθλια' : isEvent ? 'Εκδήλωση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
           </p>
 
           {isBaptism ? (
@@ -79,6 +82,23 @@ export default function VideoProsklitirio({ invitation }: Props) {
                 </p>
               )}
             </>
+          ) : isBirthday ? (
+            <>
+              <h1 className="text-white text-5xl md:text-7xl mb-2 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
+                {honoreeName}
+              </h1>
+              {yearsCount && (
+                <p className="text-white/50 text-base tracking-wide mt-2 mb-4">
+                  {yearsCount} Ετών
+                </p>
+              )}
+            </>
+          ) : isEvent ? (
+            <>
+              <h1 className="text-white text-5xl md:text-7xl mb-2 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
+                {eventTitle}
+              </h1>
+            </>
           ) : (
             <>
               <h1 className="text-white text-5xl md:text-7xl mb-2 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif", fontStyle: 'italic' }}>
@@ -90,6 +110,9 @@ export default function VideoProsklitirio({ invitation }: Props) {
               </h1>
               {isWeddingBaptism && childName && (
                 <p className="text-white/50 text-sm tracking-wide mt-3">Βάπτιση: {childName}</p>
+              )}
+              {isAnniversary && yearsCount && (
+                <p className="text-white/50 text-sm tracking-wide mt-3">{yearsCount} Χρόνια</p>
               )}
             </>
           )}

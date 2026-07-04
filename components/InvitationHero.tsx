@@ -40,16 +40,22 @@ interface Props {
   childName?: string | null;
   fatherName?: string | null;
   motherName?: string | null;
+  eventTitle?: string | null;
+  honoreeName?: string | null;
+  yearsCount?: number | null;
 }
 
 export default function InvitationHero({
   brideName, groomName, weddingDate,
   coverImageUrl, coverImages, primaryColor, fontFamily, fontColor, backgroundStyle,
-  eventCategory, childName, fatherName, motherName,
+  eventCategory, childName, fatherName, motherName, eventTitle, honoreeName, yearsCount,
 }: Props) {
   const formattedDate = weddingDate ? format(new Date(weddingDate), 'd MMMM yyyy', { locale: el }) : '';
   const isBaptism = eventCategory === 'BAPTISM';
   const isWeddingBaptism = eventCategory === 'WEDDING_BAPTISM';
+  const isAnniversary = eventCategory === 'ANNIVERSARY';
+  const isBirthday = eventCategory === 'BIRTHDAY';
+  const isEvent = eventCategory === 'EVENT';
   const color = primaryColor ?? '#b8960c';
   const nameColor = fontColor ?? '#ffffff';
   const rawFont = fontFamily ?? 'Playfair Display';
@@ -161,7 +167,7 @@ export default function InvitationHero({
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
+          {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : isAnniversary ? 'Επέτειος' : isBirthday ? 'Γενέθλια' : isEvent ? 'Εκδήλωση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
         </motion.p>
 
         {isBaptism ? (
@@ -185,6 +191,40 @@ export default function InvitationHero({
                 {fatherName && motherName ? `${fatherName} & ${motherName}` : fatherName || motherName}
               </motion.p>
             )}
+          </>
+        ) : isBirthday ? (
+          <>
+            <motion.h1
+              className="text-6xl md:text-8xl font-bold italic leading-tight mb-4"
+              style={{ fontFamily: `'${font}', serif`, color: nameColor }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              {honoreeName || ''}
+            </motion.h1>
+            {yearsCount && (
+              <motion.p
+                className="text-white/60 text-lg tracking-wide mb-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8 }}
+              >
+                {yearsCount} Ετών
+              </motion.p>
+            )}
+          </>
+        ) : isEvent ? (
+          <>
+            <motion.h1
+              className="text-6xl md:text-8xl font-bold italic leading-tight mb-4"
+              style={{ fontFamily: `'${font}', serif`, color: nameColor }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              {eventTitle || ''}
+            </motion.h1>
           </>
         ) : (
           <>
@@ -223,6 +263,16 @@ export default function InvitationHero({
                 transition={{ delay: 1.0 }}
               >
                 Βάπτιση: {childName}
+              </motion.p>
+            )}
+            {isAnniversary && yearsCount && (
+              <motion.p
+                className="text-white/60 text-lg tracking-wide mb-2"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.0 }}
+              >
+                {yearsCount} Χρόνια
               </motion.p>
             )}
           </>

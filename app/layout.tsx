@@ -26,8 +26,8 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://invitations.adinfinity.gr'),
   alternates: { canonical: '/' },
   title: {
-    default: 'Ψηφιακές Προσκλήσεις Γάμου | adifinity',
-    template: '%s | adifinity',
+    default: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
+    template: '%s | adinfinity',
   },
   description:
     'Δημιουργήστε την ψηφιακή πρόσκληση γάμου σας — mini-site με αντίστροφη μέτρηση, RSVP online, χάρτες Google, λίστα δώρων και video. Ένα μόνο link για όλους τους καλεσμένους.',
@@ -37,20 +37,20 @@ export const metadata: Metadata = {
     'ηλεκτρονική πρόσκληση',
     'RSVP online',
     'προσκλητήριο γάμου',
-    'adifinity',
+    'adinfinity',
   ],
-  authors: [{ name: 'adifinity', url: 'https://adinfinity.gr' }],
+  authors: [{ name: 'adinfinity', url: 'https://adinfinity.gr' }],
   openGraph: {
     type: 'website',
     locale: 'el_GR',
-    siteName: 'adifinity — Ψηφιακές Προσκλήσεις',
-    title: 'Ψηφιακές Προσκλήσεις Γάμου | adifinity',
+    siteName: 'adinfinity — Ψηφιακές Προσκλήσεις',
+    title: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
     description:
       'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video. Ένα link για όλους τους καλεσμένους.',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ψηφιακές Προσκλήσεις Γάμου | adifinity',
+    title: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
     description:
       'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
   },

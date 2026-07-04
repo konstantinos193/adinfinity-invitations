@@ -38,6 +38,9 @@ const CATEGORY_OPTIONS: { id: EventCategory; label: string; activeClass: string 
   { id: 'WEDDING',         label: 'Γάμος',         activeClass: 'bg-rose-500/15 border-rose-400/50 text-rose-300' },
   { id: 'BAPTISM',         label: 'Βάπτιση',        activeClass: 'bg-sky-500/15 border-sky-400/50 text-sky-300' },
   { id: 'WEDDING_BAPTISM', label: 'Γαμοβάπτιση',   activeClass: 'bg-violet-500/15 border-violet-400/50 text-violet-300' },
+  { id: 'ANNIVERSARY',     label: 'Επέτειος',      activeClass: 'bg-pink-500/15 border-pink-400/50 text-pink-300' },
+  { id: 'BIRTHDAY',        label: 'Γενέθλια',      activeClass: 'bg-amber-500/15 border-amber-400/50 text-amber-300' },
+  { id: 'EVENT',           label: 'Εκδήλωση',      activeClass: 'bg-purple-500/15 border-purple-400/50 text-purple-300' },
 ];
 const blankGift = (): GiftRow => ({ ownerName: '', bankName: '', iban: '' });
 
@@ -146,6 +149,10 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
   const [fatherName, setFatherName] = useState('');
   const [motherName, setMotherName] = useState('');
   const [weddingDate, setWeddingDate] = useState('');
+  const [eventTitle, setEventTitle] = useState('');
+  const [honoreeName, setHonoreeName] = useState('');
+  const [hostName, setHostName] = useState('');
+  const [yearsCount, setYearsCount] = useState('');
   const [story, setStory] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
   const [coverImages, setCoverImages] = useState<string[]>([]);
@@ -192,6 +199,10 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
         setFatherName(inv.fatherName ?? '');
         setMotherName(inv.motherName ?? '');
         setWeddingDate(fmt(inv.weddingDate ?? ''));
+        setEventTitle(inv.eventTitle ?? '');
+        setHonoreeName(inv.honoreeName ?? '');
+        setHostName(inv.hostName ?? '');
+        setYearsCount(inv.yearsCount?.toString() ?? '');
         setStory(inv.story ?? '');
         setVideoUrl(inv.videoUrl ?? '');
         setCoverImages(inv.coverImages.length > 0 ? inv.coverImages : (inv.coverImageUrl ? [inv.coverImageUrl] : []));
@@ -301,14 +312,22 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
       const token = localStorage.getItem('admin_token')!;
       const isWedding = eventCategory === 'WEDDING' || eventCategory === 'WEDDING_BAPTISM';
       const isBaptism = eventCategory === 'BAPTISM' || eventCategory === 'WEDDING_BAPTISM';
+      const isAnniversary = eventCategory === 'ANNIVERSARY';
+      const isBirthday = eventCategory === 'BIRTHDAY';
+      const isEvent = eventCategory === 'EVENT';
+      
       await adminApi(token).patch(`/admin/invitations/${id}`, {
         slug: slug || undefined,
         eventCategory,
-        brideName: isWedding ? brideName : null,
-        groomName: isWedding ? groomName : null,
+        brideName: isWedding || isAnniversary ? brideName : null,
+        groomName: isWedding || isAnniversary ? groomName : null,
         childName: isBaptism ? childName : null,
         fatherName: isBaptism ? (fatherName || null) : null,
         motherName: isBaptism ? (motherName || null) : null,
+        eventTitle: isEvent ? eventTitle : null,
+        honoreeName: isBirthday ? honoreeName : null,
+        hostName: isEvent ? (hostName || null) : null,
+        yearsCount: (isAnniversary || isBirthday) && yearsCount ? parseInt(yearsCount) : null,
         weddingDate: weddingDate ? new Date(weddingDate).toISOString() : undefined,
         story: story || undefined,
         videoUrl: videoUrl || undefined,

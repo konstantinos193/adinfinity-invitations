@@ -18,9 +18,12 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-function invitationTitle(inv: { eventCategory?: string | null; brideName?: string | null; groomName?: string | null; childName?: string | null }): string {
+function invitationTitle(inv: { eventCategory?: string | null; brideName?: string | null; groomName?: string | null; childName?: string | null; honoreeName?: string | null; eventTitle?: string | null }): string {
   if (inv.eventCategory === 'BAPTISM') return inv.childName ?? 'Βάπτιση';
   if (inv.eventCategory === 'WEDDING_BAPTISM') return `${inv.brideName ?? ''} & ${inv.groomName ?? ''} · ${inv.childName ?? ''}`.trim();
+  if (inv.eventCategory === 'ANNIVERSARY') return `${inv.brideName ?? ''} & ${inv.groomName ?? ''}`.trim();
+  if (inv.eventCategory === 'BIRTHDAY') return inv.honoreeName ?? 'Γενέθλια';
+  if (inv.eventCategory === 'EVENT') return inv.eventTitle ?? 'Εκδήλωση';
   return `${inv.brideName ?? ''} & ${inv.groomName ?? ''}`.trim();
 }
 
@@ -89,7 +92,7 @@ export default async function InvitationPage({ params }: Props) {
       location: { '@type': 'Place', name: ceremony.name, address: ceremony.address },
     }),
     ...(invitation.coverImageUrl && { image: invitation.coverImageUrl }),
-    organizer: { '@type': 'Organization', name: 'adifinity', url: 'https://adinfinity.gr' },
+    organizer: { '@type': 'Organization', name: 'adinfinity', url: 'https://adinfinity.gr' },
   };
 
   return (
@@ -106,6 +109,9 @@ export default async function InvitationPage({ params }: Props) {
         childName={invitation.childName}
         fatherName={invitation.fatherName}
         motherName={invitation.motherName}
+        eventTitle={invitation.eventTitle}
+        honoreeName={invitation.honoreeName}
+        yearsCount={invitation.yearsCount}
         coverImageUrl={invitation.coverImageUrl}
         coverImages={invitation.coverImages}
         primaryColor={invitation.primaryColor}

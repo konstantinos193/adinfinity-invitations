@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="flex justify-center mb-10">
-          <Image src="/logo.png" alt="adifinity" width={140} height={48} className="object-contain" />
+          <Image src="/logo.png" alt="adinfinity" width={140} height={48} className="object-contain" />
         </div>
 
         {/* Card */}
@@ -51,7 +51,7 @@ export default function AdminLoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="w-full bg-[#07141C] border border-[#01FFFF]/20 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-[#01FFFF]/30 focus:border-[#01FFFF]/40 transition-colors"
-                placeholder="admin@adifinity.gr"
+                placeholder="admin@adinfinity.gr"
               />
             </div>
             <div>

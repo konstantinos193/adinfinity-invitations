@@ -18,10 +18,13 @@ function embedUrl(url: string): string {
 interface Props { invitation: Invitation }
 
 export default function VideoOnlyPage({ invitation }: Props) {
-  const { brideName, groomName, weddingDate, videoUrl, eventCategory, childName, fatherName, motherName } = invitation;
+  const { brideName, groomName, weddingDate, videoUrl, eventCategory, childName, fatherName, motherName, honoreeName, eventTitle, yearsCount } = invitation;
   const formattedDate = weddingDate ? format(new Date(weddingDate), "d MMMM yyyy", { locale: el }) : '';
   const isBaptism = eventCategory === 'BAPTISM';
   const isWeddingBaptism = eventCategory === 'WEDDING_BAPTISM';
+  const isAnniversary = eventCategory === 'ANNIVERSARY';
+  const isBirthday = eventCategory === 'BIRTHDAY';
+  const isEvent = eventCategory === 'EVENT';
 
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white flex flex-col">
@@ -39,7 +42,7 @@ export default function VideoOnlyPage({ invitation }: Props) {
           className="relative z-10"
         >
           <p className="text-white/40 tracking-[0.4em] text-xs uppercase mb-8">
-            {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
+            {isBaptism ? 'Βάπτιση' : isWeddingBaptism ? 'Γαμοβάπτιση' : isAnniversary ? 'Επέτειος' : isBirthday ? 'Γενέθλια' : isEvent ? 'Εκδήλωση' : 'Με μεγάλη χαρά σας προσκαλούμε'}
           </p>
 
           {isBaptism ? (
@@ -53,6 +56,23 @@ export default function VideoOnlyPage({ invitation }: Props) {
                 </p>
               )}
             </>
+          ) : isBirthday ? (
+            <>
+              <h1 className="font-serif text-6xl md:text-8xl text-white mb-4 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
+                {honoreeName}
+              </h1>
+              {yearsCount && (
+                <p className="text-white/50 text-lg tracking-wide mb-6">
+                  {yearsCount} Ετών
+                </p>
+              )}
+            </>
+          ) : isEvent ? (
+            <>
+              <h1 className="font-serif text-6xl md:text-8xl text-white mb-4 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
+                {eventTitle}
+              </h1>
+            </>
           ) : (
             <>
               <h1 className="font-serif text-6xl md:text-8xl text-white mb-4 leading-none" style={{ fontFamily: "'Cormorant Garamond', 'Playfair Display', Georgia, serif" }}>
@@ -64,6 +84,9 @@ export default function VideoOnlyPage({ invitation }: Props) {
               </h1>
               {isWeddingBaptism && childName && (
                 <p className="text-white/50 text-base tracking-wide mb-2">Βάπτιση: {childName}</p>
+              )}
+              {isAnniversary && yearsCount && (
+                <p className="text-white/50 text-base tracking-wide mb-2">{yearsCount} Χρόνια</p>
               )}
             </>
           )}
@@ -93,7 +116,7 @@ export default function VideoOnlyPage({ invitation }: Props) {
                 className="absolute inset-0 w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                title={isBaptism ? `Βάπτιση ${childName} — Video Invitation` : `${brideName} & ${groomName} — Video Invitation`}
+                title={isBaptism ? `Βάπτιση ${childName} — Video Invitation` : isBirthday ? `Γενέθλια ${honoreeName} — Video Invitation` : isEvent ? `${eventTitle} — Video Invitation` : `${brideName} & ${groomName} — Video Invitation`}
               />
             </div>
           </div>

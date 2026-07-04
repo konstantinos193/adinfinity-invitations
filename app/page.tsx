@@ -93,7 +93,7 @@ export default function LandingPage() {
         '@type': 'WebSite',
         '@id': 'https://invitations.adinfinity.gr/#website',
         url: 'https://invitations.adinfinity.gr',
-        name: 'adifinity — Ψηφιακές Προσκλήσεις',
+        name: 'adinfinity — Ψηφιακές Προσκλήσεις',
         inLanguage: 'el-GR',
         publisher: { '@id': 'https://adinfinity.gr/#organization' },
       },
@@ -130,7 +130,7 @@ export default function LandingPage() {
       {/* ── NAV ───────────────────────────────────────────── */}
       <nav className="relative z-20 border-b border-[#01FFFF]/10 bg-[#07141C]/80 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Image src="/logo.png" alt="adifinity" width={120} height={40} className="object-contain" />
+          <Image src="/logo.png" alt="adinfinity" width={120} height={40} className="object-contain" />
           <a
             href="https://adinfinity.gr/contact#contact-form"
             target="_blank"
@@ -485,11 +485,8 @@ export default function LandingPage() {
       {/* ── FOOTER ────────────────────────────────────────── */}
       <footer className="relative z-10 border-t border-[#01FFFF]/10 py-8 px-4">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-white/30 text-sm">
-          <Image src="/logo.png" alt="adifinity" width={90} height={30} className="object-contain opacity-50" />
-          <p>© {new Date().getFullYear()} adifinity. Όλα τα δικαιώματα διατηρούνται.</p>
-          <Link href="/admin" className="hover:text-white/60 transition-colors text-xs">
-            Admin →
-          </Link>
+          <Image src="/logo.png" alt="adinfinity" width={90} height={30} className="object-contain opacity-50" />
+          <p>© {new Date().getFullYear()} adinfinity. Όλα τα δικαιώματα διατηρούνται.</p>
         </div>
       </footer>
 

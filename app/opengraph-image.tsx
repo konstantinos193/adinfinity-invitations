@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 // Static metadata for the generated image (also used for twitter:image).
-export const alt = 'adifinity — Ψηφιακές Προσκλήσεις Γάμου';
+export const alt = 'adinfinity — Ψηφιακές Προσκλήσεις Γάμου';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -42,7 +42,7 @@ export default async function OpengraphImage() {
             textTransform: 'uppercase',
           }}
         >
-          adifinity
+          adinfinity
         </div>
         <div
           style={{

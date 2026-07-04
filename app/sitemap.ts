@@ -16,5 +16,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
+    {
+      url: 'https://invitations.adinfinity.gr/psifiakes-proskliseis-gamou',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://invitations.adinfinity.gr/ilektroniko-prosklitirio-gamou',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://invitations.adinfinity.gr/prosklitirio-gamou-rsvp',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: 'https://invitations.adinfinity.gr/prosklitiria-gamou-arta',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.7,
+    },
+    {
+      url: 'https://invitations.adinfinity.gr/demo',
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
   ];
 }

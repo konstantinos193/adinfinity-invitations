@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Globe, Film, Video, LogOut, LayoutDashboard, Menu, X } from 'lucide-react';
+import { Globe, Film, Video, LogOut, LayoutDashboard, Menu, X, Heart, Cake, PartyPopper } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -24,7 +24,7 @@ export function AdminSidebar() {
   const navContent = (
     <>
       <div className="px-5 py-5 border-b border-[#01FFFF]/10 flex items-center justify-between">
-        <Image src="/logo.png" alt="adifinity" width={100} height={34} className="object-contain" />
+        <Image src="/logo.png" alt="adinfinity" width={100} height={34} className="object-contain" />
         <button onClick={close} className="md:hidden text-white/40 hover:text-white p-1 -mr-1">
           <X size={20} />
         </button>
@@ -73,6 +73,31 @@ export function AdminSidebar() {
           <Video size={14} />
           Video Only
         </Link>
+        <div className="border-t border-white/5 my-2" />
+        <Link
+          href="/admin/create/event?type=ANNIVERSARY"
+          onClick={close}
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-pink-400/60 hover:text-pink-400 hover:bg-pink-500/10 transition-colors"
+        >
+          <Heart size={14} />
+          Επέτειος
+        </Link>
+        <Link
+          href="/admin/create/event?type=BIRTHDAY"
+          onClick={close}
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-amber-400/60 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          <Cake size={14} />
+          Γενέθλια
+        </Link>
+        <Link
+          href="/admin/create/event?type=EVENT"
+          onClick={close}
+          className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm text-purple-400/60 hover:text-purple-400 hover:bg-purple-500/10 transition-colors"
+        >
+          <PartyPopper size={14} />
+          Εκδήλωση
+        </Link>
       </div>
 
       <div className="p-3 border-t border-[#01FFFF]/10">
@@ -98,7 +123,7 @@ export function AdminSidebar() {
         >
           <Menu size={22} />
         </button>
-        <Image src="/logo.png" alt="adifinity" width={80} height={27} className="object-contain" />
+        <Image src="/logo.png" alt="adinfinity" width={80} height={27} className="object-contain" />
       </div>
 
       {/* Mobile drawer */}

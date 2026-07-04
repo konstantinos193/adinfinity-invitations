@@ -1,8 +1,8 @@
 export type EventType = 'CEREMONY' | 'RECEPTION';
-export type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR' | 'FATHER' | 'MOTHER' | 'GODFATHER' | 'GODMOTHER';
+export type ContactRole = 'BRIDE' | 'GROOM' | 'BEST_MAN' | 'MAID_OF_HONOR' | 'FATHER' | 'MOTHER' | 'GODFATHER' | 'GODMOTHER' | 'HOST';
 export type InvitationStatus = 'DRAFT' | 'ACTIVE' | 'EXPIRED';
 export type InvitationType = 'MINI_WEBSITE' | 'VIDEO' | 'VIDEO_PROSKLITIRIO';
-export type EventCategory = 'WEDDING' | 'BAPTISM' | 'WEDDING_BAPTISM';
+export type EventCategory = 'WEDDING' | 'BAPTISM' | 'WEDDING_BAPTISM' | 'ANNIVERSARY' | 'BIRTHDAY' | 'EVENT';
 export type DietaryType = 'NONE' | 'VEGAN' | 'VEGETARIAN';
 
 export interface Event {
@@ -40,6 +40,11 @@ export interface Invitation {
   childName: string | null;
   fatherName: string | null;
   motherName: string | null;
+  // Anniversary/Birthday/Event fields
+  eventTitle: string | null;
+  honoreeName: string | null;
+  hostName: string | null;
+  yearsCount: number | null;
   // Shared event date
   weddingDate: string | null;
   story: string | null;

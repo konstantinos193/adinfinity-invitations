@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { adminApi } from '@/lib/api';
 import type { EventCategory, InvitationType, EventType, ContactRole } from '@/lib/types';
@@ -25,7 +25,7 @@ function SecTitle({ title, desc }: { title: string; desc?: string }) {
   return (
     <div className="border-b border-[#01FFFF]/10 pb-3 mb-4">
       <h2 className="text-white font-semibold text-sm tracking-wide">{title}</h2>
-      {desc && <p className="text-white/35 text-xs mt-0.5">{desc}</p>
+      {desc && <p className="text-white/35 text-xs mt-0.5">{desc}</p>}
     </div>
   );
 }
@@ -150,7 +150,7 @@ function PreviewCard({ eventCategory, brideName, groomName, honoreeName, eventTi
   );
 }
 
-export default function EventCreatePage() {
+function EventCreatePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const typeParam = searchParams.get('type') as EventCategory | null;
@@ -509,8 +509,7 @@ export default function EventCreatePage() {
                         title={label}
                         className={`flex flex-col items-center gap-1 p-2 rounded-xl border transition-all ${
                           fontColor === hex ? 'border-[#01FFFF]/60 bg-[#01FFFF]/5' : 'border-white/8 hover:border-white/20'
-                        }`}
-                      >
+                        }`}>
                         <div className="w-7 h-7 rounded-full border border-white/20" style={{ backgroundColor: hex }} />
                         <span className="text-[10px] text-white/40">{label}</span>
                       </button>
@@ -720,5 +719,13 @@ export default function EventCreatePage() {
         </div>
       </form>
     </div>
+  );
+}
+
+export default function EventCreatePage() {
+  return (
+    <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-8 text-white/50">Φόρτωση...</div>}>
+      <EventCreatePageContent />
+    </Suspense>
   );
 }

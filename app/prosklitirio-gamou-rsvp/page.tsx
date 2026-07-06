@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Προσκλητήριο Γάμου με RSVP Online | adinfinity',
+  alternates: { canonical: '/prosklitirio-gamou-rsvp' },
+  title: 'Προσκλητήριο Γάμου με RSVP Online',
   description: 'Δημιουργήστε προσκλητήριο γάμου με RSVP online. Οι καλεσμένοι απαντούν απευθείας από το κινητό τους και εσείς βλέπετε τις απαντήσεις σε πραγματικό χρόνο.',
   openGraph: {
-    title: 'Προσκλητήριο Γάμου με RSVP Online | adinfinity',
+    title: 'Προσκλητήριο Γάμου με RSVP Online',
     description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
     type: 'website',
     locale: 'el_GR',

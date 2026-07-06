@@ -72,6 +72,7 @@ const BG_STYLES = [
   { id: 'sage',       label: 'Forest',      gradient: 'linear-gradient(135deg,#0d1e10 0%,#1e4022 50%,#386840 100%)', dot: '#386840' },
   { id: 'midnight',   label: 'Midnight',    gradient: 'linear-gradient(135deg,#050510 0%,#101030 50%,#1e1e50 100%)', dot: '#1e1e50' },
   { id: 'golden',     label: 'Golden Hour', gradient: 'linear-gradient(135deg,#1e1000 0%,#3d2400 50%,#6b4400 100%)', dot: '#6b4400' },
+  { id: 'heritage',   label: 'Heritage',    gradient: 'linear-gradient(135deg,#b3a68f 0%,#c9c1ad 50%,#dbd5c6 100%)', dot: '#b3a68f' },
 ];
 
 function mixColors(hex1: string, hex2: string) {
@@ -325,7 +326,7 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
         fatherName: isBaptism ? (fatherName || null) : null,
         motherName: isBaptism ? (motherName || null) : null,
         eventTitle: isEvent ? eventTitle : null,
-        honoreeName: isBirthday ? honoreeName : null,
+        honoreeName: isBirthday ? honoreeName : isEvent ? (honoreeName || null) : null,
         hostName: isEvent ? (hostName || null) : null,
         yearsCount: (isAnniversary || isBirthday) && yearsCount ? parseInt(yearsCount) : null,
         weddingDate: weddingDate ? new Date(weddingDate).toISOString() : undefined,
@@ -706,6 +707,25 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
               <div>
                 <label className={labelCls}>Μαμά</label>
                 <input className={inputCls} value={motherName} onChange={(e) => setMotherName(e.target.value)} placeholder="Μαρία" />
+              </div>
+            </div>
+          </>
+        )}
+
+        {eventCategory === 'EVENT' && (
+          <>
+            <div>
+              <label className={labelCls}>Τίτλος εκδήλωσης *</label>
+              <input className={inputCls} value={eventTitle} onChange={(e) => setEventTitle(e.target.value)} placeholder="π.χ. Καραϊσκάκεια 2026" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelCls}>Διοργανωτής</label>
+                <input className={inputCls} value={hostName} onChange={(e) => setHostName(e.target.value)} placeholder="π.χ. Δήμος Γ. Καραϊσκάκη" />
+              </div>
+              <div>
+                <label className={labelCls}>Υπότιτλος</label>
+                <input className={inputCls} value={honoreeName} onChange={(e) => setHonoreeName(e.target.value)} placeholder="π.χ. Αρχιστράτηγος Ελληνικής Επανάστασης" />
               </div>
             </div>
           </>

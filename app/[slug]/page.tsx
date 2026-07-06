@@ -13,6 +13,7 @@ import MusicPlayer from '@/components/MusicPlayer';
 import PhotoGallery from '@/components/PhotoGallery';
 import VideoOnlyPage from '@/components/templates/VideoOnlyPage';
 import VideoProsklitirio from '@/components/templates/VideoProsklitirio';
+import EventHeritageHero from '@/components/templates/EventHeritageHero';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -80,6 +81,7 @@ export default async function InvitationPage({ params }: Props) {
     return <VideoProsklitirio invitation={invitation} />;
   }
 
+  const isHeritage = invitation.eventCategory === 'EVENT' && invitation.backgroundStyle === 'heritage';
   const ceremony = invitation.events.find((e) => e.type === 'CEREMONY');
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -101,26 +103,40 @@ export default async function InvitationPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <InvitationHero
-        brideName={invitation.brideName ?? ''}
-        groomName={invitation.groomName ?? ''}
-        weddingDate={invitation.weddingDate ?? ''}
-        eventCategory={invitation.eventCategory}
-        childName={invitation.childName}
-        fatherName={invitation.fatherName}
-        motherName={invitation.motherName}
-        eventTitle={invitation.eventTitle}
-        honoreeName={invitation.honoreeName}
-        yearsCount={invitation.yearsCount}
-        coverImageUrl={invitation.coverImageUrl}
-        coverImages={invitation.coverImages}
-        primaryColor={invitation.primaryColor}
-        fontFamily={invitation.fontFamily}
-        fontColor={invitation.fontColor}
-        backgroundStyle={invitation.backgroundStyle}
-      />
+      {isHeritage ? (
+        <EventHeritageHero
+          eventTitle={invitation.eventTitle ?? ''}
+          hostName={invitation.hostName}
+          subtitle={invitation.honoreeName}
+          quote={invitation.story}
+          eventDate={invitation.weddingDate}
+          photoUrl={invitation.coverImages?.[0] ?? invitation.coverImageUrl}
+          logoUrl={invitation.coverImages?.[1] ?? null}
+          fontFamily={invitation.fontFamily}
+          fontColor={invitation.fontColor}
+        />
+      ) : (
+        <InvitationHero
+          brideName={invitation.brideName ?? ''}
+          groomName={invitation.groomName ?? ''}
+          weddingDate={invitation.weddingDate ?? ''}
+          eventCategory={invitation.eventCategory}
+          childName={invitation.childName}
+          fatherName={invitation.fatherName}
+          motherName={invitation.motherName}
+          eventTitle={invitation.eventTitle}
+          honoreeName={invitation.honoreeName}
+          yearsCount={invitation.yearsCount}
+          coverImageUrl={invitation.coverImageUrl}
+          coverImages={invitation.coverImages}
+          primaryColor={invitation.primaryColor}
+          fontFamily={invitation.fontFamily}
+          fontColor={invitation.fontColor}
+          backgroundStyle={invitation.backgroundStyle}
+        />
+      )}
 
-      {invitation.story && <OurStory story={invitation.story} color={invitation.primaryColor ?? undefined} />}
+      {invitation.story && !isHeritage && <OurStory story={invitation.story} color={invitation.primaryColor ?? undefined} />}
 
       {invitation.videoUrl && <VideoSection videoUrl={invitation.videoUrl} />}
 

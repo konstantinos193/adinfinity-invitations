@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Προσκλήσεις Γάμου Άρτα | adinfinity',
+  alternates: { canonical: '/prosklitiria-gamou-arta' },
+  title: 'Προσκλήσεις Γάμου Άρτα',
   description: 'Ψηφιακές προσκλήσεις γάμου στην Άρτα. Δημιουργήστε το δικό σας mini-site με RSVP, χάρτες και video. adinfinity — Ηλεκτρονικά προσκλητήρια γάμου.',
   openGraph: {
-    title: 'Προσκλήσεις Γάμου Άρτα | adinfinity',
+    title: 'Προσκλήσεις Γάμου Άρτα',
     description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
     type: 'website',
     locale: 'el_GR',

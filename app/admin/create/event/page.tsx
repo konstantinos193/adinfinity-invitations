@@ -70,6 +70,7 @@ const BG_STYLES = [
   { id: 'sage',       label: 'Forest',      gradient: 'linear-gradient(135deg,#0d1e10 0%,#1e4022 50%,#386840 100%)', dot: '#386840' },
   { id: 'midnight',   label: 'Midnight',    gradient: 'linear-gradient(135deg,#050510 0%,#101030 50%,#1e1e50 100%)', dot: '#1e1e50' },
   { id: 'golden',     label: 'Golden Hour', gradient: 'linear-gradient(135deg,#1e1000 0%,#3d2400 50%,#6b4400 100%)', dot: '#6b4400' },
+  { id: 'heritage',   label: 'Heritage',    gradient: 'linear-gradient(135deg,#b3a68f 0%,#c9c1ad 50%,#dbd5c6 100%)', dot: '#b3a68f' },
 ];
 
 type PaletteShape = typeof PALETTES[0];
@@ -282,6 +283,7 @@ function EventCreatePageContent() {
       } else if (eventCategory === 'EVENT') {
         payload.eventTitle = eventTitle;
         payload.hostName = hostName || undefined;
+        payload.honoreeName = honoreeName || undefined;
       }
 
       if (invitationType === 'MINI_WEBSITE') {
@@ -394,6 +396,10 @@ function EventCreatePageContent() {
                   <div>
                     <label className={lbl}>Διοργανωτής (προαιρετικό)</label>
                     <input type="text" value={hostName} onChange={(e) => setHostName(e.target.value)} className={inp} placeholder="Όνομα" />
+                  </div>
+                  <div>
+                    <label className={lbl}>Υπότιτλος (προαιρετικό)</label>
+                    <input type="text" value={honoreeName} onChange={(e) => setHonoreeName(e.target.value)} className={inp} placeholder="π.χ. Αρχιστράτηγος Ελληνικής Επανάστασης" />
                   </div>
                 </div>
               )}
@@ -530,6 +536,9 @@ function EventCreatePageContent() {
               <section className={sec}>
                 <SecTitle title="Εικόνες" />
                 <CoverImagesUpload values={coverImages} onChange={setCoverImages} />
+                {bgStyleId === 'heritage' && eventCategory === 'EVENT' && (
+                  <p className="text-white/35 text-xs">Στο στυλ Heritage: η 1η εικόνα είναι η κεντρική φωτογραφία, η 2η (προαιρετικά) το λογότυπο/έμβλημα.</p>
+                )}
               </section>
             )}
 

@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Demo Προσκλητήριο Γάμου | adinfinity',
+  alternates: { canonical: '/demo' },
+  title: 'Demo Προσκλητήριο Γάμου',
   description: 'Δείτε ένα demo ψηφιακού προσκλητηρίου γάμου. Mini-site με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
   openGraph: {
-    title: 'Demo Προσκλητήριο Γάμου | adinfinity',
+    title: 'Demo Προσκλητήριο Γάμου',
     description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
     type: 'website',
     locale: 'el_GR',

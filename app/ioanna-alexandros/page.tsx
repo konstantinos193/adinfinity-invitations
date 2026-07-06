@@ -11,10 +11,11 @@ import MusicPlayer from '@/components/MusicPlayer';
 import PhotoGallery from '@/components/PhotoGallery';
 
 export const metadata: Metadata = {
-  title: 'Ιωάννα & Αλέξανδρος | adinfinity',
+  alternates: { canonical: '/ioanna-alexandros' },
+  title: 'Ιωάννα & Αλέξανδρος',
   description: 'Ψηφιακή πρόσκληση γάμου — Ιωάννα & Αλέξανδρος. RSVP online, χάρτες εκδηλώσεων και λεπτομέρειες.',
   openGraph: {
-    title: 'Ιωάννα & Αλέξανδρος | adinfinity',
+    title: 'Ιωάννα & Αλέξανδρος',
     description: 'Ψηφιακή πρόσκληση γάμου — Ιωάννα & Αλέξανδρος. RSVP online, χάρτες εκδηλώσεων και λεπτομέρειες.',
     type: 'website',
     locale: 'el_GR',

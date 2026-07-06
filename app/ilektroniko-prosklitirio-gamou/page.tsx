@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Ηλεκτρονικό Προσκλητήριο Γάμου | adinfinity',
+  alternates: { canonical: '/ilektroniko-prosklitirio-gamou' },
+  title: 'Ηλεκτρονικό Προσκλητήριο Γάμου',
   description: 'Το ηλεκτρονικό προσκλητήριο γάμου είναι η σύγχρονη εναλλακτική λύση για τις χάρτινες προσκλήσεις. Δημιουργήστε το δικό σας mini-site με RSVP, χάρτες και video.',
   openGraph: {
-    title: 'Ηλεκτρονικό Προσκλητήριο Γάμου | adinfinity',
+    title: 'Ηλεκτρονικό Προσκλητήριο Γάμου',
     description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
     type: 'website',
     locale: 'el_GR',

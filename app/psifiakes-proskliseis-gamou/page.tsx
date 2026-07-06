@@ -2,10 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
+  alternates: { canonical: '/psifiakes-proskliseis-gamou' },
+  title: 'Ψηφιακές Προσκλήσεις Γάμου',
   description: 'Δημιουργήστε την ψηφιακή πρόσκληση γάμου σας — mini-site με αντίστροφη μέτρηση, RSVP online, χάρτες Google, λίστα δώρων και video. Ένα μόνο link για όλους τους καλεσμένους.',
   openGraph: {
-    title: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
+    title: 'Ψηφιακές Προσκλήσεις Γάμου',
     description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
     type: 'website',
     locale: 'el_GR',

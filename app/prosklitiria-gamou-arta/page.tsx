@@ -95,9 +95,7 @@ export default function ProsklitiriaGamouArtaPage() {
             Είμαστε στην Άρτα και είμαστε έτοιμοι να δημιουργήσουμε την πρόσκληση του γάμου σας.
           </p>
           <Link
-            href="https://adinfinity.gr/contact#contact-form"
-            target="_blank"
-            rel="noreferrer"
+            href="/request"
             className="inline-block bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-3 px-6 rounded-full transition-colors"
           >
             Επικοινωνήστε μαζί μας →

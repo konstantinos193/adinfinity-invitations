@@ -19,6 +19,22 @@ export async function submitRsvp(slug: string, payload: CreateRsvpPayload) {
   return data;
 }
 
+export interface CreateLeadPayload {
+  coupleName: string;
+  email: string;
+  phone?: string;
+  eventDate?: string;
+  invitationType: 'MINI_WEBSITE' | 'VIDEO_PROSKLITIRIO' | 'VIDEO' | 'UNSURE';
+  message?: string;
+  /** Honeypot — must stay empty for real submissions. */
+  website?: string;
+}
+
+export async function submitLead(payload: CreateLeadPayload) {
+  const { data } = await api.post('/leads', payload);
+  return data;
+}
+
 export async function adminLogin(email: string, password: string) {
   const { data } = await api.post<{ access_token: string }>('/auth/login', {
     email,

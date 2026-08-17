@@ -2,7 +2,6 @@ import Link from 'next/link';
 import JsonLd from '@/components/JsonLd';
 import RelatedLinks from '@/components/RelatedLinks';
 import {
-  CONTACT_URL,
   PAGES,
   breadcrumbNode,
   graph,
@@ -77,9 +76,7 @@ export default function DemoPage() {
 
         <div className="text-center">
           <Link
-            href={CONTACT_URL}
-            target="_blank"
-            rel="noreferrer"
+            href="/request"
             className="inline-block bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-4 px-8 rounded-full text-lg transition-colors"
           >
             Δημιουργήστε το δικό σας →

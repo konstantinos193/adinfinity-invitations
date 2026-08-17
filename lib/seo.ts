@@ -17,6 +17,15 @@ export const ORG_ID = `${BRAND_URL}/#organization`;
 export const WEBSITE_ID = `${SITE_URL}/#website`;
 export const SERVICE_ID = `${SITE_URL}/#service`;
 
+/**
+ * Starting price shown as "Πακέτα από €X".
+ *
+ * Left null until a real figure is confirmed — an invented price on a
+ * commercial page is worse than no price at all. Set the number and the anchor
+ * renders itself everywhere it's used; nothing else needs changing.
+ */
+export const PACKAGES_FROM_EUR: number | null = null;
+
 export const LOCALE = 'el_GR';
 export const LANG = 'el-GR';
 export const SITE_NAME = 'adinfinity — Ψηφιακές Προσκλήσεις';
@@ -164,6 +173,22 @@ export const PAGES = {
     ogSub: 'Ψηφιακή πρόσκληση γάμου — δείγμα',
     priority: 0.6,
     changeFrequency: 'yearly',
+    lastModified: '2026-08-17',
+  },
+  request: {
+    path: '/request',
+    title: 'Ζητήστε το Προσκλητήριό σας',
+    description:
+      'Ζητήστε το ψηφιακό σας προσκλητήριο γάμου. Στείλτε ονόματα, ημερομηνία και τύπο πρόσκλησης — απαντάμε με πρόταση και τιμή.',
+    keywords: [
+      'παραγγελία ψηφιακού προσκλητηρίου',
+      'ζητήστε προσκλητήριο γάμου',
+      'τιμή ψηφιακού προσκλητηρίου',
+    ],
+    ogHeadline: 'Ζητήστε το Προσκλητήριό σας',
+    ogSub: 'Στείλτε τα στοιχεία σας και σας απαντάμε με πρόταση',
+    priority: 0.9,
+    changeFrequency: 'monthly',
     lastModified: '2026-08-17',
   },
   karaiskakia: {

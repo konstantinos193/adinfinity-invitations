@@ -91,9 +91,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <Image src="/logo.png" alt="adinfinity" width={120} height={40} className="object-contain" />
           <a
-            href="https://adinfinity.gr/contact#contact-form"
-            target="_blank"
-            rel="noreferrer"
+            href="/request"
             className="bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] text-sm font-bold px-6 py-2.5 rounded-full transition-colors"
           >
             Ζητήστε την πρόσκλησή σας
@@ -136,9 +134,7 @@ export default function LandingPage() {
               {...(prefersReduced ? {} : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, delay: 0.24 } })}
             >
               <motion.a
-                href="https://adinfinity.gr/contact#contact-form"
-                target="_blank"
-                rel="noreferrer"
+                href="/request"
                 className="bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-3.5 px-8 rounded-full text-base text-center transition-colors"
                 whileHover={prefersReduced ? {} : { scale: 1.02 }}
                 whileTap={prefersReduced ? {} : { scale: 0.98 }}
@@ -420,9 +416,7 @@ export default function LandingPage() {
               </div>
               <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-4 lg:justify-end">
                 <motion.a
-                  href="https://adinfinity.gr/contact#contact-form"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="/request"
                   className="inline-flex items-center justify-center gap-2 bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold px-8 py-4 rounded-full text-base transition-colors"
                   whileHover={prefersReduced ? {} : { scale: 1.02 }}
                   whileTap={prefersReduced ? {} : { scale: 0.98 }}

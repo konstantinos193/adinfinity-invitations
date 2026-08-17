@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { el } from 'date-fns/locale';
 import type { Invitation } from '@/lib/types';
+import InvitationFooter from '@/components/InvitationFooter';
 
 function embedUrl(url: string): string {
   // YouTube
@@ -128,12 +129,7 @@ export default function VideoOnlyPage({ invitation }: Props) {
       )}
 
       {/* Footer */}
-      <footer className="text-center py-8 text-xs text-white/20 border-t border-white/5">
-        Δημιουργήθηκε από{' '}
-        <a href="https://adinfinity.gr" className="hover:text-white/50 transition-colors">
-          adinfinity.gr
-        </a>
-      </footer>
+      <InvitationFooter tone="dark" />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { AdminSidebar } from './Sidebar';
+import WeddingFonts from '@/components/WeddingFonts';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-[#07141C] text-white relative">
+      {/* Admin previews invitations in every available face, so it needs the
+          full display-font set that the marketing pages no longer load. */}
+      <WeddingFonts />
       {/* Subtle grid pattern */}
       <div
         className="fixed inset-0 pointer-events-none opacity-[0.025]"

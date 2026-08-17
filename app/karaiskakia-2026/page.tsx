@@ -1,19 +1,20 @@
-import type { Metadata } from 'next';
 import EventHeritageHero from '@/components/templates/EventHeritageHero';
 import EventsSection from '@/components/EventsSection';
 import ContactsSection from '@/components/ContactsSection';
 import RSVPForm from '@/components/RSVPForm';
+import WeddingFonts from '@/components/WeddingFonts';
+import { pageMetadata } from '@/lib/seo';
+import InvitationFooter from '@/components/InvitationFooter';
 
-export const metadata: Metadata = {
-  title: 'Καραϊσκάκεια 2026 | adinfinity',
-  description: 'Επετείου 200 ετών από τον θάνατο του Γεωργίου Καραϊσκάκη. Εκδηλώσεις τιμής στη μνήμη του Αρχιστράτηγου της Ελληνικής Επανάστασης.',
-  openGraph: {
-    title: 'Καραϊσκάκεια 2026',
-    description: 'Επετείου 200 ετών από τον θάνατο του Γεωργίου Καραϊσκάκη. Εκδηλώσεις τιμής στη μνήμη του Αρχιστράτηγου της Ελληνικής Επανάστασης.',
-    type: 'website',
-    locale: 'el_GR',
-  },
-};
+// Two bugs lived here:
+//   1. the title already ended in "| adinfinity", which the root template then
+//      appended to again → "Καραϊσκάκεια 2026 | adinfinity | adinfinity";
+//   2. no `alternates.canonical`, so it inherited the root layout's `'/'` and
+//      declared the HOMEPAGE as its canonical — which stops it being indexed
+//      under its own URL entirely.
+// Both are now handled centrally by pageMetadata(). Note this page is
+// currently `noindex` by registry flag while its content is placeholder data.
+export const metadata = pageMetadata('karaiskakia');
 
 const mockEvents = [
   {
@@ -47,6 +48,7 @@ const mockContacts = [
 export default function Karaiskakia2026Page() {
   return (
     <main>
+      <WeddingFonts />
       <EventHeritageHero
         eventTitle="Καραϊσκάκεια 2026"
         hostName="Δήμος Γεωργίου Καραϊσκάκη"
@@ -65,12 +67,7 @@ export default function Karaiskakia2026Page() {
 
       <RSVPForm slug="karaiskakia-2026" rsvpDeadline="2026-04-15" color="#b8960c" />
 
-      <footer className="py-8 text-center text-xs text-[#5c3320]/40 bg-[#fdfaf6] border-t border-[#b8960c]/10">
-        Δημιουργήθηκε από{' '}
-        <a href="https://adinfinity.gr" className="hover:text-[#b8960c] transition-colors">
-          adinfinity.gr
-        </a>
-      </footer>
+      <InvitationFooter />
     </main>
   );
 }

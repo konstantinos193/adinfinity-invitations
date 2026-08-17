@@ -7,6 +7,7 @@ import { el } from 'date-fns/locale';
 import { MapPin, CreditCard, Send, CheckCircle } from 'lucide-react';
 import RSVPForm from '@/components/RSVPForm';
 import type { Invitation } from '@/lib/types';
+import InvitationFooter from '@/components/InvitationFooter';
 
 function embedUrl(url: string): string {
   const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
@@ -236,12 +237,7 @@ export default function VideoProsklitirio({ invitation }: Props) {
       </div>
 
       {/* Footer */}
-      <footer className="py-8 text-center text-xs text-[#5c3320]/40 bg-[#fdfaf6] border-t border-[#b8960c]/10">
-        Δημιουργήθηκε από{' '}
-        <a href="https://adinfinity.gr" className="hover:text-[#b8960c] transition-colors">
-          adinfinity.gr
-        </a>
-      </footer>
+      <InvitationFooter />
     </div>
   );
 }

@@ -1,21 +1,49 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
+import JsonLd from '@/components/JsonLd';
+import RelatedLinks from '@/components/RelatedLinks';
+import {
+  PAGES,
+  breadcrumbNode,
+  faqNode,
+  graph,
+  localBusinessNode,
+  pageMetadata,
+  serviceNode,
+  webPageNode,
+} from '@/lib/seo';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/prosklitiria-gamou-arta' },
-  title: 'Προσκλήσεις Γάμου Άρτα',
-  description: 'Ψηφιακές προσκλήσεις γάμου στην Άρτα. Δημιουργήστε το δικό σας mini-site με RSVP, χάρτες και video. adinfinity — Ηλεκτρονικά προσκλητήρια γάμου.',
-  openGraph: {
-    title: 'Προσκλήσεις Γάμου Άρτα',
-    description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
-    type: 'website',
-    locale: 'el_GR',
+export const metadata = pageMetadata('arta');
+
+const FAQ = [
+  {
+    q: 'Εξυπηρετείτε ζευγάρια εκτός Άρτας;',
+    a: 'Ναι. Το προσκλητήριο σχεδιάζεται και παραδίδεται εξ ολοκλήρου ψηφιακά, οπότε συνεργαζόμαστε με ζευγάρια σε όλη την Ήπειρο και την Ελλάδα. Το γραφείο μας βρίσκεται στη Βασ. Πύρρου 30 στην Άρτα για όσους προτιμούν δια ζώσης συνάντηση.',
   },
-};
+  {
+    q: 'Μπορείτε να προσθέσετε τοποθεσίες γάμου στην Άρτα;',
+    a: 'Ναι. Κάθε εκδήλωση — εκκλησία, δεξίωση, δείπνο — μπαίνει με ακριβή διεύθυνση και σύνδεσμο Google Maps, ώστε οι καλεσμένοι να πλοηγηθούν με ένα tap.',
+  },
+  {
+    q: 'Πόσο χρόνο χρειάζεται η δημιουργία;',
+    a: 'Αφού λάβουμε τα στοιχεία και το φωτογραφικό υλικό σας, το προσκλητήριο είναι συνήθως έτοιμο για έλεγχο μέσα σε λίγες ημέρες, με διορθώσεις πριν την τελική δημοσίευση.',
+  },
+];
 
 export default function ProsklitiriaGamouArtaPage() {
   return (
     <div className="min-h-screen bg-[#07141C] text-white">
+      <JsonLd
+        data={graph(
+          webPageNode('arta'),
+          breadcrumbNode([
+            { name: 'Αρχική', path: '/' },
+            { name: 'Προσκλητήρια Γάμου Άρτα', path: PAGES.arta.path },
+          ]),
+          localBusinessNode,
+          serviceNode,
+          faqNode(PAGES.arta.path, FAQ),
+        )}
+      />
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#01FFFF]">Προσκλήσεις Γάμου Άρτα</h1>
         
@@ -85,11 +113,25 @@ export default function ProsklitiriaGamouArtaPage() {
           </Link>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[#01FFFF]/10">
-          <Link href="/" className="text-white/50 hover:text-[#01FFFF] transition-colors">
-            ← Επιστροφή στην αρχική
-          </Link>
-        </div>
+        {/* Visible counterpart to the FAQPage structured data above. */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6 text-white">Συχνές ερωτήσεις</h2>
+          <div className="space-y-4">
+            {FAQ.map(({ q, a }) => (
+              <details
+                key={q}
+                className="group rounded-xl border border-[#01FFFF]/15 bg-[#071218]/60 p-5"
+              >
+                <summary className="cursor-pointer font-semibold text-[#01FFFF] marker:content-['']">
+                  {q}
+                </summary>
+                <p className="mt-3 text-white/70 leading-relaxed">{a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <RelatedLinks current="arta" />
       </div>
     </div>
   );

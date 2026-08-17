@@ -1,5 +1,6 @@
-import type { Metadata } from 'next';
 import InvitationHero from '@/components/InvitationHero';
+import WeddingFonts from '@/components/WeddingFonts';
+import { pageMetadata } from '@/lib/seo';
 import OurStory from '@/components/OurStory';
 import EventsSection from '@/components/EventsSection';
 import ContactsSection from '@/components/ContactsSection';
@@ -9,18 +10,10 @@ import VideoSection from '@/components/VideoSection';
 import FloatingBar from '@/components/FloatingBar';
 import MusicPlayer from '@/components/MusicPlayer';
 import PhotoGallery from '@/components/PhotoGallery';
+import InvitationFooter from '@/components/InvitationFooter';
+import DemoNotice from '@/components/DemoNotice';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/ioanna-alexandros' },
-  title: 'Ιωάννα & Αλέξανδρος',
-  description: 'Ψηφιακή πρόσκληση γάμου — Ιωάννα & Αλέξανδρος. RSVP online, χάρτες εκδηλώσεων και λεπτομέρειες.',
-  openGraph: {
-    title: 'Ιωάννα & Αλέξανδρος',
-    description: 'Ψηφιακή πρόσκληση γάμου — Ιωάννα & Αλέξανδρος. RSVP online, χάρτες εκδηλώσεων και λεπτομέρειες.',
-    type: 'website',
-    locale: 'el_GR',
-  },
-};
+export const metadata = pageMetadata('ioanna');
 
 const demoInvitation = {
   brideName: 'Ιωάννα',
@@ -101,6 +94,8 @@ export default function DemoInvitationPage() {
 
   return (
     <main>
+      <DemoNotice />
+      <WeddingFonts />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -143,12 +138,7 @@ export default function DemoInvitationPage() {
 
       <RSVPForm slug="ioanna-alexandros" rsvpDeadline={demoInvitation.rsvpDeadline} color={demoInvitation.primaryColor} />
 
-      <footer className="py-8 text-center text-xs text-[#5c3320]/40 bg-[#fdfaf6] border-t border-[#b8960c]/10">
-        Δημιουργήθηκε από{' '}
-        <a href="https://adinfinity.gr" className="hover:text-[#b8960c] transition-colors">
-          adinfinity.gr
-        </a>
-      </footer>
+      <InvitationFooter />
 
       <FloatingBar events={demoInvitation.events} gifts={demoInvitation.giftRegistries} color={demoInvitation.primaryColor} />
 

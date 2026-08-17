@@ -1,3 +1,4 @@
+import InvitationFooter from '@/components/InvitationFooter';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getInvitation } from '@/lib/api';
@@ -14,6 +15,8 @@ import PhotoGallery from '@/components/PhotoGallery';
 import VideoOnlyPage from '@/components/templates/VideoOnlyPage';
 import VideoProsklitirio from '@/components/templates/VideoProsklitirio';
 import EventHeritageHero from '@/components/templates/EventHeritageHero';
+import WeddingFonts from '@/components/WeddingFonts';
+import { SITE_NAME, SITE_URL } from '@/lib/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -41,11 +44,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title,
       description,
+      // Required. Without it this page inherits the root layout's
+      // `alternates.canonical: '/'` and tells Google that every client
+      // invitation is a duplicate of the homepage.
+      alternates: { canonical: `/${slug}` },
       openGraph: {
         title,
         description,
         type: 'website',
         locale: 'el_GR',
+        url: `${SITE_URL}/${slug}`,
+        siteName: SITE_NAME,
         ...(images.length > 0 && { images }),
       },
       twitter: {
@@ -54,9 +63,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         description,
         ...(inv.coverImageUrl && { images: [inv.coverImageUrl] }),
       },
+      // Client invitations are never indexed, ACTIVE or not.
+      //
+      // These pages carry third parties' personal data — the couple's and
+      // their relatives' phone numbers and email, venue addresses, and a bank
+      // IBAN — none of which the guests consented to publish in a search
+      // engine. The SEO asset is the product; a customer's wedding is not.
+      //
+      // `follow: true` is deliberate: it keeps the footer's adinfinity.gr
+      // attribution link live as an acquisition loop.
+      // `noimageindex` keeps the couple's photos out of Google Images, and
+      // `noarchive` prevents a cached copy outliving the page.
       robots: {
-        index: inv.status === 'ACTIVE',
+        index: false,
         follow: true,
+        noimageindex: true,
+        noarchive: true,
       },
     };
   } catch {
@@ -75,10 +97,20 @@ export default async function InvitationPage({ params }: Props) {
   }
 
   if (invitation.invitationType === 'VIDEO') {
-    return <VideoOnlyPage invitation={invitation} />;
+    return (
+      <>
+        <WeddingFonts />
+        <VideoOnlyPage invitation={invitation} />
+      </>
+    );
   }
   if (invitation.invitationType === 'VIDEO_PROSKLITIRIO') {
-    return <VideoProsklitirio invitation={invitation} />;
+    return (
+      <>
+        <WeddingFonts />
+        <VideoProsklitirio invitation={invitation} />
+      </>
+    );
   }
 
   const isHeritage = invitation.eventCategory === 'EVENT' && invitation.backgroundStyle === 'heritage';
@@ -99,6 +131,7 @@ export default async function InvitationPage({ params }: Props) {
 
   return (
     <main>
+      <WeddingFonts />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -158,12 +191,7 @@ export default async function InvitationPage({ params }: Props) {
 
       <RSVPForm slug={slug} rsvpDeadline={invitation.rsvpDeadline} color={invitation.primaryColor ?? undefined} />
 
-      <footer className="py-8 text-center text-xs text-[#5c3320]/40 bg-[#fdfaf6] border-t border-[#b8960c]/10">
-        Δημιουργήθηκε από{' '}
-        <a href="https://adinfinity.gr" className="hover:text-[#b8960c] transition-colors">
-          adinfinity.gr
-        </a>
-      </footer>
+      <InvitationFooter />
 
       <FloatingBar events={invitation.events} gifts={invitation.giftRegistries} color={invitation.primaryColor ?? undefined} />
 

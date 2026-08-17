@@ -1,4 +1,12 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+// Soft-404s are a common cause of index bloat: without this the 404 body would
+// be served under the root layout's indexable robots directives.
+export const metadata: Metadata = {
+  title: 'Η σελίδα δεν βρέθηκε',
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

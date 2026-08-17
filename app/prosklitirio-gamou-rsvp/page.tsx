@@ -1,21 +1,52 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
+import JsonLd from '@/components/JsonLd';
+import RelatedLinks from '@/components/RelatedLinks';
+import {
+  CONTACT_URL,
+  PAGES,
+  breadcrumbNode,
+  faqNode,
+  graph,
+  pageMetadata,
+  serviceNode,
+  webPageNode,
+} from '@/lib/seo';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/prosklitirio-gamou-rsvp' },
-  title: 'Προσκλητήριο Γάμου με RSVP Online',
-  description: 'Δημιουργήστε προσκλητήριο γάμου με RSVP online. Οι καλεσμένοι απαντούν απευθείας από το κινητό τους και εσείς βλέπετε τις απαντήσεις σε πραγματικό χρόνο.',
-  openGraph: {
-    title: 'Προσκλητήριο Γάμου με RSVP Online',
-    description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
-    type: 'website',
-    locale: 'el_GR',
+export const metadata = pageMetadata('rsvp');
+
+const FAQ = [
+  {
+    q: 'Τι σημαίνει RSVP σε προσκλητήριο γάμου;',
+    a: 'RSVP προέρχεται από το γαλλικό «répondez s\'il vous plaît» και σημαίνει «παρακαλώ απαντήστε». Στο ψηφιακό προσκλητήριο είναι μια φόρμα όπου ο καλεσμένος δηλώνει αν θα παραβρεθεί, με πόσα άτομα και τυχόν σχόλια.',
   },
-};
+  {
+    q: 'Χρειάζεται εγγραφή για να απαντήσει ο καλεσμένος;',
+    a: 'Όχι. Ο καλεσμένος ανοίγει το link, συμπληρώνει το όνομά του και απαντά σε λίγα δευτερόλεπτα από το κινητό, χωρίς λογαριασμό και χωρίς εφαρμογή.',
+  },
+  {
+    q: 'Πώς βλέπω τις απαντήσεις;',
+    a: 'Κάθε απάντηση εμφανίζεται άμεσα σε dashboard με σύνολα συμμετοχών, αριθμό ατόμων ανά απάντηση και σχόλια. Τα δεδομένα εξάγονται σε αρχείο για τον καταλόγο τραπεζιών.',
+  },
+  {
+    q: 'Μπορώ να ορίσω προθεσμία απάντησης;',
+    a: 'Ναι. Ορίζετε καταληκτική ημερομηνία RSVP και η φόρμα κλείνει αυτόματα μετά από αυτήν, ώστε να έχετε οριστικό αριθμό για τη δεξίωση.',
+  },
+];
 
 export default function ProsklitirioGamouRsvpPage() {
   return (
     <div className="min-h-screen bg-[#07141C] text-white">
+      <JsonLd
+        data={graph(
+          webPageNode('rsvp'),
+          breadcrumbNode([
+            { name: 'Αρχική', path: '/' },
+            { name: 'Προσκλητήριο Γάμου με RSVP Online', path: PAGES.rsvp.path },
+          ]),
+          serviceNode,
+          faqNode(PAGES.rsvp.path, FAQ),
+        )}
+      />
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#01FFFF]">Προσκλητήριο Γάμου με RSVP Online</h1>
         
@@ -70,7 +101,7 @@ export default function ProsklitirioGamouRsvpPage() {
 
         <div className="text-center">
           <Link
-            href="https://adinfinity.gr/contact#contact-form"
+            href={CONTACT_URL}
             target="_blank"
             rel="noreferrer"
             className="inline-block bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-4 px-8 rounded-full text-lg transition-colors"
@@ -79,11 +110,25 @@ export default function ProsklitirioGamouRsvpPage() {
           </Link>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[#01FFFF]/10">
-          <Link href="/" className="text-white/50 hover:text-[#01FFFF] transition-colors">
-            ← Επιστροφή στην αρχική
-          </Link>
-        </div>
+        {/* Visible counterpart to the FAQPage structured data above. */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6 text-white">Συχνές ερωτήσεις</h2>
+          <div className="space-y-4">
+            {FAQ.map(({ q, a }) => (
+              <details
+                key={q}
+                className="group rounded-xl border border-[#01FFFF]/15 bg-[#071218]/60 p-5"
+              >
+                <summary className="cursor-pointer font-semibold text-[#01FFFF] marker:content-['']">
+                  {q}
+                </summary>
+                <p className="mt-3 text-white/70 leading-relaxed">{a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <RelatedLinks current="rsvp" />
       </div>
     </div>
   );

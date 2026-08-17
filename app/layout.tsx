@@ -1,6 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import JsonLd from "@/components/JsonLd";
+import {
+  LANG,
+  LOCALE,
+  PAGES,
+  SITE_NAME,
+  SITE_URL,
+  BRAND_URL,
+  graph,
+  organizationNode,
+  websiteNode,
+} from "@/lib/seo";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin", "greek"] });
 const playfair = Playfair_Display({
@@ -9,56 +21,65 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 });
 
-// Loaded via <link> so we're not restricted by next/font subset types.
-// All 8 fonts have confirmed Greek glyph support on Google Fonts.
-const WEDDING_FONTS =
-  'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600' +
-  '&family=Alegreya:ital,wght@0,400;0,700;1,400;1,700' +
-  '&family=GFS+Didot:ital,wght@0,400;1,400' +
-  '&family=Cardo:ital,wght@0,400;0,700;1,400' +
-  '&family=Gentium+Plus:ital,wght@0,400;0,700;1,400;1,700' +
-  '&family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700' +
-  '&family=Tinos:ital,wght@0,400;0,700;1,400;1,700' +
-  '&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400' +
-  '&display=swap';
-
+// NOTE: the homepage (app/page.tsx) is a client component and so cannot export
+// its own `metadata` — the values below ARE the homepage's metadata.
+//
+// Consequence to watch: `alternates.canonical` here is inherited by any route
+// that doesn't set its own, which silently canonicalises it to the homepage.
+// Every page under app/ must declare its own canonical (see lib/seo.ts).
 export const metadata: Metadata = {
-  metadataBase: new URL('https://invitations.adinfinity.gr'),
-  alternates: { canonical: '/' },
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: '/',
+    languages: { [LANG]: '/', 'x-default': '/' },
+  },
   title: {
-    default: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
+    default: `${PAGES.home.title} | adinfinity`,
     template: '%s | adinfinity',
   },
-  description:
-    'Δημιουργήστε την ψηφιακή πρόσκληση γάμου σας — mini-site με αντίστροφη μέτρηση, RSVP online, χάρτες Google, λίστα δώρων και video. Ένα μόνο link για όλους τους καλεσμένους.',
-  keywords: [
-    'ψηφιακή πρόσκληση γάμου',
-    'online πρόσκληση γάμου',
-    'ηλεκτρονική πρόσκληση',
-    'RSVP online',
-    'προσκλητήριο γάμου',
-    'adinfinity',
-  ],
-  authors: [{ name: 'adinfinity', url: 'https://adinfinity.gr' }],
+  description: PAGES.home.description,
+  keywords: [...PAGES.home.keywords],
+  applicationName: SITE_NAME,
+  category: 'Wedding',
+  authors: [{ name: 'adinfinity', url: BRAND_URL }],
+  creator: 'adinfinity',
+  publisher: 'adinfinity',
+  formatDetection: { telephone: false, address: false, email: false },
   openGraph: {
     type: 'website',
-    locale: 'el_GR',
-    siteName: 'adinfinity — Ψηφιακές Προσκλήσεις',
-    title: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
-    description:
-      'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video. Ένα link για όλους τους καλεσμένους.',
+    locale: LOCALE,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${PAGES.home.title} | adinfinity`,
+    description: PAGES.home.description,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ψηφιακές Προσκλήσεις Γάμου | adinfinity',
-    description:
-      'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
+    title: `${PAGES.home.title} | adinfinity`,
+    description: PAGES.home.description,
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      // Let Google use full-size image previews and untruncated snippets.
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
 };
 
 export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  // Not locked to 1 — pinch-zoom is an accessibility requirement.
+  maximumScale: 5,
+  userScalable: true,
   themeColor: '#b8960c',
+  colorScheme: 'light',
 };
 
 export default function RootLayout({
@@ -66,12 +87,12 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="el" className={`${inter.variable} ${playfair.variable}`}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href={WEDDING_FONTS} />
-      </head>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        {/* Site-wide entity graph: emitted on every route so each page ties
+            back to the same Organization and WebSite nodes. */}
+        <JsonLd data={graph(organizationNode, websiteNode)} />
+        {children}
+      </body>
     </html>
   );
 }

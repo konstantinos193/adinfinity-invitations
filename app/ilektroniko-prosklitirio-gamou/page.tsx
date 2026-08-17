@@ -1,21 +1,52 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
+import JsonLd from '@/components/JsonLd';
+import RelatedLinks from '@/components/RelatedLinks';
+import {
+  CONTACT_URL,
+  PAGES,
+  breadcrumbNode,
+  faqNode,
+  graph,
+  pageMetadata,
+  serviceNode,
+  webPageNode,
+} from '@/lib/seo';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/ilektroniko-prosklitirio-gamou' },
-  title: 'Ηλεκτρονικό Προσκλητήριο Γάμου',
-  description: 'Το ηλεκτρονικό προσκλητήριο γάμου είναι η σύγχρονη εναλλακτική λύση για τις χάρτινες προσκλήσεις. Δημιουργήστε το δικό σας mini-site με RSVP, χάρτες και video.',
-  openGraph: {
-    title: 'Ηλεκτρονικό Προσκλητήριο Γάμου',
-    description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
-    type: 'website',
-    locale: 'el_GR',
+export const metadata = pageMetadata('ilektroniko');
+
+const FAQ = [
+  {
+    q: 'Τι διαφορά έχει το ηλεκτρονικό από το χάρτινο προσκλητήριο;',
+    a: 'Το ηλεκτρονικό προσκλητήριο δεν εκτυπώνεται και δεν αποστέλλεται ταχυδρομικά: είναι ένα link που ανοίγει σε κάθε κινητό. Περιλαμβάνει στοιχεία που το χαρτί δεν μπορεί — αντίστροφη μέτρηση, διαδραστικούς χάρτες, video και αυτόματο RSVP.',
   },
-};
+  {
+    q: 'Είναι πιο οικονομικό από τις χάρτινες προσκλήσεις;',
+    a: 'Ναι. Δεν υπάρχει κόστος εκτύπωσης, φακέλων ή αποστολής, και δεν χρειάζεται να παραγγείλετε επιπλέον αντίτυπα για καλεσμένους που προστίθενται αργότερα.',
+  },
+  {
+    q: 'Μπορώ να το στείλω σε Viber, WhatsApp ή email;',
+    a: 'Ναι. Επειδή πρόκειται για έναν απλό σύνδεσμο, μπορείτε να τον στείλετε από οποιαδήποτε εφαρμογή — Viber, WhatsApp, Messenger, SMS ή email — και εμφανίζεται με εικόνα προεπισκόπησης.',
+  },
+  {
+    q: 'Τι γίνεται αν αλλάξει η ώρα ή η τοποθεσία;',
+    a: 'Ενημερώνουμε το προσκλητήριο και η αλλαγή είναι άμεσα ορατή σε όλους όσους έχουν το link, χωρίς να χρειαστεί να ειδοποιήσετε ξεχωριστά τον καθένα.',
+  },
+];
 
 export default function IlektronikoProsklitirioGamouPage() {
   return (
     <div className="min-h-screen bg-[#07141C] text-white">
+      <JsonLd
+        data={graph(
+          webPageNode('ilektroniko'),
+          breadcrumbNode([
+            { name: 'Αρχική', path: '/' },
+            { name: 'Ηλεκτρονικό Προσκλητήριο Γάμου', path: PAGES.ilektroniko.path },
+          ]),
+          serviceNode,
+          faqNode(PAGES.ilektroniko.path, FAQ),
+        )}
+      />
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#01FFFF]">Ηλεκτρονικό Προσκλητήριο Γάμου</h1>
         
@@ -70,7 +101,7 @@ export default function IlektronikoProsklitirioGamouPage() {
 
         <div className="text-center">
           <Link
-            href="https://adinfinity.gr/contact#contact-form"
+            href={CONTACT_URL}
             target="_blank"
             rel="noreferrer"
             className="inline-block bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-4 px-8 rounded-full text-lg transition-colors"
@@ -79,11 +110,25 @@ export default function IlektronikoProsklitirioGamouPage() {
           </Link>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[#01FFFF]/10">
-          <Link href="/" className="text-white/50 hover:text-[#01FFFF] transition-colors">
-            ← Επιστροφή στην αρχική
-          </Link>
-        </div>
+        {/* Visible counterpart to the FAQPage structured data above. */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold mb-6 text-white">Συχνές ερωτήσεις</h2>
+          <div className="space-y-4">
+            {FAQ.map(({ q, a }) => (
+              <details
+                key={q}
+                className="group rounded-xl border border-[#01FFFF]/15 bg-[#071218]/60 p-5"
+              >
+                <summary className="cursor-pointer font-semibold text-[#01FFFF] marker:content-['']">
+                  {q}
+                </summary>
+                <p className="mt-3 text-white/70 leading-relaxed">{a}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <RelatedLinks current="ilektroniko" />
       </div>
     </div>
   );

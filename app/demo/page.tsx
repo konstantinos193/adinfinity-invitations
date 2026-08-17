@@ -1,21 +1,31 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
+import JsonLd from '@/components/JsonLd';
+import RelatedLinks from '@/components/RelatedLinks';
+import {
+  CONTACT_URL,
+  PAGES,
+  breadcrumbNode,
+  graph,
+  pageMetadata,
+  serviceNode,
+  webPageNode,
+} from '@/lib/seo';
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/demo' },
-  title: 'Demo Προσκλητήριο Γάμου',
-  description: 'Δείτε ένα demo ψηφιακού προσκλητηρίου γάμου. Mini-site με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
-  openGraph: {
-    title: 'Demo Προσκλητήριο Γάμου',
-    description: 'Mini-site για τον γάμο σας με αντίστροφη μέτρηση, RSVP, χάρτες και video.',
-    type: 'website',
-    locale: 'el_GR',
-  },
-};
+export const metadata = pageMetadata('demo');
 
 export default function DemoPage() {
   return (
     <div className="min-h-screen bg-[#07141C] text-white">
+      <JsonLd
+        data={graph(
+          webPageNode('demo'),
+          breadcrumbNode([
+            { name: 'Αρχική', path: '/' },
+            { name: 'Demo Προσκλητήριο Γάμου', path: PAGES.demo.path },
+          ]),
+          serviceNode,
+        )}
+      />
       <div className="container mx-auto px-4 py-24 max-w-4xl">
         <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#01FFFF]">Demo Προσκλητήριο Γάμου</h1>
         
@@ -67,7 +77,7 @@ export default function DemoPage() {
 
         <div className="text-center">
           <Link
-            href="https://adinfinity.gr/contact#contact-form"
+            href={CONTACT_URL}
             target="_blank"
             rel="noreferrer"
             className="inline-block bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-4 px-8 rounded-full text-lg transition-colors"
@@ -76,11 +86,7 @@ export default function DemoPage() {
           </Link>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[#01FFFF]/10">
-          <Link href="/" className="text-white/50 hover:text-[#01FFFF] transition-colors">
-            ← Επιστροφή στην αρχική
-          </Link>
-        </div>
+        <RelatedLinks current="demo" />
       </div>
     </div>
   );

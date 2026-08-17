@@ -1,0 +1,132 @@
+# Προσκλητήρια με κωδικό (PIN) — σχεδιασμός
+
+Στόχος: το ζευγάρι να επιλέγει αν το προσκλητήριό του είναι **δημόσιο** (όποιος
+έχει το link το βλέπει) ή **κλειδωμένο με PIN** (μόνο όποιος ξέρει τον κωδικό).
+
+Δεν είναι υλοποιημένο. Αυτό το έγγραφο είναι η πρόταση υλοποίησης.
+
+---
+
+## 1. Schema (Prisma) — **χρειάζεται migration**
+
+```prisma
+enum AccessMode {
+  PUBLIC
+  PIN
+}
+
+model Invitation {
+  // …
+  accessMode AccessMode @default(PUBLIC)
+  accessPin  String?    // bcrypt hash — ποτέ plaintext
+}
+```
+
+> ⚠️ **Παγίδα deploy:** το `deploy.sh` του backend δεν τρέχει migrations. Αυτό
+> το βήμα πρέπει είτε να προστεθεί εκεί είτε να εκτελεστεί χειροκίνητα, αλλιώς
+> το build θα ανέβει με schema drift και το `accessMode` δεν θα υπάρχει στη ΒΔ.
+
+Το `bcryptjs` υπάρχει ήδη στο backend (χρησιμοποιείται για τους admins).
+
+---
+
+## 2. Backend
+
+### `GET /invitations/:slug`
+
+Αν `accessMode === 'PIN'` και δεν υπάρχει έγκυρο unlock token, επιστρέφει
+**μόνο** ένα ελάχιστο payload:
+
+```json
+{ "slug": "ioanna-alexandros", "accessMode": "PIN", "locked": true }
+```
+
+Κανένα όνομα, ημερομηνία, διεύθυνση, τηλέφωνο ή IBAN. Το φιλτράρισμα γίνεται
+**στο backend** — όχι κρύβοντας πεδία στο frontend, γιατί τότε τα δεδομένα
+ταξιδεύουν ήδη στον browser.
+
+### `POST /invitations/:slug/unlock`
+
+```
+body: { pin: string }
+→ 200 { token: string }   // JWT, scoped στο συγκεκριμένο slug, ~30 ημέρες
+→ 401                      // λάθος PIN
+→ 429                      // πολλές προσπάθειες
+```
+
+**Rate limiting υποχρεωτικό.** Ένα 4ψήφιο PIN έχει 10.000 συνδυασμούς — χωρίς
+όριο σπάει σε δευτερόλεπτα. Πρόταση: 5 προσπάθειες / 15 λεπτά ανά IP+slug, με
+την ίδια in-memory προσέγγιση που χρησιμοποιεί ήδη το `LeadsController`.
+
+### `POST /invitations/:slug/rsvp`
+
+Πρέπει **και αυτό** να απαιτεί το unlock token όταν `accessMode === 'PIN'`.
+Αλλιώς κάποιος χωρίς τον κωδικό μπορεί να στέλνει RSVP στο προσκλητήριο.
+
+---
+
+## 3. Frontend
+
+### Ροή
+
+1. Το `app/[slug]/page.tsx` διαβάζει cookie `inv_<slug>`.
+2. Το περνά ως `Authorization` στο `getInvitation`.
+3. Αν γυρίσει `locked: true` → render `<PinGate slug={slug} />` αντί για το
+   προσκλητήριο.
+4. Το `PinGate` (client) κάνει POST στο `/api/unlock` (Next Route Handler), που
+   καλεί το backend και θέτει το cookie **httpOnly**.
+5. `router.refresh()` → η σελίδα ξαναφορτώνει ξεκλείδωτη.
+
+Cookie: `httpOnly`, `secure`, `sameSite=lax`, ανά slug, ~30 ημέρες. Το token δεν
+πρέπει να είναι προσβάσιμο από JS (αποφυγή διαρροής μέσω XSS).
+
+### ⚠️ Τρία σημεία που διαρρέουν δεδομένα αν αγνοηθούν
+
+Αυτά είναι τα μη προφανή — το PIN gate από μόνο του **δεν** αρκεί:
+
+**α) ISR cache.** Το `getInvitation` τρέχει σήμερα με `next: { revalidate: 60 }`,
+δηλαδή κοινό cache για όλους. Μόλις η σελίδα γίνει εξαρτώμενη από cookie, το
+ξεκλείδωτο HTML μπορεί να σερβιριστεί σε κλειδωμένο επισκέπτη. Λύση: για
+`accessMode === 'PIN'` η σελίδα πρέπει να γίνει **δυναμική** (η ανάγνωση cookie
+το επιβάλλει ούτως ή άλλως) και το fetch `cache: 'no-store'`.
+
+**β) `generateMetadata`.** Σήμερα βάζει τα ονόματα στο `<title>` και στο
+`description`. Για κλειδωμένο προσκλητήριο πρέπει να επιστρέφει ουδέτερο τίτλο
+(π.χ. «Πρόσκληση») — αλλιώς τα ονόματα φαίνονται στον τίτλο του tab πριν καν
+μπει ο κωδικός.
+
+**γ) Open Graph — η σοβαρότερη.** Όταν κάποιος στέλνει το link σε Viber/WhatsApp,
+η εφαρμογή διαβάζει τα `og:title` / `og:image` **χωρίς** cookie. Σήμερα αυτά
+περιέχουν τα ονόματα και τη φωτογραφία του ζευγαριού. Δηλαδή η προεπισκόπηση θα
+αποκάλυπτε ακριβώς ό,τι προστατεύει το PIN. Για κλειδωμένα προσκλητήρια το OG
+πρέπει να είναι γενικό (ουδέτερη κάρτα, χωρίς cover photo).
+
+---
+
+## 4. Admin
+
+Στο `app/admin/edit/[id]` και στα create wizards:
+
+- toggle **Δημόσιο / Με κωδικό**
+- πεδίο PIN (εμφανίζεται μόνο στο PIN mode)
+- το PIN δεν επιστρέφεται ποτέ από το API — μόνο `hasPin: boolean`. Αλλαγή
+  σημαίνει αντικατάσταση, όχι ανάγνωση.
+- βοηθητικό κείμενο ότι ο κωδικός μοιράζεται μαζί με το link στους καλεσμένους.
+
+---
+
+## 5. Σχέση με το SEO
+
+Καμία απώλεια: τα `/[slug]` είναι ήδη `noindex` (βλ. `app/[slug]/page.tsx`), άρα
+το PIN δεν αφαιρεί τίποτα από την ορατότητα στη Google. Οι σελίδες προϊόντος
+παραμένουν το μοναδικό indexable κομμάτι.
+
+---
+
+## 6. Σειρά υλοποίησης
+
+1. Migration + `accessMode`/`accessPin` (με το deploy να τρέχει migrations)
+2. Backend: φιλτράρισμα payload + `/unlock` + rate limit + προστασία RSVP
+3. Frontend: `PinGate`, route handler, cookie
+4. Διόρθωση metadata + OG για κλειδωμένα (σημεία β & γ)
+5. Admin UI

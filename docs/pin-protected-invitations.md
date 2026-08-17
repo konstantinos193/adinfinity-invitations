@@ -3,7 +3,21 @@
 Στόχος: το ζευγάρι να επιλέγει αν το προσκλητήριό του είναι **δημόσιο** (όποιος
 έχει το link το βλέπει) ή **κλειδωμένο με PIN** (μόνο όποιος ξέρει τον κωδικό).
 
-Δεν είναι υλοποιημένο. Αυτό το έγγραφο είναι η πρόταση υλοποίησης.
+**Υλοποιημένο.** Αυτό το έγγραφο περιγράφει πώς δουλεύει και γιατί πάρθηκαν οι
+συγκεκριμένες αποφάσεις.
+
+Αρχεία:
+
+| Κομμάτι | Αρχείο |
+| --- | --- |
+| Schema | `adinfinity-backend/prisma/schema.prisma` |
+| PIN / tokens / rate limit | `adinfinity-backend/src/invitations/invitation-access.service.ts` |
+| Φιλτράρισμα payload | `adinfinity-backend/src/invitations/invitations.service.ts` |
+| `POST /invitations/:slug/unlock` | `adinfinity-backend/src/invitations/invitations.controller.ts` |
+| Προστασία RSVP | `adinfinity-backend/src/rsvp/rsvp.controller.ts` |
+| PIN gate UI | `components/PinGate.tsx` |
+| Cookie + proxies | `lib/access-cookie.ts`, `app/api/unlock/[slug]/route.ts`, `app/api/rsvp/[slug]/route.ts` |
+| Admin toggle | `app/admin/edit/[id]/page.tsx` |
 
 ---
 
@@ -22,9 +36,15 @@ model Invitation {
 }
 ```
 
-> ⚠️ **Παγίδα deploy:** το `deploy.sh` του backend δεν τρέχει migrations. Αυτό
-> το βήμα πρέπει είτε να προστεθεί εκεί είτε να εκτελεστεί χειροκίνητα, αλλιώς
-> το build θα ανέβει με schema drift και το `accessMode` δεν θα υπάρχει στη ΒΔ.
+> **Deploy:** το `deploy.sh` τρέχει `npx prisma db push`, οπότε το schema
+> συγχρονίζεται αυτόματα. Και οι δύο αλλαγές είναι προσθετικές — νέα στήλη με
+> default (`PUBLIC`) και μια nullable — άρα το `db push` περνά χωρίς
+> `--accept-data-loss`. Δεν απαιτείται χειροκίνητο βήμα.
+>
+> Σημείωση: υπάρχει `prisma/migrations/` με δύο migrations, αλλά το deploy
+> χρησιμοποιεί `db push` και όχι `migrate deploy`. Δεν πρόσθεσα migration file
+> γιατί δεν θα εκτελεστεί ποτέ· αν κάποια στιγμή γυρίσετε σε `migrate deploy`,
+> θα χρειαστεί να δημιουργηθεί.
 
 Το `bcryptjs` υπάρχει ήδη στο backend (χρησιμοποιείται για τους admins).
 

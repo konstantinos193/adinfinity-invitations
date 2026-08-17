@@ -1,7 +1,11 @@
 import InvitationFooter from '@/components/InvitationFooter';
+import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getInvitation } from '@/lib/api';
+import { isLocked } from '@/lib/types';
+import { accessCookieName } from '@/lib/access-cookie';
+import PinGate from '@/components/PinGate';
 import InvitationHero from '@/components/InvitationHero';
 import OurStory from '@/components/OurStory';
 import EventsSection from '@/components/EventsSection';
@@ -34,7 +38,33 @@ function invitationTitle(inv: { eventCategory?: string | null; brideName?: strin
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     const { slug } = await params;
+
+    // Deliberately fetched WITHOUT the unlock token.
+    //
+    // Link-preview crawlers (Viber, WhatsApp, Messenger) request the page with
+    // no cookies, so whatever lands in og:title/og:image is visible to anyone
+    // holding the link. Reading the public response means a PIN-protected
+    // invitation yields the locked stub here, and the preview can't leak the
+    // couple's names or cover photo — which is the whole point of the PIN.
     const inv = await getInvitation(slug);
+
+    if (isLocked(inv)) {
+      return {
+        title: 'Ιδιωτική πρόσκληση',
+        description: 'Η πρόσκληση αυτή προστατεύεται με κωδικό.',
+        alternates: { canonical: `/${slug}` },
+        openGraph: {
+          title: 'Ιδιωτική πρόσκληση',
+          description: 'Η πρόσκληση αυτή προστατεύεται με κωδικό.',
+          type: 'website',
+          locale: 'el_GR',
+          url: `${SITE_URL}/${slug}`,
+          siteName: SITE_NAME,
+        },
+        robots: { index: false, follow: true, noimageindex: true, noarchive: true },
+      };
+    }
+
     const title = invitationTitle(inv);
     const description = `Ψηφιακή πρόσκληση — ${title}. RSVP online, χάρτες εκδηλώσεων και λεπτομέρειες.`;
     const images = inv.coverImageUrl
@@ -89,12 +119,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function InvitationPage({ params }: Props) {
   const { slug } = await params;
 
-  let invitation;
+  // Reading a cookie makes this route dynamic, which is required: a shared ISR
+  // cache would otherwise be able to serve unlocked HTML to a visitor who
+  // never entered the PIN.
+  const jar = await cookies();
+  const accessToken = jar.get(accessCookieName(slug))?.value;
+
+  let response;
   try {
-    invitation = await getInvitation(slug);
+    response = await getInvitation(slug, accessToken);
   } catch {
     notFound();
   }
+
+  if (isLocked(response)) {
+    return <PinGate slug={slug} />;
+  }
+
+  const invitation = response;
 
   if (invitation.invitationType === 'VIDEO') {
     return (

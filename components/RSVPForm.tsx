@@ -41,7 +41,18 @@ export default function RSVPForm({ slug, rsvpDeadline, color }: Props) {
     setLoading(true);
     setError('');
     try {
-      await submitRsvp(slug, form);
+      // Goes through our own route handler rather than straight to the API so
+      // that a PIN-protected invitation's unlock token (httpOnly cookie) can be
+      // attached server-side.
+      const res = await fetch(`/api/rsvp/${encodeURIComponent(slug)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? 'RSVP failed');
+      }
       setStep('done');
     } catch {
       setError('Κάτι πήγε στραβά. Παρακαλώ δοκιμάστε ξανά.');

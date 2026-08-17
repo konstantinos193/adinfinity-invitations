@@ -59,11 +59,34 @@ export interface Invitation {
   musicUrl: string | null;
   status: InvitationStatus;
   invitationType: InvitationType;
+  accessMode: AccessMode;
+  /** Admin-only signal that a PIN exists. The PIN itself is never returned. */
+  hasPin?: boolean;
+  locked: false;
   rsvpDeadline: string | null;
   createdAt: string | null;
   events: Event[];
   contacts: Contact[];
   giftRegistries: GiftRegistry[];
+}
+
+export type AccessMode = 'PUBLIC' | 'PIN';
+
+/**
+ * What the API returns for a PIN-protected invitation before it's unlocked.
+ * Carries no personal data — not even the couple's names.
+ */
+export interface LockedInvitation {
+  slug: string;
+  accessMode: 'PIN';
+  locked: true;
+  invitationType: InvitationType;
+}
+
+export type InvitationResponse = Invitation | LockedInvitation;
+
+export function isLocked(inv: InvitationResponse): inv is LockedInvitation {
+  return inv.locked === true;
 }
 
 export interface CreateRsvpPayload {

@@ -161,6 +161,11 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
   const [rsvpDeadline, setRsvpDeadline] = useState('');
   const [status, setStatus] = useState('DRAFT');
   const [invitationType, setInvitationType] = useState('MINI_WEBSITE');
+  const [accessMode, setAccessMode] = useState('PUBLIC');
+  // Empty = leave the stored PIN untouched. The existing PIN is never sent to
+  // the client, so hasPin is all we know about it.
+  const [accessPin, setAccessPin] = useState('');
+  const [hasPin, setHasPin] = useState(false);
   const [events, setEvents] = useState<EventRow[]>([blankEvent()]);
   const [contacts, setContacts] = useState<ContactRow[]>([blankContact()]);
   const [gifts, setGifts] = useState<GiftRow[]>([]);
@@ -210,6 +215,8 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
         setGalleryImages(inv.galleryImages ?? []);
         setRsvpDeadline(fmt(inv.rsvpDeadline));
         setStatus(inv.status);
+        setAccessMode(inv.accessMode ?? 'PUBLIC');
+        setHasPin(Boolean(inv.hasPin));
         setInvitationType(inv.invitationType ?? 'MINI_WEBSITE');
         setEvents(inv.events.length > 0
           ? inv.events.map((e) => ({ type: e.type, name: e.name, date: fmt(e.date), address: e.address ?? '', mapsUrl: e.mapsUrl ?? '' }))
@@ -337,6 +344,10 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
         galleryImages: galleryImages,
         rsvpDeadline: rsvpDeadline ? new Date(rsvpDeadline).toISOString() : null,
         status,
+        accessMode,
+        // Only send when the admin typed something, so saving the form doesn't
+        // silently wipe an existing PIN.
+        ...(accessPin !== '' && { accessPin }),
         invitationType,
         ...(hasStyleFields && {
           primaryColor: resolvedPalette.primary,
@@ -760,6 +771,38 @@ export default function AdminEditPage({ params }: { params: Promise<{ id: string
             <option value="ACTIVE">Ενεργή</option>
             <option value="EXPIRED">Έληξε</option>
           </select>
+        </div>
+        <div>
+          <label className={labelCls}>Πρόσβαση</label>
+          <select
+            className={inputCls}
+            value={accessMode}
+            onChange={(e) => setAccessMode(e.target.value)}
+          >
+            <option value="PUBLIC">Δημόσια — όποιος έχει το link</option>
+            <option value="PIN">Με κωδικό — μόνο όποιος ξέρει τον κωδικό</option>
+          </select>
+
+          {accessMode === 'PIN' && (
+            <div className="mt-3">
+              <input
+                className={inputCls}
+                value={accessPin}
+                onChange={(e) => setAccessPin(e.target.value)}
+                placeholder={
+                  hasPin
+                    ? 'Ο κωδικός έχει οριστεί — γράψε νέο για αλλαγή'
+                    : 'Νέος κωδικός (τουλάχιστον 4 χαρακτήρες)'
+                }
+                autoComplete="off"
+              />
+              <p className="text-xs text-white/25 mt-1">
+                {hasPin
+                  ? 'Ο αποθηκευμένος κωδικός δεν εμφανίζεται ποτέ. Άφησέ το κενό για να μείνει ως έχει.'
+                  : 'Δώσε τον κωδικό στο ζευγάρι — τον μοιράζονται μαζί με το link.'}
+              </p>
+            </div>
+          )}
         </div>
         <div>
           <label className={labelCls}>Βίντεο</label>

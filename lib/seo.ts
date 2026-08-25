@@ -78,56 +78,74 @@ export const PAGES = {
   },
   psifiakes: {
     path: '/psifiakes-proskliseis-gamou',
-    title: 'Ψηφιακές Προσκλήσεις Γάμου — Τιμές & Χαρακτηριστικά',
+    // Retitled away from "Τιμές": the page carries no prices (PACKAGES_FROM_EUR
+    // is still null), and promising a figure the page never shows is the kind
+    // of title/content mismatch Google rewrites in the SERP.
+    //
+    // Intent split: adinfinity.gr/psifiako-prosklitirio-gamou sells the service.
+    // This page explains how the product works, so the two stop competing.
+    title: 'Ψηφιακή Πρόσκληση Γάμου: Πώς Λειτουργεί & Τι Περιλαμβάνει',
     description:
-      'Τι περιλαμβάνει μια ψηφιακή πρόσκληση γάμου: RSVP online, live countdown, χάρτες Google, video, IBAN με ένα tap και dashboard καλεσμένων. Δείτε πώς λειτουργεί.',
+      'Αναλυτικός οδηγός για την ψηφιακή πρόσκληση γάμου: RSVP online, live countdown, χάρτες Google, video, IBAN με ένα tap και dashboard καλεσμένων — βήμα βήμα, με demo.',
     keywords: [
       'ψηφιακές προσκλήσεις γάμου',
       'ψηφιακή πρόσκληση γάμου',
       'ψηφιακό προσκλητήριο',
+      'πώς λειτουργεί ψηφιακή πρόσκληση',
+      'τι περιλαμβάνει ψηφιακό προσκλητήριο',
       'οικολογικές προσκλήσεις γάμου',
       'πρόσκληση γάμου online',
     ],
-    ogHeadline: 'Ψηφιακές Προσκλήσεις Γάμου',
+    ogHeadline: 'Πώς Λειτουργεί η Ψηφιακή Πρόσκληση',
     ogSub: 'RSVP, countdown, χάρτες, video & IBAN με ένα tap',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-17',
+    lastModified: '2026-08-25',
   },
   ilektroniko: {
     path: '/ilektroniko-prosklitirio-gamou',
-    title: 'Ηλεκτρονικό Προσκλητήριο Γάμου',
+    // WARNING — this slug is byte-identical to adinfinity.gr's own
+    // /ilektroniko-prosklitirio-gamou. That collision is why Google kept the
+    // agency page and dropped this one. Both sides must stay differentiated:
+    // the agency page sells, this one is the comparison guide (paper vs
+    // electronic). Do not retitle this back to a bare service title.
+    title: 'Ηλεκτρονικό Προσκλητήριο Γάμου: Οδηγός & Σύγκριση με το Χάρτινο',
     description:
-      'Το ηλεκτρονικό προσκλητήριο γάμου αντικαθιστά τη χάρτινη πρόσκληση: ένα link με όλες τις λεπτομέρειες, RSVP, χάρτες και video — και αλλαγές ανά πάσα στιγμή.',
+      'Ηλεκτρονικό ή χάρτινο προσκλητήριο γάμου; Αναλυτική σύγκριση σε κόστος, χρόνο, αλλαγές της τελευταίας στιγμής και RSVP — με παραδείγματα και ζωντανό demo.',
     keywords: [
       'ηλεκτρονικό προσκλητήριο γάμου',
       'ηλεκτρονικές προσκλήσεις γάμου',
-      'ηλεκτρονικό προσκλητήριο',
+      'ηλεκτρονικό vs χάρτινο προσκλητήριο',
+      'σύγκριση προσκλητηρίων γάμου',
       'digital προσκλητήριο γάμου',
     ],
-    ogHeadline: 'Ηλεκτρονικό Προσκλητήριο Γάμου',
-    ogSub: 'Η σύγχρονη εναλλακτική στη χάρτινη πρόσκληση',
+    ogHeadline: 'Ηλεκτρονικό ή Χάρτινο Προσκλητήριο;',
+    ogSub: 'Αναλυτική σύγκριση σε κόστος, χρόνο και αλλαγές',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-17',
+    lastModified: '2026-08-25',
   },
   rsvp: {
     path: '/prosklitirio-gamou-rsvp',
-    title: 'Προσκλητήριο Γάμου με RSVP Online',
+    // The only page on this property with real impressions (pos. 28–45 for
+    // "rsvp γάμου", "rsvp ελληνικα"). Keep the RSVP keyword dominant here.
+    title: 'RSVP Online σε Προσκλητήριο Γάμου: Οδηγός & Demo',
     description:
-      'Προσκλητήριο γάμου με RSVP online: οι καλεσμένοι απαντούν από το κινητό χωρίς εγγραφή και βλέπετε συμμετοχές, συνοδούς και διατροφικές προτιμήσεις σε πραγματικό χρόνο.',
+      'Πώς δουλεύει το RSVP online στον γάμο: οι καλεσμένοι απαντούν από το κινητό χωρίς εγγραφή και βλέπετε συμμετοχές, συνοδούς και διατροφικές προτιμήσεις σε πραγματικό χρόνο.',
     keywords: [
       'προσκλητήριο γάμου RSVP',
       'RSVP online γάμος',
+      'RSVP ελληνικά',
+      'τι σημαίνει RSVP',
       'φόρμα RSVP γάμου',
       'επιβεβαίωση συμμετοχής γάμου',
       'λίστα καλεσμένων γάμου',
     ],
-    ogHeadline: 'Προσκλητήριο Γάμου με RSVP',
+    ogHeadline: 'RSVP Online σε Προσκλητήριο Γάμου',
     ogSub: 'Απαντήσεις καλεσμένων σε πραγματικό χρόνο',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-17',
+    lastModified: '2026-08-25',
   },
   arta: {
     path: '/prosklitiria-gamou-arta',
@@ -146,6 +164,222 @@ export const PAGES = {
     priority: 0.8,
     changeFrequency: 'monthly',
     lastModified: '2026-08-17',
+  },
+  /* ── Product-variant pages ────────────────────────────────────
+     One page per InvitationType (see lib/types.ts). The homepage listed all
+     three variants but none had its own URL, so none could rank for the
+     distinct intent behind "video προσκλητήριο" vs "wedding website".
+     ─────────────────────────────────────────────────────────────── */
+  miniWebsite: {
+    path: '/mini-website-prosklitirio',
+    title: 'Mini Website Προσκλητήριο Γάμου (Wedding Website)',
+    description:
+      'Το πλήρες mini website γάμου: hero, ιστορία ζευγαριού, εκδηλώσεις με χάρτες, γκαλερί, video, επαφές, λίστα δώρων με IBAN και RSVP — όλα σε μία σελίδα.',
+    keywords: [
+      'mini website γάμου',
+      'wedding website Ελλάδα',
+      'site γάμου',
+      'ιστοσελίδα γάμου',
+      'mini site προσκλητήριο',
+    ],
+    ogHeadline: 'Mini Website Προσκλητήριο',
+    ogSub: 'Το πλήρες site του γάμου σας σε ένα link',
+    priority: 0.85,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  videoProsklitirio: {
+    path: '/video-prosklitirio-gamou',
+    title: 'Video Προσκλητήριο Γάμου',
+    description:
+      'Video προσκλητήριο γάμου: το βίντεό σας ως hero, γρήγορες ενέργειες για RSVP, εκκλησία, δεξίωση και IBAN, και φόρμα απάντησης κάτω από αυτό.',
+    keywords: [
+      'video προσκλητήριο γάμου',
+      'βίντεο πρόσκληση γάμου',
+      'προσκλητήριο γάμου με βίντεο',
+      'animated προσκλητήριο',
+    ],
+    ogHeadline: 'Video Προσκλητήριο Γάμου',
+    ogSub: 'Το βίντεό σας ως πρόσκληση, με RSVP από κάτω',
+    priority: 0.85,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  videoOnly: {
+    path: '/video-only-prosklitirio',
+    title: 'Video Only Προσκλητήριο — Minimal Πρόσκληση',
+    description:
+      'Minimal video προσκλητήριο: ονόματα, ημερομηνία και ένα full-screen βίντεο, χωρίς τίποτα άλλο. Για όσους θέλουν η πρόσκληση να είναι μόνο το βίντεο.',
+    keywords: [
+      'video only προσκλητήριο',
+      'minimal προσκλητήριο γάμου',
+      'full screen video πρόσκληση',
+      'απλό ψηφιακό προσκλητήριο',
+    ],
+    ogHeadline: 'Video Only Προσκλητήριο',
+    ogSub: 'Ονόματα, ημερομηνία και ένα full-screen video',
+    priority: 0.7,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  faq: {
+    path: '/syxnes-erotiseis',
+    title: 'Συχνές Ερωτήσεις για Ψηφιακά Προσκλητήρια',
+    description:
+      'Απαντήσεις στις πιο συχνές ερωτήσεις για τα ψηφιακά προσκλητήρια: χρόνος παράδοσης, αλλαγές μετά την αποστολή, RSVP, video, χάρτες, IBAN και τι γίνεται μετά την εκδήλωση.',
+    keywords: [
+      'ψηφιακό προσκλητήριο ερωτήσεις',
+      'πώς λειτουργεί ψηφιακό προσκλητήριο',
+      'ψηφιακό προσκλητήριο απορίες',
+      'ηλεκτρονικό προσκλητήριο συχνές ερωτήσεις',
+    ],
+    ogHeadline: 'Συχνές Ερωτήσεις',
+    ogSub: 'Ό,τι ρωτούν πιο συχνά για τα ψηφιακά προσκλητήρια',
+    priority: 0.8,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  times: {
+    path: '/times-psifiakou-prosklitiriou',
+    // Deliberately explains how pricing is decided instead of quoting a number.
+    // PACKAGES_FROM_EUR is still null and inventing a figure on a commercial
+    // page is worse than having none — set that constant and this page can
+    // surface it automatically.
+    title: 'Τιμές Ψηφιακού Προσκλητηρίου: Τι Επηρεάζει το Κόστος',
+    description:
+      'Πόσο κοστίζει ένα ψηφιακό προσκλητήριο γάμου; Τι επηρεάζει την τιμή — τύπος πρόσκλησης, video, γκαλερί, RSVP και χρόνος παράδοσης — και πώς δίνουμε προσφορά.',
+    keywords: [
+      'ψηφιακό προσκλητήριο γάμου τιμή',
+      'ψηφιακό προσκλητήριο κόστος',
+      'πόσο κοστίζει ψηφιακό προσκλητήριο',
+      'τιμές ηλεκτρονικού προσκλητηρίου',
+      'online προσκλητήριο γάμου τιμές',
+    ],
+    ogHeadline: 'Τιμές Ψηφιακού Προσκλητηρίου',
+    ogSub: 'Τι επηρεάζει το κόστος και πώς δίνουμε προσφορά',
+    priority: 0.85,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  /* ── Non-wedding event cluster ────────────────────────────────
+     The product has supported BAPTISM / WEDDING_BAPTISM / BIRTHDAY /
+     ANNIVERSARY / EVENT since June 2026 (see lib/types.ts EventCategory) but
+     none of it had a landing page, so none of it could rank.
+
+     These slugs are also the only ones on this property with zero overlap
+     against adinfinity.gr's sitemap — nothing to cannibalise, which makes them
+     the cleanest ranking opportunity the site has.
+     ─────────────────────────────────────────────────────────────── */
+  vaptisi: {
+    path: '/prosklitirio-vaptisis',
+    title: 'Ψηφιακό Προσκλητήριο Βάπτισης με RSVP',
+    description:
+      'Ψηφιακό προσκλητήριο βάπτισης σε ένα link: όνομα και ημερομηνία, χάρτης για εκκλησία και δεξίωση, RSVP online με αριθμό παιδιών και ενηλίκων, φωτογραφίες και video.',
+    keywords: [
+      'ψηφιακό προσκλητήριο βάπτισης',
+      'προσκλητήριο βάπτισης',
+      'ηλεκτρονικό προσκλητήριο βάπτισης',
+      'προσκλητήρια βάπτισης online',
+      'πρόσκληση βάπτισης με RSVP',
+      'ψηφιακές προσκλήσεις βάπτισης',
+    ],
+    ogHeadline: 'Ψηφιακό Προσκλητήριο Βάπτισης',
+    ogSub: 'RSVP online, χάρτες, φωτογραφίες & video',
+    priority: 0.9,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  vaptisiArta: {
+    path: '/prosklitiria-vaptisis-arta',
+    title: 'Προσκλητήρια Βάπτισης Άρτα',
+    description:
+      'Ψηφιακά προσκλητήρια βάπτισης στην Άρτα και την Ήπειρο. Σχεδιάζουμε το προσκλητήριο της βάπτισης με RSVP, χάρτες και φωτογραφίες — από το γραφείο μας στη Βασ. Πύρρου 30.',
+    keywords: [
+      'προσκλητήρια βάπτισης Άρτα',
+      'προσκλήσεις βάπτισης Άρτα',
+      'ψηφιακά προσκλητήρια βάπτισης Άρτα',
+      'βάπτιση Άρτα',
+      'προσκλητήρια βάπτισης Ήπειρος',
+    ],
+    ogHeadline: 'Προσκλητήρια Βάπτισης στην Άρτα',
+    ogSub: 'Ψηφιακά προσκλητήρια για Άρτα & Ήπειρο',
+    priority: 0.8,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  gamosVaptisi: {
+    path: '/prosklitirio-gamou-vaptisis',
+    // WEDDING_BAPTISM is a distinctly Greek combined ceremony with its own
+    // search demand and no competing page on either domain.
+    title: 'Προσκλητήριο Γάμου & Βάπτισης Μαζί',
+    description:
+      'Ένα προσκλητήριο για γάμο και βάπτιση μαζί: δύο τελετές, ένα link. Ξεχωριστές ώρες και χάρτες ανά εκδήλωση, ενιαίο RSVP και μία λίστα καλεσμένων για όλα.',
+    keywords: [
+      'προσκλητήριο γάμου και βάπτισης',
+      'γάμος και βάπτιση μαζί',
+      'κοινό προσκλητήριο γάμου βάπτισης',
+      'ψηφιακό προσκλητήριο γάμου βάπτισης',
+      'διπλή τελετή προσκλητήριο',
+    ],
+    ogHeadline: 'Γάμος & Βάπτιση Μαζί',
+    ogSub: 'Δύο τελετές, ένα link, ένα RSVP',
+    priority: 0.85,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  genethlia: {
+    path: '/prosklitirio-genethlion',
+    title: 'Ψηφιακό Προσκλητήριο Γενεθλίων',
+    description:
+      'Ψηφιακό προσκλητήριο γενεθλίων με RSVP: στείλτε ένα link, δείτε ποιοι θα έρθουν σε πραγματικό χρόνο και αλλάξτε ώρα ή τοποθεσία χωρίς να ξαναστείλετε πρόσκληση.',
+    keywords: [
+      'ψηφιακό προσκλητήριο γενεθλίων',
+      'πρόσκληση γενεθλίων online',
+      'ηλεκτρονική πρόσκληση γενεθλίων',
+      'προσκλητήριο πάρτι',
+      'πρόσκληση πάρτι με RSVP',
+    ],
+    ogHeadline: 'Ψηφιακό Προσκλητήριο Γενεθλίων',
+    ogSub: 'Ένα link, RSVP σε πραγματικό χρόνο',
+    priority: 0.75,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  epeteios: {
+    path: '/prosklitirio-epeteiou',
+    title: 'Ψηφιακό Προσκλητήριο Επετείου Γάμου',
+    description:
+      'Ψηφιακό προσκλητήριο για επέτειο γάμου: ιστορία του ζευγαριού, γκαλερί φωτογραφιών από τα χρόνια μαζί, χάρτης δεξίωσης και RSVP online σε ένα link.',
+    keywords: [
+      'προσκλητήριο επετείου γάμου',
+      'πρόσκληση επετείου',
+      'ψηφιακό προσκλητήριο επετείου',
+      'αργυροί γάμοι πρόσκληση',
+      'χρυσοί γάμοι πρόσκληση',
+    ],
+    ogHeadline: 'Προσκλητήριο Επετείου Γάμου',
+    ogSub: 'Η ιστορία σας, σε ένα link με RSVP',
+    priority: 0.7,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
+  },
+  ekdiloseis: {
+    path: '/psifiakes-proskliseis-ekdilosewn',
+    title: 'Ψηφιακές Προσκλήσεις Εκδηλώσεων & Εταιρικών Events',
+    description:
+      'Ψηφιακές προσκλήσεις για εκδηλώσεις, εγκαίνια και εταιρικά events: πρόγραμμα με ώρες, χάρτες, RSVP με λίστα συμμετεχόντων και εξαγωγή σε αρχείο.',
+    keywords: [
+      'ψηφιακές προσκλήσεις εκδηλώσεων',
+      'εταιρική πρόσκληση online',
+      'πρόσκληση εκδήλωσης με RSVP',
+      'ηλεκτρονική πρόσκληση εγκαινίων',
+      'προσκλήσεις events',
+    ],
+    ogHeadline: 'Προσκλήσεις Εκδηλώσεων',
+    ogSub: 'Πρόγραμμα, χάρτες & RSVP με εξαγωγή λίστας',
+    priority: 0.7,
+    changeFrequency: 'monthly',
+    lastModified: '2026-08-25',
   },
   demo: {
     path: '/demo',
@@ -358,6 +592,61 @@ export const serviceNode = {
     ],
   },
 } as const;
+
+/**
+ * Category-scoped Service node.
+ *
+ * `serviceNode` above describes the wedding offering. Emitting it on a baptism
+ * or birthday page would tell Google those pages are about weddings — the exact
+ * signal confusion that keeps a page out of the index for its own topic. Each
+ * non-wedding landing page emits its own Service instead.
+ */
+export function serviceNodeFor(opts: {
+  id: string;
+  name: string;
+  description: string;
+  path: string;
+  serviceType: string;
+  audienceType: string;
+}) {
+  return {
+    '@type': 'Service',
+    '@id': `${SITE_URL}/#${opts.id}`,
+    name: opts.name,
+    serviceType: opts.serviceType,
+    description: opts.description,
+    url: abs(opts.path),
+    areaServed: { '@type': 'Country', name: 'Greece' },
+    provider: { '@id': ORG_ID },
+    audience: { '@type': 'Audience', audienceType: opts.audienceType },
+  };
+}
+
+/**
+ * HowTo — the ordered "πώς λειτουργεί" steps every landing page shows.
+ *
+ * Google dropped HowTo *rich results* in 2023, so this earns no SERP decoration.
+ * It's emitted because it still feeds entity understanding and is one of the
+ * formats AI answer engines parse well when summarising a process.
+ */
+export function howToNode(
+  path: string,
+  name: string,
+  steps: { name: string; text: string }[],
+) {
+  return {
+    '@type': 'HowTo',
+    '@id': `${abs(path)}/#howto`,
+    name,
+    inLanguage: LANG,
+    step: steps.map((s, i) => ({
+      '@type': 'HowToStep',
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+    })),
+  };
+}
 
 /** Local-SEO node for the Arta page. Deliberately carries no geo coordinates,
  *  phone or opening hours — those aren't known here, and inventing them would

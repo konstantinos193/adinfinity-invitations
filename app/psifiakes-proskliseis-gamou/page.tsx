@@ -1,17 +1,51 @@
-import Link from 'next/link';
 import JsonLd from '@/components/JsonLd';
 import RelatedLinks from '@/components/RelatedLinks';
+import {
+  Callout,
+  Cta,
+  Faq,
+  FeatureList,
+  H2,
+  Hero,
+  PageShell,
+  Prose,
+  StepCards,
+} from '@/components/landing/Sections';
 import {
   PAGES,
   breadcrumbNode,
   faqNode,
   graph,
+  howToNode,
   pageMetadata,
   serviceNode,
   webPageNode,
 } from '@/lib/seo';
 
 export const metadata = pageMetadata('psifiakes');
+
+const STEPS = [
+  {
+    name: 'Στέλνετε τα στοιχεία του γάμου',
+    text: 'Ονόματα, ημερομηνία, εκκλησία και χώρος δεξίωσης, τηλέφωνα κουμπάρων, και ό,τι φωτογραφίες ή βίντεο έχετε. Δεν χρειάζεται να είναι όλα έτοιμα από την πρώτη στιγμή.',
+  },
+  {
+    name: 'Επιλέγουμε τύπο και ύφος',
+    text: 'Mini website, video προσκλητήριο ή video only, και μετά χρώματα, γραμματοσειρές και διάταξη ώστε να ταιριάζουν στο ύφος του γάμου σας.',
+  },
+  {
+    name: 'Βλέπετε το αποτέλεσμα πριν δημοσιευτεί',
+    text: 'Σας στέλνουμε ένα ιδιωτικό link για έλεγχο. Διορθώνουμε ό,τι χρειάζεται μέχρι να είστε ικανοποιημένοι.',
+  },
+  {
+    name: 'Στέλνετε το link στους καλεσμένους',
+    text: 'Ένα link για όλους, σε Viber, WhatsApp, SMS ή email. Δεν χρειάζεται εφαρμογή ή εγγραφή για να το ανοίξει κάποιος.',
+  },
+  {
+    name: 'Παρακολουθείτε τις απαντήσεις',
+    text: 'Οι απαντήσεις RSVP καταγράφονται όπως έρχονται και εξάγονται σε αρχείο όταν έρθει η ώρα για τον καταλόγο τραπεζιών.',
+  },
+];
 
 const FAQ = [
   {
@@ -34,87 +68,163 @@ const FAQ = [
     q: 'Πόσο καιρό παραμένει online η πρόσκληση;',
     a: 'Η πρόσκληση παραμένει ενεργή πριν και μετά τον γάμο, ώστε οι καλεσμένοι να έχουν πρόσβαση στις πληροφορίες όποτε τις χρειαστούν.',
   },
+  {
+    q: 'Ποιον τύπο πρόσκλησης να διαλέξω;',
+    a: 'Αν οι καλεσμένοι χρειάζονται πληροφορίες — πρόγραμμα, χάρτες, οδηγίες, ιστορία — διαλέξτε mini website. Αν έχετε ένα δυνατό βίντεο, το video προσκλητήριο το βάζει στο επίκεντρο κρατώντας RSVP και χάρτες. Το video only είναι μόνο το βίντεο, χωρίς RSVP.',
+  },
+  {
+    q: 'Μπορεί να προστεθεί λίστα δώρων;',
+    a: 'Ναι. Η λίστα δώρων εμφανίζεται διακριτικά, με τον τραπεζικό λογαριασμό να αντιγράφεται με ένα tap ώστε να μην πληκτρολογήσει κανείς 27 χαρακτήρες λάθος.',
+  },
 ];
 
 export default function PsifiakesProskliseisGamouPage() {
   return (
-    <div className="min-h-screen bg-[#07141C] text-white">
+    <PageShell>
       <JsonLd
         data={graph(
           webPageNode('psifiakes'),
           breadcrumbNode([
             { name: 'Αρχική', path: '/' },
-            { name: 'Ψηφιακές Προσκλήσεις Γάμου', path: PAGES.psifiakes.path },
+            {
+              name: 'Ψηφιακή Πρόσκληση Γάμου: Πώς Λειτουργεί',
+              path: PAGES.psifiakes.path,
+            },
           ]),
           serviceNode,
+          howToNode(
+            PAGES.psifiakes.path,
+            'Πώς φτιάχνεται μια ψηφιακή πρόσκληση γάμου',
+            STEPS,
+          ),
           faqNode(PAGES.psifiakes.path, FAQ),
         )}
       />
-      <div className="container mx-auto px-4 py-24 max-w-4xl">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#01FFFF]">Ψηφιακές Προσκλήσεις Γάμου</h1>
-        
-        <p className="text-lg text-white/70 mb-8 leading-relaxed">
-          Οι ψηφιακές προσκλήσεις γάμου είναι η σύγχρονη λύση για να προσκαλέσετε τους καλεσμένους σας με έναν 
-          όμορφο και λειτουργικό τρόπο. Αντί για χάρτινες προσκλήσεις που χάνουν ή ξεχνούν, ένα ψηφιακό 
-          προσκλητήριο είναι πάντα διαθέσιμο στο κινητό τους.
+
+      <Hero
+        title="Ψηφιακή Πρόσκληση Γάμου: Πώς Λειτουργεί"
+        lead={
+          <>
+            <p>
+              Μια ψηφιακή πρόσκληση γάμου είναι μια μικρή ιστοσελίδα με δική της
+              διεύθυνση. Την στέλνετε ως ένα link και ο καλεσμένος βρίσκει εκεί
+              όλα όσα χρειάζεται: πότε, πού, πώς φτάνει, ποιον να πάρει
+              τηλέφωνο, και μια φόρμα για να δηλώσει αν θα έρθει.
+            </p>
+            <p>
+              Αυτή η σελίδα εξηγεί τι ακριβώς περιλαμβάνει, πώς φτιάχνεται βήμα
+              βήμα, και ποιον τύπο να διαλέξετε.
+            </p>
+          </>
+        }
+      />
+
+      <H2>Τι περιλαμβάνει</H2>
+      <FeatureList
+        items={[
+          {
+            term: 'RSVP online',
+            desc: 'Οι καλεσμένοι απαντούν από το κινητό τους σε δεκαπέντε δευτερόλεπτα, χωρίς εγγραφή, δηλώνοντας ενήλικες, παιδιά, διατροφικές συνήθειες και αλλεργίες.',
+          },
+          {
+            term: 'Αντίστροφη μέτρηση',
+            desc: 'Live countdown μέχρι την ημέρα του γάμου, που ενημερώνεται μόνο του σε κάθε επίσκεψη.',
+          },
+          {
+            term: 'Χάρτες Google',
+            desc: 'Ξεχωριστός χάρτης για εκκλησία και δεξίωση, με πλοήγηση ένα tap μακριά.',
+          },
+          {
+            term: 'Video',
+            desc: 'Ενσωματωμένο βίντεο από YouTube ή Vimeo, ως hero ή μέσα στη σελίδα.',
+          },
+          {
+            term: 'Η ιστορία σας',
+            desc: 'Το κείμενο για το πώς γνωριστήκατε — αυτό που κάνει τη σελίδα δική σας αντί για πρότυπο.',
+          },
+          {
+            term: 'Γκαλερί φωτογραφιών',
+            desc: 'Φωτογραφίες του ζευγαριού σε διάταξη που προσαρμόζεται στο κινητό.',
+          },
+          {
+            term: 'Επαφές με ρόλους',
+            desc: 'Κουμπάροι, γονείς και νονοί με τον ρόλο τους και κλήση με ένα tap.',
+          },
+          {
+            term: 'IBAN με ένα tap',
+            desc: 'Αντιγραφή τραπεζικού λογαριασμού χωρίς λάθη στην πληκτρολόγηση.',
+          },
+          {
+            term: 'Dashboard καλεσμένων',
+            desc: 'Σύνολα συμμετοχών και εξαγωγή σε αρχείο για τον καταλόγο τραπεζιών.',
+          },
+          {
+            term: 'Προστασία με PIN',
+            desc: 'Προαιρετικά, ώστε η πρόσκληση να ανοίγει μόνο με κωδικό.',
+          },
+        ]}
+      />
+
+      <H2>Πώς γίνεται, βήμα βήμα</H2>
+      <StepCards steps={STEPS} />
+
+      <H2>Ποιον τύπο να διαλέξετε</H2>
+      <Prose>
+        <p>
+          Υπάρχουν τρεις εκδοχές, και η επιλογή εξαρτάται από το πόση πληροφορία
+          χρειάζονται οι καλεσμένοι σας:
         </p>
+      </Prose>
+      <FeatureList
+        items={[
+          {
+            term: 'Mini website',
+            desc: 'Η πλήρης σελίδα με όλες τις ενότητες. Για γάμους με πολλούς καλεσμένους εκτός πόλης ή πρόγραμμα με πολλά μέρη.',
+          },
+          {
+            term: 'Video προσκλητήριο',
+            desc: 'Το βίντεο στην πρώτη οθόνη, με RSVP, χάρτες και IBAN από κάτω. Για όσους έχουν ήδη δυνατό οπτικό υλικό.',
+          },
+          {
+            term: 'Video only',
+            desc: 'Μόνο ονόματα, ημερομηνία και ένα full-screen βίντεο — χωρίς RSVP. Για όσους μαζεύουν τις απαντήσεις αλλού.',
+          },
+        ]}
+      />
 
-        <h2 className="text-2xl font-bold mb-4 text-white">Τι προσφέρουμε</h2>
-        <ul className="space-y-3 mb-8 text-white/80">
-          <li>• <strong className="text-[#01FFFF]">RSVP Online</strong> — Οι καλεσμένοι απαντούν απευθείας από το κινητό τους</li>
-          <li>• <strong className="text-[#01FFFF]">Αντίστροφη Μέτρηση</strong> — Live countdown μέχρι την ημέρα του γάμου</li>
-          <li>• <strong className="text-[#01FFFF]">Χάρτες Google</strong> — Ακριβείς τοποθεσίες για εκκλησία και δεξίωση</li>
-          <li>• <strong className="text-[#01FFFF]">Video</strong> — Ενσωματωμένο βίντεο από YouTube ή Vimeo</li>
-          <li>• <strong className="text-[#01FFFF]">IBAN με 1 Tap</strong> — Αντιγραφή τραπεζικού λογαριασμού χωρίς λάθη</li>
-          <li>• <strong className="text-[#01FFFF]">Διαχείριση Καλεσμένων</strong> — Dashboard με στατιστικά RSVPs</li>
-        </ul>
-
-        <h2 className="text-2xl font-bold mb-4 text-white">Γιατί να επιλέξετε ψηφιακή πρόσκληση;</h2>
-        <p className="text-white/70 mb-8 leading-relaxed">
-          Οι ψηφιακές προσκλήσεις είναι οικολογικές, οικονομικές και πιο πρακτικές. Δεν χρειάζεται να 
-          εκτυπώσετε και να στείλετε χάρτινες προσκλήσεις. Μπορείτε να ενημερώσετε τις λεπτομέρειες ανά πάσα 
-          στιγμή και οι καλεσμένοι σας έχουν πάντα πρόσβαση σε όλες τις πληροφορίες.
+      <H2>Γιατί το προτιμούν τα ζευγάρια</H2>
+      <Prose>
+        <p>
+          Ο πιο συχνός λόγος δεν είναι το κόστος αλλά οι αλλαγές. Σε κάθε γάμο
+          κάτι μετακινείται — μια ώρα, μια διεύθυνση, ένα τηλέφωνο — και με
+          τυπωμένες προσκλήσεις αυτό σημαίνει τηλέφωνα σε δεκάδες ανθρώπους. Με
+          ένα link, η διόρθωση γίνεται μία φορά.
         </p>
+        <p>
+          Ο δεύτερος λόγος είναι η καταμέτρηση. Οι απαντήσεις μαζεύονται μόνες
+          τους, με τα παιδιά και τις διατροφικές ανάγκες ήδη καταγεγραμμένα,
+          οπότε δεν υπάρχει το στάδιο όπου κάποιος μεταφέρει σημειώσεις σε
+          υπολογιστικό φύλλο τη βδομάδα πριν τον γάμο.
+        </p>
+      </Prose>
 
-        <div className="bg-[#071218]/80 border border-[#01FFFF]/20 rounded-2xl p-8 mb-8">
-          <h3 className="text-xl font-bold mb-4 text-[#01FFFF]">Πώς λειτουργεί;</h3>
-          <ol className="space-y-3 text-white/80 list-decimal list-inside">
-            <li>Επικοινωνείτε μαζί μας με τα στοιχεία του γάμου σας</li>
-            <li>Φτιάχνουμε το δικό σας mini-site με φωτογραφίες και ιστορία</li>
-            <li>Στέλνετε τον σύνδεσμο σε όλους τους καλεσμένους</li>
-          </ol>
-        </div>
+      <Callout title="Δοκιμάστε το πριν αποφασίσετε">
+        <p>
+          Το δείγμα Ιωάννα &amp; Αλέξανδρος είναι ένα πλήρες mini website σε
+          λειτουργία. Συμπληρώστε τη φόρμα RSVP για να δείτε ακριβώς τι φτάνει
+          σε εσάς όταν απαντά ένας καλεσμένος.
+        </p>
+      </Callout>
 
-        <div className="text-center">
-          <Link
-            href="/request"
-            className="inline-block bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-4 px-8 rounded-full text-lg transition-colors"
-          >
-            Ζητήστε την πρόσκλησή σας →
-          </Link>
-        </div>
+      <Cta
+        href="/request"
+        label="Ζητήστε την πρόσκλησή σας →"
+        secondary={{ href: '/ioanna-alexandros', label: 'Δείτε demo' }}
+      />
 
-        {/* Rendered visibly on purpose: FAQPage structured data must reflect
-            content the user can actually see on the page. */}
-        <section className="mt-16">
-          <h2 className="text-2xl font-bold mb-6 text-white">Συχνές ερωτήσεις</h2>
-          <div className="space-y-4">
-            {FAQ.map(({ q, a }) => (
-              <details
-                key={q}
-                className="group rounded-xl border border-[#01FFFF]/15 bg-[#071218]/60 p-5"
-              >
-                <summary className="cursor-pointer font-semibold text-[#01FFFF] marker:content-['']">
-                  {q}
-                </summary>
-                <p className="mt-3 text-white/70 leading-relaxed">{a}</p>
-              </details>
-            ))}
-          </div>
-        </section>
+      <Faq items={FAQ} />
 
-        <RelatedLinks current="psifiakes" />
-      </div>
-    </div>
+      <RelatedLinks current="psifiakes" />
+    </PageShell>
   );
 }

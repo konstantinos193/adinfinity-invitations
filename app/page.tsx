@@ -113,9 +113,23 @@ export default function LandingPage() {
               </span>
             </motion.div>
 
+            {/*
+              Slides in, but deliberately does NOT fade from `opacity: 0` the way
+              its siblings do.
+
+              framer-motion bakes `initial` into the server-rendered markup, so an
+              `opacity: 0` start ships the page's only <h1> to crawlers as
+              `style="opacity:0"` until hydration flips it. Googlebot does render
+              JS and would resolve it, but that puts the single strongest on-page
+              ranking signal behind a step that can be delayed, throttled or
+              dropped — on a page already fighting to get indexed at all.
+
+              A 16px rise with no fade reads the same to a visitor and keeps the
+              heading legible with or without JS.
+            */}
             <motion.h1
               className="text-4xl md:text-5xl lg:text-6xl font-bold mt-6 mb-5 leading-tight"
-              {...(prefersReduced ? {} : { initial: { opacity: 0, y: 16 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.4, delay: 0.08 } })}
+              {...(prefersReduced ? {} : { initial: { y: 16 }, animate: { y: 0 }, transition: { duration: 0.4, delay: 0.08 } })}
             >
               Η πρόσκλησή σας,{' '}
               <span className="text-[#01FFFF]">ζωντανή online</span>
@@ -409,9 +423,14 @@ export default function LandingPage() {
                   Φτιάχνουμε την πρόσκλησή σας<br />
                   <span className="text-[#01FFFF]">σε 24 ώρες</span>
                 </h2>
+                {/* Claim is deliberately conditioned on receiving the material:
+                    an unqualified "ready in 24h" is a promise we can't keep when
+                    photos or corrections are pending, and vague promises are an
+                    E-E-A-T liability on a commercial page. */}
                 <p className="text-white/45 text-base leading-relaxed">
-                  Επικοινωνήστε μαζί μας, στείλτε τα στοιχεία σας και σε λιγότερο από 24 ώρες
-                  το link είναι έτοιμο για τους καλεσμένους σας.
+                  Επικοινωνήστε μαζί μας και στείλτε τα στοιχεία σας. Από τη στιγμή
+                  που θα έχουμε όλα όσα χρειάζονται, σε λιγότερο από 24 ώρες το link
+                  είναι έτοιμο για τους καλεσμένους σας.
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-4 lg:justify-end">

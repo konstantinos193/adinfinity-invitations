@@ -143,10 +143,23 @@ Cookie: `httpOnly`, `secure`, `sameSite=lax`, ανά slug, ~30 ημέρες. Τ�
 
 ---
 
-## 6. Σειρά υλοποίησης
+## 6. Τι έχει επαληθευτεί
 
-1. Migration + `accessMode`/`accessPin` (με το deploy να τρέχει migrations)
-2. Backend: φιλτράρισμα payload + `/unlock` + rate limit + προστασία RSVP
-3. Frontend: `PinGate`, route handler, cookie
-4. Διόρθωση metadata + OG για κλειδωμένα (σημεία β & γ)
-5. Admin UI
+Έλεγχοι σε runtime πάνω στον compiled κώδικα (πραγματικό `InvitationAccessService`
++ πραγματικό `JwtService`, με stub Prisma):
+
+- το κλειδωμένο payload δεν περιέχει ονόματα, τηλέφωνα ή IBAN
+- λάθος PIN → 401· σωστό PIN → ξεκλειδώνει
+- το hash του PIN δεν επιστρέφεται ποτέ
+- **token για ένα slug δεν ξεκλειδώνει άλλο**
+- admin token (χωρίς scope claim) δεν ξεκλειδώνει πρόσκληση
+- public και ανύπαρκτο slug δίνουν και τα δύο 401 — δεν λειτουργεί ως oracle
+- RSVP μπλοκάρεται όσο είναι κλειδωμένο, περνά μετά το ξεκλείδωμα
+- brute force: 429 στην 6η προσπάθεια
+
+## 7. Τι μένει
+
+- Δεν υπάρχει UI για PIN στα create wizards (`app/admin/create/*`) — μόνο στο
+  edit. Μια νέα πρόσκληση ξεκινά `PUBLIC` και κλειδώνεται από το edit.
+- Δεν έχει δοκιμαστεί end-to-end με πραγματική βάση· δεν υπάρχει τοπική
+  Postgres. Η λογική είναι επαληθευμένη, η διαδρομή HTTP όχι.

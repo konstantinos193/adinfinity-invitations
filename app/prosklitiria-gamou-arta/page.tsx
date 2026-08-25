@@ -1,6 +1,15 @@
-import Link from 'next/link';
 import JsonLd from '@/components/JsonLd';
 import RelatedLinks from '@/components/RelatedLinks';
+import {
+  Callout,
+  Cta,
+  Faq,
+  FeatureList,
+  H2,
+  Hero,
+  PageShell,
+  Prose,
+} from '@/components/landing/Sections';
 import {
   PAGES,
   breadcrumbNode,
@@ -16,22 +25,30 @@ export const metadata = pageMetadata('arta');
 
 const FAQ = [
   {
-    q: 'Εξυπηρετείτε ζευγάρια εκτός Άρτας;',
-    a: 'Ναι. Το προσκλητήριο σχεδιάζεται και παραδίδεται εξ ολοκλήρου ψηφιακά, οπότε συνεργαζόμαστε με ζευγάρια σε όλη την Ήπειρο και την Ελλάδα. Το γραφείο μας βρίσκεται στη Βασ. Πύρρου 30 στην Άρτα για όσους προτιμούν δια ζώσης συνάντηση.',
+    q: 'Πρέπει να είμαι από την Άρτα για να συνεργαστούμε;',
+    a: 'Όχι. Το προσκλητήριο σχεδιάζεται και παραδίδεται online, οπότε εξυπηρετούμε όλη την Ελλάδα και ζευγάρια που ζουν στο εξωτερικό. Στην Άρτα και την Ήπειρο μπορούμε επιπλέον να συναντηθούμε από κοντά.',
   },
   {
-    q: 'Μπορείτε να προσθέσετε τοποθεσίες γάμου στην Άρτα;',
-    a: 'Ναι. Κάθε εκδήλωση — εκκλησία, δεξίωση, δείπνο — μπαίνει με ακριβή διεύθυνση και σύνδεσμο Google Maps, ώστε οι καλεσμένοι να πλοηγηθούν με ένα tap.',
+    q: 'Μπορούμε να περάσουμε από το γραφείο;',
+    a: 'Ναι, βρισκόμαστε στη Βασ. Πύρρου 30 στην Άρτα. Επικοινωνήστε πρώτα για να κανονίσουμε ώρα και να έχουμε έτοιμα δείγματα να δείτε.',
   },
   {
-    q: 'Πόσο χρόνο χρειάζεται η δημιουργία;',
-    a: 'Αφού λάβουμε τα στοιχεία και το φωτογραφικό υλικό σας, το προσκλητήριο είναι συνήθως έτοιμο για έλεγχο μέσα σε λίγες ημέρες, με διορθώσεις πριν την τελική δημοσίευση.',
+    q: 'Ξέρετε τις εκκλησίες και τα κτήματα της περιοχής;',
+    a: 'Οι τοποθεσίες μπαίνουν ως σύνδεσμοι Google Maps, οπότε λειτουργούν για οποιαδήποτε εκκλησία ή χώρο δεξίωσης — στην Άρτα, στα γύρω χωριά ή αλλού. Εσείς μας δίνετε τη διεύθυνση και εμείς τη ρυθμίζουμε ώστε το «πλοήγηση» να ανοίγει στο σωστό σημείο.',
+  },
+  {
+    q: 'Κάνετε και χάρτινα προσκλητήρια;',
+    a: 'Ναι. Η adinfinity είναι διαφημιστική εταιρεία με τμήμα εκτυπώσεων, οπότε μπορούμε να σχεδιάσουμε και τα δύο στην ίδια αισθητική — λίγα τυπωμένα για τους στενούς συγγενείς και το ψηφιακό για όλους τους υπόλοιπους.',
+  },
+  {
+    q: 'Πόσο πριν τον γάμο πρέπει να ξεκινήσουμε;',
+    a: 'Όσο νωρίτερα, τόσο περισσότερος χρόνος για τις απαντήσεις RSVP. Επειδή όμως δεν υπάρχει εκτύπωση και ταχυδρομείο, ένα ψηφιακό προσκλητήριο μπορεί να ετοιμαστεί πολύ πιο κοντά στην ημερομηνία απ’ ό,τι ένα χάρτινο.',
   },
 ];
 
 export default function ProsklitiriaGamouArtaPage() {
   return (
-    <div className="min-h-screen bg-[#07141C] text-white">
+    <PageShell>
       <JsonLd
         data={graph(
           webPageNode('arta'),
@@ -44,93 +61,131 @@ export default function ProsklitiriaGamouArtaPage() {
           faqNode(PAGES.arta.path, FAQ),
         )}
       />
-      <div className="container mx-auto px-4 py-24 max-w-4xl">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-[#01FFFF]">Προσκλήσεις Γάμου Άρτα</h1>
-        
-        <p className="text-lg text-white/70 mb-8 leading-relaxed">
-          Η adinfinity προσφέρει ψηφιακές προσκλήσεις γάμου στην Άρτα και σε όλη την Ελλάδα. Δημιουργούμε 
-          όμορφα mini-sites για τον γάμο σας με αντίστροφη μέτρηση, RSVP online, χάρτες Google, video και 
-          πολλά άλλα.
+
+      <Hero
+        title="Προσκλητήρια Γάμου στην Άρτα"
+        lead={
+          <>
+            <p>
+              Η adinfinity σχεδιάζει ψηφιακά προσκλητήρια γάμου από την Άρτα, για
+              ζευγάρια στην πόλη, στα γύρω χωριά και σε όλη την Ήπειρο. Το
+              προσκλητήριο γίνεται online και φτάνει στους καλεσμένους σας ως ένα
+              link — χωρίς εκτύπωση και χωρίς ταχυδρομείο.
+            </p>
+            <p>
+              Είμαστε διαφημιστική εταιρεία με έδρα τη Βασ. Πύρρου 30, οπότε αν
+              προτιμάτε να τα πούμε από κοντά, μπορούμε να συναντηθούμε στο
+              γραφείο.
+            </p>
+          </>
+        }
+      />
+
+      <H2>Γιατί έχει νόημα για έναν γάμο στην Άρτα</H2>
+      <Prose>
+        <p>
+          Οι γάμοι της περιοχής έχουν συνήθως καλεσμένους μοιρασμένους σε τρεις
+          ομάδες: όσοι μένουν στην Άρτα, όσοι έχουν φύγει για Γιάννενα, Πάτρα ή
+          Αθήνα, και όσοι έρχονται από το εξωτερικό. Με χάρτινες προσκλήσεις
+          κάθε ομάδα σημαίνει διαφορετικό κόστος και χρόνο αποστολής. Ένα link
+          φτάνει και στις τρεις την ίδια στιγμή.
         </p>
-
-        <h2 className="text-2xl font-bold mb-4 text-white">Υπηρεσίες στην Άρτα</h2>
-        <ul className="space-y-3 mb-8 text-white/80">
-          <li>• <strong className="text-[#01FFFF]">Ψηφιακές Προσκλήσεις</strong> — Mini-site για τον γάμο σας</li>
-          <li>• <strong className="text-[#01FFFF]">RSVP Online</strong> — Αυτόματη καταγραφή απαντήσεων</li>
-          <li>• <strong className="text-[#01FFFF]">Google Maps</strong> — Ακριβείς τοποθεσίες στην Άρτα</li>
-          <li>• <strong className="text-[#01FFFF]">Video Πρόσκληση</strong> — Ενσωματωμένο βίντεο</li>
-          <li>• <strong className="text-[#01FFFF]">Διαχείριση Καλεσμένων</strong> — Dashboard με στατιστικά</li>
-        </ul>
-
-        <h2 className="text-2xl font-bold mb-4 text-white">Γιατί adinfinity στην Άρτα;</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div className="bg-[#071218]/80 border border-[#01FFFF]/20 rounded-xl p-6">
-            <h3 className="text-lg font-bold mb-2 text-[#01FFFF]">Τοπική Εξυπηρέτηση</h3>
-            <p className="text-white/70 text-sm">Βρισκόμαστε στην Άρτα και καταλαβαίνουμε τις ανάγκες της περιοχής</p>
-          </div>
-          <div className="bg-[#071218]/80 border border-[#01FFFF]/20 rounded-xl p-6">
-            <h3 className="text-lg font-bold mb-2 text-[#01FFFF]">Γρήγορη Παράδοση</h3>
-            <p className="text-white/70 text-sm">Το mini-site σας είναι έτοιμο σε 24 ώρες</p>
-          </div>
-          <div className="bg-[#071218]/80 border border-[#01FFFF]/20 rounded-xl p-6">
-            <h3 className="text-lg font-bold mb-2 text-[#01FFFF]">Επαγγελματικό Design</h3>
-            <p className="text-white/70 text-sm">Μοντέρνα και κομψά designs για κάθε γούστο</p>
-          </div>
-          <div className="bg-[#071218]/80 border border-[#01FFFF]/20 rounded-xl p-6">
-            <h3 className="text-lg font-bold mb-2 text-[#01FFFF]">Υποστήριξη</h3>
-            <p className="text-white/70 text-sm">Διαθέσιμη υποστήριξη για τυχόν ερωτήσεις</p>
-          </div>
-        </div>
-
-        <h2 className="text-2xl font-bold mb-4 text-white">Δημοφιλείς τοποθεσίες στην Άρτα</h2>
-        <p className="text-white/70 mb-8 leading-relaxed">
-          Δημιουργούμε προσκλήσεις για γάμους σε όλες τις δημοφιλείς τοποθεσίες της Άρτας: 
-          Εκκλησία Αγίου Νικολάου, Κέντρα Εκδηλώσεων, παραδοσιακά ξενοδοχεία και πολλά άλλα. 
-          Οι χάρτες Google ενσωματώνονται αυτόματα στο mini-site σας.
+        <p>
+          Έχει σημασία και για τα πρακτικά: όσοι έρχονται από μακριά χρειάζονται
+          χάρτη για την εκκλησία και τον χώρο της δεξίωσης — ιδίως όταν η
+          δεξίωση γίνεται σε κτήμα εκτός πόλης που δεν βρίσκεται εύκολα — και
+          εσείς χρειάζεστε νωρίς έναν αριθμό για τα τραπέζια.
         </p>
+      </Prose>
 
-        <div className="bg-[#071218]/80 border border-[#01FFFF]/20 rounded-2xl p-8 mb-8">
-          <h3 className="text-xl font-bold mb-4 text-[#01FFFF]">Επικοινωνήστε μαζί μας</h3>
-          <p className="text-white/70 mb-4">
-            Είμαστε στην Άρτα και είμαστε έτοιμοι να δημιουργήσουμε την πρόσκληση του γάμου σας.
-          </p>
-          <Link
-            href="/request"
-            className="inline-block bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] font-bold py-3 px-6 rounded-full transition-colors"
+      <H2>Τι περιλαμβάνει</H2>
+      <FeatureList
+        items={[
+          {
+            term: 'Ψηφιακή πρόσκληση σε ένα link',
+            desc: 'Mini website, video προσκλητήριο ή minimal video only, ανάλογα με το τι χρειάζεστε.',
+          },
+          {
+            term: 'RSVP online',
+            desc: 'Ενήλικες, παιδιά, διατροφικές συνήθειες και αλλεργίες, συγκεντρωμένα σε μία λίστα.',
+          },
+          {
+            term: 'Χάρτες για κάθε τοποθεσία',
+            desc: 'Ξεχωριστός σύνδεσμος πλοήγησης για εκκλησία και δεξίωση, χρήσιμος για όσους δεν ξέρουν την περιοχή.',
+          },
+          {
+            term: 'Video και γκαλερί',
+            desc: 'Ενσωματωμένο βίντεο και φωτογραφίες του ζευγαριού.',
+          },
+          {
+            term: 'Λίστα δώρων με IBAN',
+            desc: 'Αντιγραφή λογαριασμού με ένα tap, χωρίς λάθη.',
+          },
+          {
+            term: 'Και έντυπο, αν το θέλετε',
+            desc: 'Έχουμε τμήμα εκτυπώσεων, οπότε λίγα τυπωμένα αντίτυπα μπορούν να σχεδιαστούν στην ίδια αισθητική.',
+          },
+        ]}
+      />
+
+      <H2>Γιατί adinfinity</H2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        {[
+          {
+            t: 'Τοπική παρουσία',
+            d: 'Γραφείο στην Άρτα, με δυνατότητα να συναντηθούμε από κοντά αντί για όλα μέσω μηνυμάτων.',
+          },
+          {
+            t: 'Γρήγορη παράδοση',
+            d: 'Από τη στιγμή που έχουμε όλα τα στοιχεία, η πρόσκληση μπορεί να είναι έτοιμη σε λιγότερο από 24 ώρες.',
+          },
+          {
+            t: 'Ψηφιακό και έντυπο μαζί',
+            d: 'Διαφημιστική εταιρεία με τμήμα εκτυπώσεων — δεν χρειάζεται δεύτερος προμηθευτής για τα τυπωμένα.',
+          },
+          {
+            t: 'Αλλαγές χωρίς κόστος',
+            d: 'Διορθώσεις σε ώρα, τοποθεσία ή ονόματα γίνονται όποτε χρειαστεί, πριν και μετά την αποστολή.',
+          },
+        ].map(({ t, d }) => (
+          <div
+            key={t}
+            className="bg-[#071218]/80 border border-[#01FFFF]/20 rounded-xl p-6"
           >
-            Επικοινωνήστε μαζί μας →
-          </Link>
-        </div>
-
-        <div className="text-center">
-          <Link
-            href="/ioanna-alexandros"
-            className="inline-block border-2 border-[#01FFFF] text-[#01FFFF] font-bold py-3 px-6 rounded-full hover:bg-[#01FFFF]/10 transition-colors"
-          >
-            Δείτε demo →
-          </Link>
-        </div>
-
-        {/* Visible counterpart to the FAQPage structured data above. */}
-        <section className="mt-16">
-          <h2 className="text-2xl font-bold mb-6 text-white">Συχνές ερωτήσεις</h2>
-          <div className="space-y-4">
-            {FAQ.map(({ q, a }) => (
-              <details
-                key={q}
-                className="group rounded-xl border border-[#01FFFF]/15 bg-[#071218]/60 p-5"
-              >
-                <summary className="cursor-pointer font-semibold text-[#01FFFF] marker:content-['']">
-                  {q}
-                </summary>
-                <p className="mt-3 text-white/70 leading-relaxed">{a}</p>
-              </details>
-            ))}
+            <h3 className="text-lg font-bold mb-2 text-[#01FFFF]">{t}</h3>
+            <p className="text-white/70 text-sm">{d}</p>
           </div>
-        </section>
-
-        <RelatedLinks current="arta" />
+        ))}
       </div>
-    </div>
+
+      <H2>Τοποθεσίες και χάρτες</H2>
+      <Prose>
+        <p>
+          Κάθε εκδήλωση μπαίνει με τη δική της διεύθυνση και τον δικό της
+          σύνδεσμο Google Maps, οπότε λειτουργεί για οποιαδήποτε εκκλησία,
+          κέντρο εκδηλώσεων ή κτήμα — μέσα στην Άρτα ή στην ευρύτερη Ήπειρο. Ο
+          καλεσμένος πατάει μία φορά και ανοίγει κατευθείαν πλοήγηση από εκεί
+          που βρίσκεται.
+        </p>
+      </Prose>
+
+      <Callout title="adinfinity — Άρτα">
+        <p>Βασ. Πύρρου 30, 471 32 Άρτα</p>
+        <p>
+          Σχεδιασμός, εκτυπώσεις και ψηφιακές υπηρεσίες για επιχειρήσεις και
+          ιδιώτες στην Ήπειρο.
+        </p>
+      </Callout>
+
+      <Cta
+        href="/request"
+        label="Ζητήστε προσφορά →"
+        secondary={{ href: '/ioanna-alexandros', label: 'Δείτε demo' }}
+      />
+
+      <Faq items={FAQ} />
+
+      <RelatedLinks current="arta" />
+    </PageShell>
   );
 }

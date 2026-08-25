@@ -1,6 +1,13 @@
 import InvitationHero from '@/components/InvitationHero';
 import WeddingFonts from '@/components/WeddingFonts';
-import { pageMetadata } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
+import {
+  PAGES,
+  breadcrumbNode,
+  graph,
+  pageMetadata,
+  webPageNode,
+} from '@/lib/seo';
 import OurStory from '@/components/OurStory';
 import EventsSection from '@/components/EventsSection';
 import ContactsSection from '@/components/ContactsSection';
@@ -15,10 +22,20 @@ import DemoNotice from '@/components/DemoNotice';
 
 export const metadata = pageMetadata('ioanna');
 
+/**
+ * Fictional showcase invitation. Every value here is deliberately fake — the
+ * phone numbers and IBAN are sequential placeholders, not customer data.
+ *
+ * KEEP THE DATES IN THE FUTURE. This page is indexable and is the main "see it
+ * working" link from the landing pages; when the date passes, the RSVP form
+ * flips to «Η προθεσμία έχει παρέλθει» and the showcase demonstrates a dead
+ * form to every visitor and to Google. It sat expired from June 2025 until
+ * August 2026 for exactly that reason.
+ */
 const demoInvitation = {
   brideName: 'Ιωάννα',
   groomName: 'Αλέξανδρος',
-  weddingDate: '2025-06-15',
+  weddingDate: '2027-06-12',
   eventCategory: 'WEDDING',
   childName: null,
   fatherName: null,
@@ -37,7 +54,7 @@ const demoInvitation = {
       id: '1',
       type: 'CEREMONY' as const,
       name: 'Γαμήλια Τελετή',
-      date: '2025-06-15T17:00:00',
+      date: '2027-06-12T17:00:00',
       address: 'Εκκλησία Αγίου Νικολάου, Άρτα',
       mapsUrl: null,
     },
@@ -45,7 +62,7 @@ const demoInvitation = {
       id: '2',
       type: 'RECEPTION' as const,
       name: 'Γαμήλια Δεξίωση',
-      date: '2025-06-15T20:00:00',
+      date: '2027-06-12T20:00:00',
       address: 'Κέντρο Εκδηλώσεων "Άρτα Palace", Άρτα',
       mapsUrl: null,
     },
@@ -74,32 +91,37 @@ const demoInvitation = {
       iban: 'GR16 0026 0280 0001 2345 6789 012',
     },
   ],
-  rsvpDeadline: '2025-05-15',
+  rsvpDeadline: '2027-05-15',
   musicUrl: null,
   status: 'ACTIVE',
   invitationType: 'MINI_WEBSITE',
 };
 
 export default function DemoInvitationPage() {
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Event',
-    name: 'Γάμος Ιωάννα & Αλέξανδρος',
-    startDate: demoInvitation.weddingDate,
-    eventStatus: 'https://schema.org/EventScheduled',
-    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    location: { '@type': 'Place', name: demoInvitation.events[0].name, address: demoInvitation.events[0].address },
-    organizer: { '@type': 'Organization', name: 'adinfinity', url: 'https://adinfinity.gr' },
-  };
+  /**
+   * Deliberately NOT an `Event` node.
+   *
+   * This page used to emit Event structured data — a wedding that does not
+   * exist, at a venue in Arta, with a concrete start date. That invites Google
+   * to treat a fabricated ceremony as a real indexable event, which is exactly
+   * what Google's structured-data policy prohibits.
+   *
+   * A WebPage tied to the site graph describes what this page honestly is: a
+   * showcase of the product, published by adinfinity.
+   */
+  const jsonLd = graph(
+    webPageNode('ioanna'),
+    breadcrumbNode([
+      { name: 'Αρχική', path: '/' },
+      { name: 'Δείγμα: Ιωάννα & Αλέξανδρος', path: PAGES.ioanna.path },
+    ]),
+  );
 
   return (
     <main>
       <DemoNotice />
       <WeddingFonts />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <InvitationHero
         brideName={demoInvitation.brideName}
         groomName={demoInvitation.groomName}

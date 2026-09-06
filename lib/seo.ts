@@ -56,9 +56,9 @@ export const PAGES = {
     // Targets the "προσκλητήρια" variant on purpose; the "προσκλήσεις"
     // variant is owned by /psifiakes-proskliseis-gamou, so the two pages
     // don't compete for the same query.
-    title: 'Ψηφιακά Προσκλητήρια Γάμου με RSVP',
+    title: 'Ψηφιακό Προσκλητήριο Γάμου σε 24h - RSVP Online',
     description:
-      'Ψηφιακό προσκλητήριο γάμου σε ένα link: mini site με RSVP online, αντίστροφη μέτρηση, χάρτες Google, λίστα δώρων και video. Σχεδιασμός από την adinfinity, Άρτα.',
+      'Σχεδιάζουμε το ψηφιακό προσκλητήριό σας σε λιγότερο από 24 ώρες. Mini-site με RSVP online, countdown, χάρτες Google και video — όλα σε ένα link. Ζητήστε προσφορά σήμερα.',
     keywords: [
       'ψηφιακά προσκλητήρια γάμου',
       'online προσκλητήριο γάμου',
@@ -74,7 +74,7 @@ export const PAGES = {
     ogSub: 'Mini site με RSVP online, countdown, χάρτες & video',
     priority: 1,
     changeFrequency: 'weekly',
-    lastModified: '2026-08-17',
+    lastModified: '2026-09-06',
   },
   psifiakes: {
     path: '/psifiakes-proskliseis-gamou',
@@ -129,9 +129,9 @@ export const PAGES = {
     path: '/prosklitirio-gamou-rsvp',
     // The only page on this property with real impressions (pos. 28–45 for
     // "rsvp γάμου", "rsvp ελληνικα"). Keep the RSVP keyword dominant here.
-    title: 'RSVP Online σε Προσκλητήριο Γάμου: Οδηγός & Demo',
+    title: 'RSVP Online Γάμου - Καλεσμένοι Απαντούν Χωρίς Εγγραφή',
     description:
-      'Πώς δουλεύει το RSVP online στον γάμο: οι καλεσμένοι απαντούν από το κινητό χωρίς εγγραφή και βλέπετε συμμετοχές, συνοδούς και διατροφικές προτιμήσεις σε πραγματικό χρόνο.',
+      'Το RSVP online γάμου αλλάζει τα δεδομένα: καλεσμένοι απαντούν σε 15 δευτερόλεπτα χωρίς εγγραφή. Δείτε απαντήσεις σε πραγματικό χρόνο και εξάγετε τη λίστα αυτόματα για τα τραπέζια.',
     keywords: [
       'προσκλητήριο γάμου RSVP',
       'RSVP online γάμος',
@@ -145,7 +145,7 @@ export const PAGES = {
     ogSub: 'Απαντήσεις καλεσμένων σε πραγματικό χρόνο',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   arta: {
     path: '/prosklitiria-gamou-arta',
@@ -245,9 +245,9 @@ export const PAGES = {
     // PACKAGES_FROM_EUR is still null and inventing a figure on a commercial
     // page is worse than having none — set that constant and this page can
     // surface it automatically.
-    title: 'Τιμές Ψηφιακού Προσκλητηρίου: Τι Επηρεάζει το Κόστος',
+    title: 'Ψηφιακό Προσκλητήριο Γάμου - Τιμές & Κόστος',
     description:
-      'Πόσο κοστίζει ένα ψηφιακό προσκλητήριο γάμου; Τι επηρεάζει την τιμή — τύπος πρόσκλησης, video, γκαλερί, RSVP και χρόνος παράδοσης — και πώς δίνουμε προσφορά.',
+      'Το κόστος ενός ψηφιακού προσκλητηρίου εξαρτάται από τον τύπο και το υλικό σας. Δεν υπάρχει χρέωση ανά καλεσμένο. Ζητήστε προσφορά σε 2 λεπτά — δωρεάν και χωρίς δέσμευση.',
     keywords: [
       'ψηφιακό προσκλητήριο γάμου τιμή',
       'ψηφιακό προσκλητήριο κόστος',
@@ -259,7 +259,7 @@ export const PAGES = {
     ogSub: 'Τι επηρεάζει το κόστος και πώς δίνουμε προσφορά',
     priority: 0.85,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   /* ── Non-wedding event cluster ────────────────────────────────
      The product has supported BAPTISM / WEDDING_BAPTISM / BIRTHDAY /

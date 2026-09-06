@@ -84,9 +84,9 @@ export const PAGES = {
     //
     // Intent split: adinfinity.gr/psifiako-prosklitirio-gamou sells the service.
     // This page explains how the product works, so the two stop competing.
-    title: 'Ψηφιακή Πρόσκληση Γάμου: Πώς Λειτουργεί & Τι Περιλαμβάνει',
+    title: 'Ψηφιακές Προσκλήσεις Γάμου - Ολοκληρωμένος Οδηγός',
     description:
-      'Αναλυτικός οδηγός για την ψηφιακή πρόσκληση γάμου: RSVP online, live countdown, χάρτες Google, video, IBAN με ένα tap και dashboard καλεσμένων — βήμα βήμα, με demo.',
+      'Πώς λειτουργούν οι ψηφιακές προσκλήσεις: RSVP online χωρίς εγγραφή, live countdown, χάρτες Google, video υπό ταχυδρόμηση, IBAN με tap και πρόσβαση καλεσμένων. Δείτε ολόκληρο παράδειγμα.',
     keywords: [
       'ψηφιακές προσκλήσεις γάμου',
       'ψηφιακή πρόσκληση γάμου',
@@ -100,7 +100,7 @@ export const PAGES = {
     ogSub: 'RSVP, countdown, χάρτες, video & IBAN με ένα tap',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   ilektroniko: {
     path: '/ilektroniko-prosklitirio-gamou',
@@ -109,9 +109,9 @@ export const PAGES = {
     // agency page and dropped this one. Both sides must stay differentiated:
     // the agency page sells, this one is the comparison guide (paper vs
     // electronic). Do not retitle this back to a bare service title.
-    title: 'Ηλεκτρονικό Προσκλητήριο Γάμου: Οδηγός & Σύγκριση με το Χάρτινο',
+    title: 'Ηλεκτρονικό vs Χάρτινο Προσκλητήριο Γάμου - Σύγκριση',
     description:
-      'Ηλεκτρονικό ή χάρτινο προσκλητήριο γάμου; Αναλυτική σύγκριση σε κόστος, χρόνο, αλλαγές της τελευταίας στιγμής και RSVP — με παραδείγματα και ζωντανό demo.',
+      'Ηλεκτρονικό ή χάρτινο; Σύγκριση σε κόστος (€0 ανά καλεσμένο), χρόνο παράδοσης, αλλαγές της τελευταίας στιγμής χωρίς κόστος και RSVP online. Δείτε παραδείγματα.',
     keywords: [
       'ηλεκτρονικό προσκλητήριο γάμου',
       'ηλεκτρονικές προσκλήσεις γάμου',
@@ -123,7 +123,7 @@ export const PAGES = {
     ogSub: 'Αναλυτική σύγκριση σε κόστος, χρόνο και αλλαγές',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   rsvp: {
     path: '/prosklitirio-gamou-rsvp',
@@ -172,9 +172,9 @@ export const PAGES = {
      ─────────────────────────────────────────────────────────────── */
   miniWebsite: {
     path: '/mini-website-prosklitirio',
-    title: 'Mini Website Προσκλητήριο Γάμου (Wedding Website)',
+    title: 'Mini Website Γάμου - Ιστορία, Χάρτες, RSVP & Δώρα',
     description:
-      'Το πλήρες mini website γάμου: hero, ιστορία ζευγαριού, εκδηλώσεις με χάρτες, γκαλερί, video, επαφές, λίστα δώρων με IBAN και RSVP — όλα σε μία σελίδα.',
+      'Πλήρες mini website γάμου σε ένα link: ιστορία ζευγαριού, εκδηλώσεις με Google Maps, γκαλερί φωτογραφιών, video, RSVP online, αντιγραφή IBAN και λίστα δώρων.',
     keywords: [
       'mini website γάμου',
       'wedding website Ελλάδα',
@@ -186,13 +186,13 @@ export const PAGES = {
     ogSub: 'Το πλήρες site του γάμου σας σε ένα link',
     priority: 0.85,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   videoProsklitirio: {
     path: '/video-prosklitirio-gamou',
-    title: 'Video Προσκλητήριο Γάμου',
+    title: 'Video Προσκλητήριο Γάμου - Βίντεο + RSVP + Χάρτες',
     description:
-      'Video προσκλητήριο γάμου: το βίντεό σας ως hero, γρήγορες ενέργειες για RSVP, εκκλησία, δεξίωση και IBAN, και φόρμα απάντησης κάτω από αυτό.',
+      'Video προσκλητήριο γάμου με το βίντεό σας ως hero, γρήγορα κουμπιά για RSVP, εκκλησία, δεξίωση και IBAN αντιγραφής, φόρμα απάντησης και χάρτες στο χώρο.',
     keywords: [
       'video προσκλητήριο γάμου',
       'βίντεο πρόσκληση γάμου',
@@ -203,13 +203,13 @@ export const PAGES = {
     ogSub: 'Το βίντεό σας ως πρόσκληση, με RSVP από κάτω',
     priority: 0.85,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   videoOnly: {
     path: '/video-only-prosklitirio',
-    title: 'Video Only Προσκλητήριο — Minimal Πρόσκληση',
+    title: 'Video Only Προσκλητήριο Γάμου - Minimal & Κομψό',
     description:
-      'Minimal video προσκλητήριο: ονόματα, ημερομηνία και ένα full-screen βίντεο, χωρίς τίποτα άλλο. Για όσους θέλουν η πρόσκληση να είναι μόνο το βίντεο.',
+      'Minimal video προσκλητήριο: ονόματα, ημερομηνία και full-screen βίντεο. Χωρίς περισσότερες λεπτομέρειες. Ιδανικό για όσους θέλουν την πρόσκληση να είναι μόνο το βίντεο.',
     keywords: [
       'video only προσκλητήριο',
       'minimal προσκλητήριο γάμου',
@@ -220,13 +220,13 @@ export const PAGES = {
     ogSub: 'Ονόματα, ημερομηνία και ένα full-screen video',
     priority: 0.7,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   faq: {
     path: '/syxnes-erotiseis',
-    title: 'Συχνές Ερωτήσεις για Ψηφιακά Προσκλητήρια',
+    title: 'Συχνές Ερωτήσεις Ψηφιακών Προσκλητηρίων - Όλες οι Απαντήσεις',
     description:
-      'Απαντήσεις στις πιο συχνές ερωτήσεις για τα ψηφιακά προσκλητήρια: χρόνος παράδοσης, αλλαγές μετά την αποστολή, RSVP, video, χάρτες, IBAN και τι γίνεται μετά την εκδήλωση.',
+      'Όλες οι συχνές ερωτήσεις και απαντήσεις: χρόνος παράδοσης (24h), αλλαγές μετά την αποστολή (δωρεάν), RSVP online, video, χάρτες, IBAN αντιγραφή, τι μετά την εκδήλωση.',
     keywords: [
       'ψηφιακό προσκλητήριο ερωτήσεις',
       'πώς λειτουργεί ψηφιακό προσκλητήριο',
@@ -237,7 +237,7 @@ export const PAGES = {
     ogSub: 'Ό,τι ρωτούν πιο συχνά για τα ψηφιακά προσκλητήρια',
     priority: 0.8,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   times: {
     path: '/times-psifiakou-prosklitiriou',
@@ -272,9 +272,9 @@ export const PAGES = {
      ─────────────────────────────────────────────────────────────── */
   vaptisi: {
     path: '/prosklitirio-vaptisis',
-    title: 'Ψηφιακό Προσκλητήριο Βάπτισης με RSVP',
+    title: 'Ψηφιακό Προσκλητήριο Βάπτισης - Όνομα, Χάρτες, RSVP',
     description:
-      'Ψηφιακό προσκλητήριο βάπτισης σε ένα link: όνομα και ημερομηνία, χάρτης για εκκλησία και δεξίωση, RSVP online με αριθμό παιδιών και ενηλίκων, φωτογραφίες και video.',
+      'Ψηφιακό προσκλητήριο βάπτισης σε ένα link: όνομα και ημερομηνία, χάρτης για εκκλησία και δεξίωση, RSVP χωρίς εγγραφή, αριθμός ενηλίκων/παιδιών, φωτογραφίες και video.',
     keywords: [
       'ψηφιακό προσκλητήριο βάπτισης',
       'προσκλητήριο βάπτισης',
@@ -287,13 +287,13 @@ export const PAGES = {
     ogSub: 'RSVP online, χάρτες, φωτογραφίες & video',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   vaptisiArta: {
     path: '/prosklitiria-vaptisis-arta',
-    title: 'Προσκλητήρια Βάπτισης Άρτα',
+    title: 'Προσκλητήρια Βάπτισης Άρτα - Ψηφιακά & Γρήγορα',
     description:
-      'Ψηφιακά προσκλητήρια βάπτισης στην Άρτα και την Ήπειρο. Σχεδιάζουμε το προσκλητήριο της βάπτισης με RSVP, χάρτες και φωτογραφίες — από το γραφείο μας στη Βασ. Πύρρου 30.',
+      'Ψηφιακά προσκλητήρια βάπτισης στην Άρτα και Ήπειρο. Σχεδιάζουμε το προσκλητήριό σας σε 24 ώρες με RSVP online, χάρτες και φωτογραφίες. Επαφή: Βας. Πύρρου 30, Άρτα.',
     keywords: [
       'προσκλητήρια βάπτισης Άρτα',
       'προσκλήσεις βάπτισης Άρτα',
@@ -305,15 +305,15 @@ export const PAGES = {
     ogSub: 'Ψηφιακά προσκλητήρια για Άρτα & Ήπειρο',
     priority: 0.8,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   gamosVaptisi: {
     path: '/prosklitirio-gamou-vaptisis',
     // WEDDING_BAPTISM is a distinctly Greek combined ceremony with its own
     // search demand and no competing page on either domain.
-    title: 'Προσκλητήριο Γάμου & Βάπτισης Μαζί',
+    title: 'Προσκλητήριο Γάμου & Βάπτισης Μαζί - Ένα Link',
     description:
-      'Ένα προσκλητήριο για γάμο και βάπτιση μαζί: δύο τελετές, ένα link. Ξεχωριστές ώρες και χάρτες ανά εκδήλωση, ενιαίο RSVP και μία λίστα καλεσμένων για όλα.',
+      'Προσκλητήριο για γάμο και βάπτιση μαζί: δύο τελετές, ένα link, μία RSVP φόρμα. Ξεχωριστές ώρες και χάρτες ανά εκδήλωση, μία λίστα καλεσμένων για όλα.',
     keywords: [
       'προσκλητήριο γάμου και βάπτισης',
       'γάμος και βάπτιση μαζί',
@@ -325,13 +325,13 @@ export const PAGES = {
     ogSub: 'Δύο τελετές, ένα link, ένα RSVP',
     priority: 0.85,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   genethlia: {
     path: '/prosklitirio-genethlion',
-    title: 'Ψηφιακό Προσκλητήριο Γενεθλίων',
+    title: 'Ψηφιακό Προσκλητήριο Γενεθλίων - RSVP Σε Πραγματικό Χρόνο',
     description:
-      'Ψηφιακό προσκλητήριο γενεθλίων με RSVP: στείλτε ένα link, δείτε ποιοι θα έρθουν σε πραγματικό χρόνο και αλλάξτε ώρα ή τοποθεσία χωρίς να ξαναστείλετε πρόσκληση.',
+      'Ψηφιακό προσκλητήριο γενεθλίων με RSVP: ένα link, δείτε ποιοι θα έρθουν σε πραγματικό χρόνο. Αλλάξτε ώρα, τοποθεσία ή λεπτομέρειες χωρίς ξανά-αποστολή.',
     keywords: [
       'ψηφιακό προσκλητήριο γενεθλίων',
       'πρόσκληση γενεθλίων online',
@@ -343,13 +343,13 @@ export const PAGES = {
     ogSub: 'Ένα link, RSVP σε πραγματικό χρόνο',
     priority: 0.75,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   epeteios: {
     path: '/prosklitirio-epeteiou',
-    title: 'Ψηφιακό Προσκλητήριο Επετείου Γάμου',
+    title: 'Προσκλητήριο Επετείου Γάμου - Ιστορία & Φωτογραφίες',
     description:
-      'Ψηφιακό προσκλητήριο για επέτειο γάμου: ιστορία του ζευγαριού, γκαλερί φωτογραφιών από τα χρόνια μαζί, χάρτης δεξίωσης και RSVP online σε ένα link.',
+      'Προσκλητήριο επετείου γάμου: η ιστορία του ζευγαριού, γκαλερί φωτογραφιών από τα χρόνια μαζί, χάρτης δεξίωσης και RSVP online. Για αργυρούς και χρυσούς γάμους.',
     keywords: [
       'προσκλητήριο επετείου γάμου',
       'πρόσκληση επετείου',
@@ -361,13 +361,13 @@ export const PAGES = {
     ogSub: 'Η ιστορία σας, σε ένα link με RSVP',
     priority: 0.7,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   ekdiloseis: {
     path: '/psifiakes-proskliseis-ekdilosewn',
-    title: 'Ψηφιακές Προσκλήσεις Εκδηλώσεων & Εταιρικών Events',
+    title: 'Ψηφιακές Προσκλήσεις Εκδηλώσεων - Πρόγραμμα & RSVP',
     description:
-      'Ψηφιακές προσκλήσεις για εκδηλώσεις, εγκαίνια και εταιρικά events: πρόγραμμα με ώρες, χάρτες, RSVP με λίστα συμμετεχόντων και εξαγωγή σε αρχείο.',
+      'Ψηφιακές προσκλήσεις για εκδηλώσεις, εγκαίνια και corporate events: πρόγραμμα με ώρες, χάρτες venue, RSVP με λίστα συμμετεχόντων και εξαγωγή σε Excel/PDF.',
     keywords: [
       'ψηφιακές προσκλήσεις εκδηλώσεων',
       'εταιρική πρόσκληση online',
@@ -379,13 +379,13 @@ export const PAGES = {
     ogSub: 'Πρόγραμμα, χάρτες & RSVP με εξαγωγή λίστας',
     priority: 0.7,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-25',
+    lastModified: '2026-09-06',
   },
   demo: {
     path: '/demo',
-    title: 'Demo Προσκλητήριο Γάμου',
+    title: 'Demo Προσκλητήριο Γάμου - Δοκιμάστε Ζωντανά',
     description:
-      'Δείτε ζωντανά ένα demo ψηφιακού προσκλητηρίου γάμου — αντίστροφη μέτρηση, ιστορία ζευγαριού, εκδηλώσεις με χάρτες, video και φόρμα RSVP.',
+      'Δείτε ένα δείγμα ψηφιακού προσκλητηρίου γάμου με countdown, ιστορία ζευγαριού, εκδηλώσεις με χάρτες, video, RSVP φόρμα και IBAN αντιγραφή.',
     keywords: [
       'demo προσκλητήριο γάμου',
       'δείγμα ψηφιακής πρόσκλησης',
@@ -395,7 +395,7 @@ export const PAGES = {
     ogSub: 'Δείτε ζωντανά πώς είναι μια ψηφιακή πρόσκληση',
     priority: 0.7,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-17',
+    lastModified: '2026-09-06',
   },
   ioanna: {
     path: '/ioanna-alexandros',
@@ -411,9 +411,9 @@ export const PAGES = {
   },
   request: {
     path: '/request',
-    title: 'Ζητήστε το Προσκλητήριό σας',
+    title: 'Παραγγελία Ψηφιακού Προσκλητηρίου - Ζητήστε Προσφορά',
     description:
-      'Ζητήστε το ψηφιακό σας προσκλητήριο γάμου. Στείλτε ονόματα, ημερομηνία και τύπο πρόσκλησης — απαντάμε με πρόταση και τιμή.',
+      'Ζητήστε το ψηφιακό προσκλητήριό σας σε 24 ώρες. Συμπληρώστε ονόματα, ημερομηνία και τύπο πρόσκλησης — απαντάμε άμεσα με προσφορά και τιμή. Δωρεάν συμβουλή.',
     keywords: [
       'παραγγελία ψηφιακού προσκλητηρίου',
       'ζητήστε προσκλητήριο γάμου',
@@ -423,7 +423,7 @@ export const PAGES = {
     ogSub: 'Στείλτε τα στοιχεία σας και σας απαντάμε με πρόταση',
     priority: 0.9,
     changeFrequency: 'monthly',
-    lastModified: '2026-08-17',
+    lastModified: '2026-09-06',
   },
   karaiskakia: {
     path: '/karaiskakia-2026',

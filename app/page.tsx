@@ -63,7 +63,12 @@ export default function LandingPage() {
 
   const fadeUp = prefersReduced
     ? {}
-    : { initial: { opacity: 0, y: 24 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.5 } };
+    : {
+        initial: { opacity: 0, y: 24 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true, margin: "0px 0px -100px 0px" },
+        transition: { duration: 0.3 }
+      };
 
   // The Organization and WebSite nodes now live in the root layout so every
   // route carries them; this page adds only what's specific to it. Rendered
@@ -89,7 +94,7 @@ export default function LandingPage() {
       {/* ── NAV ───────────────────────────────────────────── */}
       <nav className="relative z-20 border-b border-[#01FFFF]/10 bg-[#07141C]/80 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Image src="/logo.png" alt="adinfinity" width={120} height={40} className="object-contain" />
+          <Image src="/logo.png" alt="adinfinity" width={120} height={40} className="object-contain" priority loading="eager" />
           <a
             href="/request"
             className="bg-[#01FFFF] hover:bg-[#01FFFF]/90 text-[#07141C] text-sm font-bold px-6 py-2.5 rounded-full transition-colors"

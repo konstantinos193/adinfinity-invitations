@@ -41,3 +41,32 @@ html {
   margin: 0 auto;
 }
 
+/* Mobile performance optimizations */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.8em !important;
+  }
+
+  h2 {
+    font-size: 1.4em !important;
+  }
+
+  /* Reduce animations on mobile for better performance */
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  /* Ensure buttons are tap-friendly */
+  button, a[role="button"] {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 16px;
+  }
+}
+
